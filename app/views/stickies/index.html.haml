@@ -1,0 +1,7 @@
+-form_for :sticky do |f|
+  =f.submit "new sticky"
+
+
+-@stickies.each do  |sticky|
+  .sticky{:id => "sticky_#{sticky.id}"}
+
