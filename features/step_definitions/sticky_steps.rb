@@ -1,5 +1,8 @@
-Then /^I should see a new sticky$/ do
-  new_sticky = Sticky.last
-  response.should have_selector("div", :id => "sticky_#{new_sticky.id}")
+Given /^I create a new sticky$/ do
+  Sticky.create
+end
+
+Then /^I should see (\d*) stick(?:y|ies)$/ do |count|
+  response.should have_selector("div", :class => "sticky", :count => count.to_i)
 end
 
