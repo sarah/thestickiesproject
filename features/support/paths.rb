@@ -12,6 +12,8 @@ module NavigationHelpers
     when /the sticky stage/
       stickies_path
 
+    when /the home page/
+      "/"
     # Add more mappings here.
     # Here is a more fancy example:
     #
