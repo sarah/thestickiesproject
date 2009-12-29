@@ -6,5 +6,5 @@ I want to create a sticky
 
   Scenario: Creating first sticky
     Given I am on the sticky stage
-    When I push the "new sticky" button
+    When I press "new sticky"
     Then I should see a new sticky
