@@ -3,9 +3,9 @@
 
 
 -@stickies.each do  |sticky|
-  .sticky{:id => "sticky_#{sticky.id}"}
+  .sticky{:id => "sticky_#{sticky.id}", "data-update-url" => sticky_url(sticky)}
     =link_to "x", sticky_path(sticky), :class => 'delete_sticky_link', :id => "delete_sticky_#{sticky.id}", :method => :delete
-    .editable{"data-sticky-id" => sticky.id}
+    .editable
 
 
 =javascript_include_tag "stickies"
