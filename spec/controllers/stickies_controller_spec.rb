@@ -20,4 +20,18 @@ describe StickiesController do
       post :create
     end
   end
+
+  context "DELETE /stickies/:id" do
+    it "deletes a sticky" do
+      Sticky.stub(:find).with('5').and_return(sticky = mock_model(Sticky))
+      sticky.should_receive(:destroy)
+      post :destroy, :method => :delete, :id => '5'
+    end
+
+    it "redirects to index" do
+      Sticky.stub(:find).and_return(stub_model(Sticky, :destroy => nil))
+      post :destroy, :method => :delete, :id => '5'
+      response.should redirect_to(stickies_path)
+    end
+  end
 end

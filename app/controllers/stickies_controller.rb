@@ -7,4 +7,10 @@ class StickiesController < ApplicationController
     Sticky.create
     redirect_to stickies_path
   end
+
+  def destroy
+    sticky = Sticky.find(params[:id])
+    sticky.destroy
+    redirect_to stickies_path
+  end
 end

@@ -4,4 +4,5 @@
 
 -@stickies.each do  |sticky|
   .sticky{:id => "sticky_#{sticky.id}"}
+    =link_to "x", sticky_path(sticky), :class => 'delete_sticky_link', :id => "delete_sticky_#{sticky.id}", :method => :delete
 
