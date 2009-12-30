@@ -1,16 +1,3 @@
-class StickiesController < ApplicationController
-  def index
-    @stickies = Sticky.all
-  end
-
-  def create
-    Sticky.create
-    redirect_to stickies_path
-  end
-
-  def destroy
-    sticky = Sticky.find(params[:id])
-    sticky.destroy
-    redirect_to stickies_path
-  end
+class StickiesController < ResourceController::Base
+  create.wants.html { redirect_to collection_path }
 end
