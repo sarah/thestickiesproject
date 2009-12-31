@@ -15,3 +15,9 @@ config.action_controller.perform_caching             = false
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
+
+# config.gem 'the_metric_system'
+# config.gem 'rspec'
+# config.gem 'rspec-rails'
+# config.gem 'cucumber'
+# config.gem 'webrat'
