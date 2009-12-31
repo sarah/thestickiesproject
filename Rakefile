@@ -9,4 +9,4 @@ require 'rake/rdoctask'
 
 require 'tasks/rails'
 
-task :default => ["spec","spec:javascripts", "cucumber", "quality", "rcov:all"]
+task :default => ["rcov:all", "spec:javascripts", "quality"]

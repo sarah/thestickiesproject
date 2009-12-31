@@ -5,3 +5,4 @@ config/database.yml
 .DS_STORE
 webrat*
 coverage/*
+coverage.data
