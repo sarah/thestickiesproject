@@ -3,6 +3,7 @@ require 'spec_helper'
 describe StickiesController do
   context "POST /stickies/create" do
     it "redirects to index" do
+      Sticky.stub(:new).and_return(mock_model(Sticky).as_null_object)
       post :create
       response.should redirect_to(stickies_path)
     end
