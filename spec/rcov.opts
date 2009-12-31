@@ -1,2 +1,6 @@
 --exclude "spec/*,gems/*"
 --rails
+--html
+--aggregate "coverage.data"
+--sort coverage
+--text-report

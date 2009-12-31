@@ -5,6 +5,8 @@
     =stylesheet_link_tag "style"
     %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"}
     =javascript_include_tag "jquery.jeditable.mini"
+    -if protect_against_forgery?
+      =javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
   %body
     =yield
 

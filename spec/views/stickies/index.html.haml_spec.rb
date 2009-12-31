@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "/stickies/index.html.haml" do
-  let(:sticky) { mock_model(Sticky) }
+  let(:sticky) { mock_model(Sticky).as_null_object }
   let(:stickies) { [sticky] }
   
   before(:each) do
@@ -10,7 +10,7 @@ describe "/stickies/index.html.haml" do
   it "contains the update url on the sticky div" do
     render "/stickies/index.html.haml"
 
-    response.should have_tag(".sticky[data-update-url = #{sticky_url(sticky)}]")
+    response.should have_tag(".sticky[data-update-url = #{sticky_url(sticky, :format => :json)}]")
   end
 end
 

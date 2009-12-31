@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Sticky do
   before(:each) do
     @valid_attributes = {
-      
+      :content => "foo"
     }
   end
 

@@ -2,9 +2,20 @@ Given /^I create a new sticky$/ do
   Sticky.create
 end
 
+Given /^a sticky with content "([^\"]*)"$/ do |content|
+  Sticky.create(:content => content)
+end
+
 Given /^(\d*) stick(?:y|ies)$/ do |count|
   count.to_i.times do
     Sticky.create
+  end
+end
+
+Then /^I should see a sticky with content "([^\"]*)"$/ do |content|
+  sticky = Sticky.find_by_content(content)
+  response.should have_tag(".sticky", :id => "sticky_#{sticky.id}") do |sticky_div|
+    sticky_div.should contain(content)
   end
 end
 
