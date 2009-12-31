@@ -1,14 +1,17 @@
+def valid_sticky(content = {})
+  Sticky.create(content.merge(:x => 0, :y => 0))
+end
 Given /^I create a new sticky$/ do
-  Sticky.create
+  valid_sticky
 end
 
 Given /^a sticky with content "([^\"]*)"$/ do |content|
-  Sticky.create(:content => content)
+  valid_sticky(:content => content)
 end
 
 Given /^(\d*) stick(?:y|ies)$/ do |count|
   count.to_i.times do
-    Sticky.create
+    valid_sticky
   end
 end
 
