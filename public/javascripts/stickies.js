@@ -24,7 +24,11 @@ function parent_sticky(sticky_child){
 }
 
 function inspect(me){
-  return JSON.stringify(me);
+  if(JSON) {
+    return JSON.stringify(me);
+  }else{
+    return 'me';
+  }
 }
 function get_position_from_ui_object(ui_object){
   var left = Math.round(ui_object.absolutePosition.left);
