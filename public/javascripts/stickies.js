@@ -23,4 +23,8 @@ function parent_sticky(sticky_child){
   return $(sticky_child).parent(".sticky");
 }
 
+function hookup_draggability(){
+  $('.sticky').draggable();
+}
 $(document).ready(hookup_sticky_editing);
+$(document).ready(hookup_draggability);
