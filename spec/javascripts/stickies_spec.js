@@ -36,5 +36,39 @@ Screw.Unit(function(){
       expect(position.top).to(equal, 33);
     });
   });
+
+  describe("#old_update_sticky_text", function(){
+    
+    before(function(){
+      this.sticky_update_url_for = function(x) { return null; }
+      this.parent_sticky = function(x) { return null; }
+      this.update_sticky = function(x) { return null; }
+    });
+
+    it("returns the value passed in", function(){
+      var value = old_update_sticky_text("foo", null);
+      expect(value).to(equal, "foo");
+    });
+
+    it("calls #parent_sticky", function(){
+      expect_called(this, 'parent_sticky', function(){
+        old_update_sticky_text("foo", null);
+      });
+    });
+
+    it("calls #sticky_update_url_for", function(){
+      expect_called(this, 'sticky_update_url_for', function(){
+        old_update_sticky_text("foo", null);
+      });
+    });
+
+    it("calls #update_sticky", function(){
+      expect_called(this, 'update_sticky', function(){
+        old_update_sticky_text("foo", null);
+      });
+    });
+  });
+
+
 });
 
