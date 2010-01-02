@@ -1,7 +1,57 @@
+body{
+	font-family: verdana,sans;
+}
+#stage{
+	margin-top: 10px;
+	border-top: 1px dotted #000;
+	padding-top: 5px;
+}
+#header{}
+#header ul.navigation{
+	position:absolute;
+	right: 10px;
+	top: 10px;
+	list-style:none;
+}
+#header ul.navigation li{
+	display:inline;
+	padding: 0 5px;
+}
+
+#footer{
+	border-top: 1px dotted #000;
+	padding-top: 5px;
+	font-size: 10px;
+	color: pink;	
+}
 .sticky{
-  background-color:yellow;
-  color: black;
-  width: 100px;
-  height: 100px;
-  margin:10px;
+		width: 114px;
+		height:95px;
+		border-top: 	1px solid #ccc;
+		border-left: 	1px solid #ccc;
+		border-right: 	1px solid #333;
+		border-bottom: 	1px solid #333;
+		padding-bottom: 12px;
+		margin-bottom: 	20px;
+		background-color:#FFFF99; 
+		font-size:10px;
+}
+.sticky .header {
+	border-bottom: 1px solid #333;
+	padding: 1px;
+}
+
+.sticky .header .delete_sticky_link{
+	right: -5px;
+	margin-left: 105px;
+	font-weight: bold;
+}
+
+.sticky .header a.delete_sticky_link {
+	text-decoration:none;
+}
+
+
+.sticky .body{ 
+	margin: 5px;
 }
