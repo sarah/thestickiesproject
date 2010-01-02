@@ -1,4 +1,4 @@
-var rails_require = function rails_require(js_file) {
+var rails_require = function(js_file) {
   require("../../public/javascripts/" + js_file + ".js");
 }
 Screw.Matchers['expect_true'] = function(value){

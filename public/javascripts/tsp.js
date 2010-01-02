@@ -1,5 +1,13 @@
-var TSP = {
-  update_sticky_text_handler : function(value, settings){
-                                 return value;
-                               }
+var TSP = {};
+
+TSP.Handlers = {
+  update_sticky_text: function(value, settings){
+    var sticky = TSP.Lookups.get_sticky_parent_for(this);
+    sticky.update_content(value);
+    return value;
+   }
+};
+TSP.Lookups = {
+  get_sticky_parent_for : function(element){
+   }
 };
