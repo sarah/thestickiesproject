@@ -81,5 +81,6 @@ if(BlueRidge.loaded != true) {
   require(BLUE_RIDGE_VENDOR_PREFIX + "screw.mocking.js",   {system: true});
 
   BlueRidge.loaded = true;
+  require('spec_helper.js');
   require(BlueRidge.Browser.deriveSpecNameFromCurrentFile());
 }
