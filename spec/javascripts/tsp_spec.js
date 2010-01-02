@@ -1,4 +1,6 @@
-rails_require('tsp');
+require('spec_helper.js', {onload: function(){
+    rails_require('tsp');
+}});
 
 var Helpers = {};
 
