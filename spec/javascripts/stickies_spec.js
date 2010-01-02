@@ -1,4 +1,3 @@
-require("spec_helper.js");
 rails_require('stickies');
 
 Screw.Unit(function(){

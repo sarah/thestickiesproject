@@ -7,13 +7,18 @@ Helpers.editable_div = function(){
   return $('.sticky .editable');
 };
 
-var editable_div = Helpers.editable_div;
+Helpers.sticky_div = function(){
+  return $('.sticky');
+};
+
+var get_editable_div = Helpers.editable_div;
+var get_sticky_div = Helpers.sticky_div;
 
 
 Screw.Unit(function(){
   var mock_sticky = function(){
     var sticky = mock();
-    mock(TSP.Lookups).should_receive('get_sticky').and_return(sticky);
+    mock(TSP.Lookups).should_receive('sticky_from').and_return(sticky);
     stub(sticky, 'update_content');
     return sticky;
   };
@@ -23,29 +28,35 @@ Screw.Unit(function(){
       it("returns the value passed in", function(){
         mock_sticky();
 
-        var value = TSP.Handlers.update_sticky_text.apply(editable_div(), ['new text', null]);
+        var value = TSP.Handlers.update_sticky_text.apply(get_editable_div(), ['new text', null]);
         expect(value).to(equal, "new text");
       });
 
       it("updates the sticky value with the passed value", function(){
-        var sticky = mock_sticky();
+        mock_sticky().should_receive('update_content').with_arguments('new content').exactly(1);
 
-        sticky.should_receive('update_content').with_arguments('new content').exactly(1);
-
-        TSP.Handlers.update_sticky_text.apply(editable_div(), ['new content', null]);
+        TSP.Handlers.update_sticky_text.apply(get_editable_div(), ['new content', null]);
       });
     });
   });
 
-  describe("TSP.Lookups", function(){
-   describe("#get_sticky_parent_for", function(){
-    it("retrieves the parent .sticky for the editable tag", function() {
-      expect(TSP.Lookups.get_sticky_parent_for(editable_div()).attr('class')).to(equal, 'sticky');
-    });
-  });
- });
+  describe("sticky object returned from TSP.sticky_from", function(){
+      it("contains the sticky div it was spawned from", function(){
+        var sticky_div = get_sticky_div();
+        sticky_div.attr('id', 'foo');
 
-  describe("TSP.get_sticky", function(){
+        var sticky = TSP.Lookups.sticky_from(sticky_div);
+        expect(sticky.div.attr('id')).to(equal, 'foo');
+      });
 
+      it("can generate from a child of the sticky div", function(){
+        var sticky_div = get_sticky_div();
+        sticky_div.attr('id', 'bar');
+
+        var editable_child_div = sticky_div.find('.editable');
+
+        var sticky = TSP.Lookups.sticky_from(editable_child_div);
+        expect(sticky.div.attr('id')).to(equal, 'bar');
+      });
     });
 });
