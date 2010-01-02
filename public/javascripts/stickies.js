@@ -1,8 +1,8 @@
 var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', event : "dblclick", tooltip : "Double-click to edit", indicator : 'Saving...', placeholder : "Double-click to edit" };
 
-function update_sticky_text(value, settings) {
-  var stickie = parent_sticky(this);
-  var url = sticky_update_url_for(stickie);
+function old_update_sticky_text(value, settings) {
+  var sticky = parent_sticky(this);
+  var url = sticky_update_url_for(sticky);
   update_sticky(url, value);
   return value;
 }
@@ -12,7 +12,7 @@ function update_sticky(url, value){
 }
 
 function hookup_sticky_editing(){
-  $('.sticky .editable').editable(update_sticky_text, EDITABLE_STICKY_PROPS);
+  $('.sticky .editable').editable(old_update_sticky_text, EDITABLE_STICKY_PROPS);
 }
 
 function sticky_update_url_for(sticky_div){
@@ -24,7 +24,11 @@ function parent_sticky(sticky_child){
 }
 
 function inspect(me){
-  return JSON.stringify(me);
+  if(JSON) {
+    return JSON.stringify(me);
+  }else{
+    return 'me';
+  }
 }
 function get_position_from_ui_object(ui_object){
   var left = Math.round(ui_object.absolutePosition.left);
