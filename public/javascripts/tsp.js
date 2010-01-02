@@ -9,5 +9,6 @@ TSP.Handlers = {
 };
 TSP.Lookups = {
   get_sticky_parent_for : function(element){
+    return element.parent('.sticky');
    }
 };
