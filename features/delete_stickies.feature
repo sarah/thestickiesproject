@@ -1,3 +1,4 @@
+@wip
 Feature: Deleting A Sticky
   In order to correct a mistakenly created sticky
   As a user

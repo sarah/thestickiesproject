@@ -1,3 +1,4 @@
+@wip
 Feature: Viewing Stickies
 In order to keep track of my thoughts
 As a user
