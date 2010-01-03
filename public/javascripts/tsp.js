@@ -20,9 +20,16 @@ TSP.get = function() {
 
   var builders = {
     sticky:function(options){
+            var sticky_element=function(options){
+return $("<div class='sticky' data-update-url='"+options.update_url+"'><div class='header'>"+options.id+"</div><div class='body'><div class='editable'>"+options.content+"</div></div><div class='footer'></div></div>");
+
+            };
+
+
+
             var new_sticky = {left: options.left, top: options.top, content: options.content, update_url: options.update_url, id: options.id};
             new_sticky.place_on = function(container){
-              var sticky_el = $("<div class='sticky' data-update-url='"+this.update_url+"'><div class='header'>"+this.id+"</div><div class='body'><div class='editable'>"+this.content+"</div></div><div class='footer'></div></div>");
+              var sticky_el = sticky_element(this);
               $(container).append(sticky_el);
               sticky_el.animate({left: this.left, top: this.top},'slow');
             };
