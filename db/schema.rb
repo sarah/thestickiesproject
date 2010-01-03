@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(:version => 20091229201833) do
   create_table "stickies", :force => true do |t|
     t.text     "content"
     t.integer  "left"
-    t.integer  "right"
+    t.integer  "top"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
