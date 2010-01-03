@@ -9,14 +9,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091231045742) do
+ActiveRecord::Schema.define(:version => 20091229201833) do
 
   create_table "stickies", :force => true do |t|
     t.text     "content"
+    t.integer  "left"
+    t.integer  "right"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "left"
-    t.integer  "top"
   end
 
 end
