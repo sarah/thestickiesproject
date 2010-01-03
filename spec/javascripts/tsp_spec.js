@@ -61,6 +61,38 @@ Screw.Unit(function(){
     });
   });
 
+  describe("tsp.builders", function(){
+    describe("sticky object returned from #sticky", function(){
+      var sticky;
+      before(function(){
+        sticky = TSP.get().builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me'});
+      });
+      it("contains the properties passed in", function(){
+        expect(sticky.left).to(equal, 5);
+        expect(sticky.top).to(equal, 10);
+        expect(sticky.content).to(equal, 'my content');
+        expect(sticky.update_url).to(equal, '/update_me');
+      });
+
+      it("can draw the sticky in the dom", function(){
+        sticky.place_on('#stage');
+        var stage = $('#stage');
+
+          expect(stage).to(contain_selector, '.sticky');
+          var sticky_el = $('#stage .sticky');
+        $(['.header', 
+          '.body', 
+          '.body .editable', 
+          '.footer']).each(function(){
+          expect(sticky_el).to(contain_selector, this.toString());
+        });
+
+        expect(sticky_el.attr('data-update-url')).to(equal, '/update_me');
+        expect(sticky_el.find(".body .editable").text()).to(equal, 'my content');
+      });
+    });
+  });
+
   describe("tsp.lookups", function(){
     var sticky_div;
     var editable_div;
@@ -80,7 +112,7 @@ Screw.Unit(function(){
         expect_true(div.hasClass('sticky'));
       });
     });
-
+    
     describe("sticky object returned from #sticky_from", function(){
         before(function(){
           sticky = tsp.lookups.sticky_from(editable_div);

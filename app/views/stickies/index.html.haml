@@ -1,16 +1,10 @@
 -form_for :sticky do |f|
   =f.submit "new sticky"
 
-
--@stickies.each do  |sticky|
-  .sticky{"data-update-url" => sticky_url(sticky, :format => :json)}
-    .header
-      =link_to "x", sticky_path(sticky), :class => 'delete_sticky_link', :id => "delete_sticky_#{sticky.id}", :method => :delete
-    .body
-      .editable=sticky.content
-    .footer
-
+%script
+  var sticky;
+  var build_sticky = TSP.get().builders.sticky;
+  -@stickies.each do |sticky|
+    ==build_sticky({left:#{sticky.left}, top:#{sticky.top}, content:'#{h sticky.content}', update_url:'#{sticky_url(sticky)}'}).place_on('#stage');
 
 =javascript_include_tag "stickies"
-
-

@@ -6,7 +6,7 @@ function hookup_sticky_editing(){
 }
 function hookup_draggability(){
   var handler = TSP.get().handlers.update_sticky_position;
-  $('.sticky').draggable({ stop: handler, containment: "#stage"  });
+  $('.sticky').draggable({ stop: handler, containment: "#stage", scroll: true  });
 }
 $(document).ready(hookup_sticky_editing);
 $(document).ready(hookup_draggability);
