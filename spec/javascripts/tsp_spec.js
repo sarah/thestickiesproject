@@ -23,11 +23,26 @@ Screw.Unit(function(){
     stub(sticky, 'update_content');
     return sticky;
   };
+
   var tsp;
   before(function(){
-    tsp  = get_tsp();
+    tsp  = TSP.get();
     });
+
   describe("tsp.handlers", function(){
+
+    describe("#update_sticky_position", function(){
+      it("calls update_position on sticky", function(){
+        var ui_obj = { absolutePosition : {
+                      left : 15, top: 100 },
+                      helper : get_sticky_div()};
+        var event_obj = 'unused';
+
+        mock_sticky(tsp).should_receive('update_position').exactly(1).with_arguments({left : 15, top : 100});
+        tsp.handlers.update_sticky_position(event_obj, ui_obj);
+      });
+    });
+
     describe("#update_sticky_text", function(){
       var sticky;
       before(function(){
@@ -47,16 +62,59 @@ Screw.Unit(function(){
   });
 
   describe("tsp.lookups", function(){
-    describe("sticky object returned from #sticky_from", function(){
-        var sticky;
-        before(function(){
-          sticky = tsp.lookups.sticky_from();
+    var sticky_div;
+    var editable_div;
+    before(function(){
+      sticky_div = $('.sticky');
+      editable_div = $('.sticky .body .editable');
+    });
 
-          });
+    describe("#sticky_element_from", function(){
+      it("returns sticky element when passed child element", function(){
+        var div = tsp.lookups.sticky_element_from(editable_div);
+        expect_true(div.hasClass('sticky'));
+      });
+
+      it("returns sticky element when passed sticky element ", function(){
+        var div = tsp.lookups.sticky_element_from(sticky_div);
+        expect_true(div.hasClass('sticky'));
+      });
+    });
+
+    describe("sticky object returned from #sticky_from", function(){
+        before(function(){
+          sticky = tsp.lookups.sticky_from(editable_div);
+        });
+
         describe("#update_content", function(){
-          it("can be called", function(){
-            sticky.update_content();
+          it("posts the update to update-url", function(){
+            sticky_div.attr('data-update-url', '/dummy_url');
+            verify_argument_to_jquery_post_when_calling(sticky.update_content,"hello", function(args){
+                expect(args[0]).to(equal, "/dummy_url");
+              });
           });
+          
+          it("posts the value passed in", function(){
+            verify_argument_to_jquery_post_when_calling(sticky.update_content,"hello", function(args){
+                expect(args[1]["sticky[content]"]).to(equal, "hello");
+              });
+          });
+        });
+
+        describe("#update_position", function(){
+           it("posts the update to update-url", function(){
+            sticky_div.attr('data-update-url', '/dummy_url');
+            verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
+                expect(args[0]).to(equal, "/dummy_url");
+              });
+           });
+
+           it("posts the x and y values", function(){
+            verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
+                expect(args[1]["sticky[x]"]).to(equal, 10);
+                expect(args[1]["sticky[y]"]).to(equal, 20);
+              });
+           });
         });
       });
   });

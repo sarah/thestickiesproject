@@ -28,7 +28,5 @@ end
 
 When /^I delete sticky (\d*)$/ do |sticky_index|
   sticky_to_delete = Sticky.all[sticky_index.to_i-1]
-  within("#sticky_#{sticky_to_delete.id}") do |scope|
-    scope.click_link('x')
-  end
+  click_link "delete_sticky_#{sticky_to_delete.id}"
 end

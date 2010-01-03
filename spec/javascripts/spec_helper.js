@@ -19,3 +19,15 @@ var stub_call = function(obj, func, ret){
 
 rails_require("jquery.jeditable.mini");
 rails_require("jquery-ui-1.7.2.custom.min");
+
+AUTH_TOKEN = "dummy_token";
+var verify_argument_to_jquery_post_when_calling = function(method_to_call, arg_to_method_under_test, block){
+  var old_post = $.post;
+  var delivered_args;
+  $.post = function() {
+    delivered_args = arguments;
+  };
+  method_to_call(arg_to_method_under_test);
+  $.post = old_post;
+  block(delivered_args);
+};
