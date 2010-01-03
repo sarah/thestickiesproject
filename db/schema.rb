@@ -15,8 +15,8 @@ ActiveRecord::Schema.define(:version => 20091231045742) do
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "x"
-    t.integer  "y"
+    t.integer  "left"
+    t.integer  "top"
   end
 
 end

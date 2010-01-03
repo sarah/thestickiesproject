@@ -1,5 +1,5 @@
 def valid_sticky(content = {})
-  Sticky.create(content.merge(:x => 0, :y => 0))
+  Sticky.create(content.merge(:left => 0, :top => 0))
 end
 Given /^I create a new sticky$/ do
   valid_sticky

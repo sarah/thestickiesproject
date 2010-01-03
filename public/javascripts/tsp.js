@@ -13,7 +13,7 @@ TSP.get = function() {
                           update({"sticky[content]" : content});
                          },
           update_position:function(position){
-                           update({"sticky[x]" : position.left, "sticky[y]" : position.top});
+                           update({"sticky[left]" : position.left, "sticky[top]" : position.top});
                           }
         };
   };

@@ -1,3 +1,3 @@
 class Sticky < ActiveRecord::Base
-  validates_presence_of :x,:y
+  validates_presence_of :left,:top
 end

@@ -109,10 +109,10 @@ Screw.Unit(function(){
               });
            });
 
-           it("posts the x and y values", function(){
+           it("posts the left and top values", function(){
             verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
-                expect(args[1]["sticky[x]"]).to(equal, 10);
-                expect(args[1]["sticky[y]"]).to(equal, 20);
+                expect(args[1]["sticky[left]"]).to(equal, 10);
+                expect(args[1]["sticky[top]"]).to(equal, 20);
               });
            });
         });
