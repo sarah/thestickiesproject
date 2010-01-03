@@ -35,8 +35,8 @@ TSP.get = function() {
                          return value;
                         },
     update_sticky_position: function(event, ui){
-                          var left = Math.round(ui.absolutePosition.left);
-                          var top = Math.round(ui.absolutePosition.top);
+                          var left = Math.round(ui.position.left);
+                          var top = Math.round(ui.position.top);
                           var position = { left : left, top : top };
                           var sticky = tsp.lookups.sticky_from(ui.helper);
                           sticky.update_position(position);

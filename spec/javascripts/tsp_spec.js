@@ -33,7 +33,7 @@ Screw.Unit(function(){
 
     describe("#update_sticky_position", function(){
       it("calls update_position on sticky", function(){
-        var ui_obj = { absolutePosition : {
+        var ui_obj = { position : {
                       left : 15, top: 100 },
                       helper : get_sticky_div()};
         var event_obj = 'unused';
