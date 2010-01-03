@@ -24,7 +24,6 @@ TSP.get = function() {
             new_sticky.place_on = function(container){
               var sticky_el = $("<div class='sticky' data-update-url='"+this.update_url+"'><div class='header'></div><div class='body'><div class='editable'>"+this.content+"</div></div><div class='footer'></div></div>");
               $(container).append(sticky_el);
-              console.log(this.left + " " + this.top);
               sticky_el.animate({left: this.left, top: this.top},'slow');
             };
             return new_sticky;
