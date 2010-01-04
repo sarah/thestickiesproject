@@ -2,9 +2,10 @@
   =f.submit "new sticky"
 
 %script
-  var sticky;
   var build_sticky = TSP.get().builders.sticky;
+  var sticky_params;
   -@stickies.sort{|a,b|a.id <=> b.id}.each do |sticky|
-    ==build_sticky({id:#{sticky.id}, left:#{sticky.left}, top:#{sticky.top}, content:'#{h sticky.content}', update_url:'#{sticky_url(sticky)}'}).place_on('#stage');
+    ==sticky_params = {id:#{sticky.id}, left:#{sticky.left}, top:#{sticky.top}, content:'#{h sticky.content}', delete_url: '#{sticky_url(sticky)}', update_url:'#{sticky_url(sticky)}'};
+    build_sticky(sticky_params).place_on('#stage');
 
 =javascript_include_tag "stickies"

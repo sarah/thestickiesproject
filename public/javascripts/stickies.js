@@ -8,5 +8,10 @@ function hookup_draggability(){
   var handler = TSP.get().handlers.update_sticky_position;
   $('.sticky').draggable({ stop: handler, containment: "#stage", scroll: true  });
 }
+function hookup_sticky_delete(){
+  var handler = TSP.get().handlers.destroy_sticky;
+  $('.sticky .delete_link').click(handler);
+}
 $(document).ready(hookup_sticky_editing);
 $(document).ready(hookup_draggability);
+$(document).ready(hookup_sticky_delete);

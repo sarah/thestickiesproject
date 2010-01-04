@@ -31,6 +31,14 @@ Screw.Unit(function(){
 
   describe("tsp.handlers", function(){
 
+    describe("#destroy_sticky", function(){
+
+      it("calls destroy on sticky", function(){
+        var delete_div = {};
+        mock_sticky(tsp).should_receive('destroy').exactly(1);
+        tsp.handlers.destroy_sticky.apply(delete_div, []);
+      });
+    });
     describe("#update_sticky_position", function(){
       it("calls update_position on sticky", function(){
         var ui_obj = { position : {
@@ -118,6 +126,30 @@ Screw.Unit(function(){
     describe("sticky object returned from #sticky_from", function(){
         before(function(){
           sticky = tsp.lookups.sticky_from(editable_div);
+        });
+        describe("#destroy", function(){
+          before(function(){
+            sticky_to_destroy = $("<div id='to_remove' class='sticky' data-delete-url='/delete_me'></div>");
+            $('#stage').append(sticky_to_destroy);
+            sticky = tsp.lookups.sticky_from(sticky_to_destroy);
+            });
+
+          it("posts to delete-url", function(){
+            verify_argument_to_jquery_post_when_calling(sticky.destroy,null, function(args){
+                expect(args[0]).to(equal, "/delete_me");
+              });
+          });
+
+          it("removes the sticky element", function(){
+            var old$ = $;
+            $ = {};
+            stub($, 'post');
+
+            sticky.destroy();
+
+            $ = old$;
+            expect($('#stage')).to_not(contain_selector, '#to_remove');
+          });
         });
 
         describe("#update_content", function(){

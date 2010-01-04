@@ -7,14 +7,20 @@ TSP.get = function() {
           var url = sticky_element.attr('data-update-url');
           $.post(url, params, null, "json");
         };
-
+        
         return {
           update_content:function(content){
                           update({"sticky[content]" : content});
                          },
           update_position:function(position){
                            update({"sticky[left]" : position.left, "sticky[top]" : position.top});
-                          }
+                          },
+destroy: function(){
+           var url = sticky_element.attr('data-delete-url');
+          var params = {"_method" : "delete", authenticity_token : AUTH_TOKEN};
+           $.post(url, params, null, "json");
+           sticky_element.remove();
+         }
         };
   };
 
@@ -45,6 +51,10 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
   };
 
   var handlers = {
+    destroy_sticky: function(){
+                    var sticky = tsp.lookups.sticky_from(this);
+                    sticky.destroy();
+                  },
     update_sticky_text: function(value, settings){
                          var sticky = tsp.lookups.sticky_from(this);
                          sticky.update_content(value);
