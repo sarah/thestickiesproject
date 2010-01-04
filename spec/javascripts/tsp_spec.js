@@ -65,13 +65,14 @@ Screw.Unit(function(){
     describe("sticky object returned from #sticky", function(){
       var sticky;
       before(function(){
-        sticky = TSP.get().builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me'});
+        sticky = TSP.get().builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me', delete_url: '/delete_me'});
       });
       it("contains the properties passed in", function(){
         expect(sticky.left).to(equal, 5);
         expect(sticky.top).to(equal, 10);
         expect(sticky.content).to(equal, 'my content');
         expect(sticky.update_url).to(equal, '/update_me');
+        expect(sticky.delete_url).to(equal, '/delete_me');
       });
 
       it("can draw the sticky in the dom", function(){
@@ -80,13 +81,14 @@ Screw.Unit(function(){
 
           expect(stage).to(contain_selector, '.sticky');
           var sticky_el = $('#stage .sticky');
-        $(['.header', 
+        $(['.header','.header .delete_link',  
           '.body', 
           '.body .editable', 
           '.footer']).each(function(){
           expect(sticky_el).to(contain_selector, this.toString());
         });
 
+        expect(sticky_el.attr('data-delete-url')).to(equal, '/delete_me');
         expect(sticky_el.attr('data-update-url')).to(equal, '/update_me');
         expect(sticky_el.find(".body .editable").text()).to(equal, 'my content');
       });
