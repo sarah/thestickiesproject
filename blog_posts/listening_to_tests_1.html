@@ -1,0 +1,170 @@
+<h3>Editing a Sticky's Contents</h3>
+<p>One of the first things that we'll need to do is be able to edit the content of a sticky. We decided on using the <a href="http://plugins.jquery.com/project/jeditable">jEditable component</a>, as it seemed the easiest to integrate, and it was really high up on the google page. In this series of blog posts, I'm going to take a look at how we went about not only integrating the component, but also how we went about improving our design through shifting to a TDD approach and listening to what the tests were saying as they guided and influenced our design. Along the way, I learned some valuable lessons about bringing old habits from other language styles over without thinking about them. That comes later, though.</p>
+
+<p><a href="http://gist.github.com/268132">Link to the gist for all the code samples</a></p>
+
+<h3>Do I even know the javascripts?</h3>
+<p>It has been a long time since I wrote serious JavaScript; I think the last time I did what I would call an actual 'JavaScript application' was in 2002, or so. Sure, I've written a few things here and there. In fact, at the startup I worked at, I wrote a couple in-browser things that I was proud of at the time (looking back, naturally, I can see the parts that I'm not so proud of). But, all-in-all, most of what I do has been pretty non-dynamic. Back in 2002, I'm pretty sure I was only seeing the beginnings of JavaScript frameworks. There were some libraries coming out, but I seem to remember them being very focused on hiding the differences between DOM implementations. I wrote a couple things back then, but nothing incredibly crazy; I remember writing a client-side form validation library that was pretty damn sweet for the time. :)</p>
+
+<p>So, both my JavaScript and JavaScript testing skills were a bit rusty. I've used this as an example before when talking about using the term 'pragmatic' to really be a cover over lack of skill: I never tested my JavaScript, not because I was pragmatic about testing, but because I flat-out didn't have the skills needed to do it effectively. This was one of the reasons I was so excited to work on The Stickies Project: as I outlined initially, this application is going to be almost entirely JavaScript, so I will have a great opportunity to patch what I consider a significant hole in my skillset. After setting up BlueRidge, I began writing some examples for my code, but I found that, while I was writing tests, I wasn't really doing TDD; I was writing some functions, trying to figure out how to get the desired behavior, while writing tests alongside them.</p>
+
+<h3>Figuring out the component</h3>
+<p>At first, I was just trying to get things working, figuring out how the component worked, so I wrote the following spike code:</p>
+
+[sourcecode language='javascript' wraplines="false" autolinks='false' gutter='false']
+function update_sticky_text(value, settings) {
+  var stickie = $(this);
+  console.log("value " + value + " settings " + settings + " this " ));
+  var url = sticky_update_url_for(stickie);
+  console.log("url " + url );
+  // jQuery.post(url, {content : value, method : 'put'});
+  return value;
+}
+
+function sticky_update_url_for(sticky_div){
+  return sticky_div.attr('data-update-url');
+}
+[/sourcecode]
+
+[sourcecode language='javascript' wraplines="false" autolinks='false' gutter='false']
+Screw.Unit(function(){
+  describe("getting information from sticky div", function(){
+    it("can get the update url", function(){
+      sticky_div = $("#sticky_23");
+      sticky_div.attr('data-update-url', "/stickies/25");
+      expect(sticky_update_url_for(sticky_div)).to(equal, "/stickies/25");
+    });
+  });
+});
+[/sourcecode]
+
+<h3>Hmmm... Reflection</h3>
+<p>Yeah, looks pretty bad. But, it was enough to learn the jEditable component, so I was pretty happy. However, I definitely had a few major problems with the code:</p>
+
+<ol>
+  <li>global functions</li>
+  <li>no sense of cohesion other than being in the same file for these two functions, even though the dependency was there</li>
+  <li>#sticky_update_url_for was not used anywhere else, only by #update_sticky_text</li>
+  <li>no test coverage for the #update_sticky_text function.</li>
+</ol>
+
+<h3>Learning from the spike</h3>
+<p>Now that I had finished the spike, it was time to actually write some code. I had identified some design problems with the resulting code, and I was curious to see how those problems would be resolved. Before moving on, though, we took a bit of time to learn some more about ScrewUnit. I had learned the expect(...).to(...) syntax, but wasn't sure what the setup was for checking if methods are called. I'm tend to do collaboration-style tests, so it is important for me to be able to set expectations on method calls. I wasn't ready to jump into using a mocking framework, so I decided to stick with the simplest way I knew how: replace the method with your own that sets a flag if it was called. Something like this should suffice:</p>
+
+
+
+
+[sourcecode language='javascript' wraplines="false" autolinks='false' gutter='false']
+Screw.Matchers['expect_called'] = function(obj, func_name, block){
+  var got_called = false;
+  obj[func_name] = function(x) { got_called = true; }
+  block();
+  this.expect_true(got_called);
+};
+
+
+// used like this
+it("calls #parent_sticky", function(){
+    expect_called(this, 'parent_sticky', function(){
+    old_update_sticky_text("foo", null);
+  });
+});
+[/sourcecode]
+
+<p>This is the easiest way to check if something was called, but, of course, it doesn't reset the function at the end (I wrote that later), so it isn't perfect. But, this allowed me to write isolation-based examples for my functions. With this in hand, I was equiped to write a full set of examples for what was going to be known as #old_update_sticky_text:</p>
+
+[sourcecode language='javascript' wraplines="false" autolinks='false' gutter='false']
+describe("#old_update_sticky_text", function(){
+    
+    before(function(){
+      this.sticky_update_url_for = function(x) { return null; }
+      this.parent_sticky = function(x) { return null; }
+      this.update_sticky = function(x) { return null; }
+    });
+
+    it("returns the value passed in", function(){
+      var value = old_update_sticky_text("foo", null);
+      expect(value).to(equal, "foo");
+    });
+
+    it("calls #parent_sticky", function(){
+      expect_called(this, 'parent_sticky', function(){
+        old_update_sticky_text("foo", null);
+      });
+    });
+
+    it("calls #sticky_update_url_for", function(){
+      expect_called(this, 'sticky_update_url_for', function(){
+        old_update_sticky_text("foo", null);
+      });
+    });
+
+    it("calls #update_sticky", function(){
+      expect_called(this, 'update_sticky', function(){
+        old_update_sticky_text("foo", null);
+      });
+    });
+});
+[/sourcecode]
+
+<p>So, I was pretty happy that I was able to write isolation tests, but I was still annoyed by the other problems, primarily what I considered to be the big problems of global functions and lack of a sense of cohesion. My experiences have led me to trust in TDD to guide me when I'm not 100% sure where to go. Let's get going. I've comfortable enough with ScrewUnit now, so I thought I would just jump in head-first.</p>
+
+<h3>Let's try some TDD</h3>
+<p>First example? How about this:</p>
+
+ 
+[sourcecode language='javascript' wraplines="false" autolinks='false' gutter='false']
+require("spec_helper.js");
+rails_require('tsp');
+
+Screw.Unit(function(){
+  describe("TSP", function(){
+    describe("#update_sticky_text_handler", function(){
+      it("returns the value passed in", function(){
+        var value = TSP.update_sticky_text_handler("new text", null);
+        expect(value).to(equal, "new text");
+      });
+    });
+  });
+});
+[/sourcecode]
+
+<p>It felt somewhat reasonable. This is a handler across all the sticky object editable components, so hanging off a TSP (the stickies project) object feels like it will at least afford me a bit of cohesion while I figure out a better method.</p>
+
+<p>Now to get it passing:</p>
+
+[sourcecode language='javascript' wraplines="false" autolinks='false' gutter='false']
+var TSP = {
+  update_sticky_text_handler : function(value, settings){
+                                 return value;
+                               }
+};
+[/sourcecode]
+
+
+<p>There, that made it passed, plus satisfied the first behavior that the jEditable component required: the handler returns the new value. In our case, we didn't need anything fancy, so this was good enough. Of course, this didn't do much, so we need to add the code that would interact with the back-end. The jEditable component executes the handler in the context of the inline editor div, so 'this' would be that div. The schema for a sticky was starting to look like:</p>
+
+
+[sourcecode language='html' wraplines="false" autolinks='false' gutter='false']
+<div class='sticky'>
+  <div class='editable' id='sticky_23'></div>
+</div>
+[/sourcecode]
+
+<p>Looking at this, and knowing that we were executing in the context of div.editable, it seemed naturally to have a 2-step process for updating the sticky:</p>
+
+<ol>
+<li>construct some sort a sticky object from the div.editable</li>
+<li>call #update_content on the sticky object</li>
+</ol>
+
+<h3>Reflecting on the work so far</h3>
+<ul>
+<li>I felt really good with the way that things were progressing, especially how the spike led me to some conclusions about my code and drove me to learn ScrewUnit a bit more. The side-by-side testing on the spike gave me confidence with the toolset, so I was able to build some examples with the code there to base it on.</li>
+<li>By holding myself to a bit of isolation, I see that an abstraction has snuck in: 'sticky object.' What is going to be? I don't totally know at this point, but I do know that it is constructed from div.editable somehow and it has an #update_content method which, apparently, updates the content in the backend.</li>
+<li>Having a global TSP object feels a bit weird. It is going to be shared between everything, and that makes me uncomfortable. Of course, it is much better than just having free-floating functions out in the world. Not the spoil the surprise, but having a global object like this causes me a bit of pain and annoyance soon, so I end up getting rid of it. :) But, that is a story for the near future.</li>
+</ul>
+
+<h3>What is coming up in the next installment</h3>
+<p>I've got an idea of what needs to be done, so it is time to write the examples for the updating process and implement the code. Also, we'll start writing more examples, learn the smoke framework, get annoyed with the smoke framework, realize that our annoyance is telling us something about our preconceptions, accept that our frustration has a lesson hidden in it, then listen to what the difficulties tell us about our design.</p>
+
