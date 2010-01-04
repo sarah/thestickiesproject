@@ -13,13 +13,29 @@ body{
 }
 #header ul.navigation{
   position:absolute;
-  right: 10px;
-  top: 10px;
+  right: 5px;
+  top: 67px;
   list-style:none;
+	background-color: #EEE4CF;
+
+	margin: 0;
 }
 #header ul.navigation li{
   display:inline;
   padding: 0 5px;
+	margin: 0;
+	border-right: 2px solid #eee;
+	font-size: 18px;
+/*	border-bottom: 1px solid 007799;*/
+	
+}
+#header ul.navigation li a{
+	text-decoration: none;
+	color: #007799;
+}
+#header ul.navigation li a:hover{
+	color: #ff00ee;
+
 }
 
 /* sticky */
