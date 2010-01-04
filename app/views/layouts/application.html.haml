@@ -2,19 +2,22 @@
 %html
   %head
     %title The Stickies Project
-    =stylesheet_link_tag "style"
+    =stylesheet_link_tag "structure", "style"
     =javascript_include_tag "jquery-1.3.2.min", "jquery.jeditable.mini", "jquery-ui-1.7.2.custom.min"
     =javascript_include_tag "tsp"
     -if protect_against_forgery?
       =javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
   %body
     #header
-      %h3 The Stickies Project
-      %ul.navigation
-        %li=link_to "about", "http://thestickiesproject.wordpress.com/about"
-        %li=link_to "blog", "http://thestickiesproject.wordpress.com"
+      .content
+        %h3 The Stickies Project
+        %ul.navigation
+          %li=link_to "about", "http://thestickiesproject.wordpress.com/about"
+          %li=link_to "blog", "http://thestickiesproject.wordpress.com"
+        =yield :new_sticky
     #stage
       =yield
     #footer
-      coreyhaines & sarahggray
+      .content
+        coreyhaines & sarahggray
 

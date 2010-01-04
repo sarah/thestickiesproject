@@ -1,6 +1,7 @@
--form_for :sticky do |f|
-  =f.submit "new sticky"
-
+-content_for :new_sticky do
+  -form_for :sticky do |f|
+    =f.submit "new sticky"
+  
 %script
   var build_sticky = TSP.get().builders.sticky;
   var sticky_params;

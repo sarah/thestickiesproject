@@ -1,12 +1,16 @@
 body{
   font-family: verdana,sans;
 }
-#stage{
-  margin-top: 10px;
-  border-top: 1px dotted #000;
-  padding: 0px 10px;
+
+/* header */
+#header{
+	background-color: #007799;
+	color:#fff;
 }
-#header{}
+
+#stage{
+	background-color: #EEE4CF;
+}
 #header ul.navigation{
   position:absolute;
   right: 10px;
@@ -18,12 +22,7 @@ body{
   padding: 0 5px;
 }
 
-#footer{
-  border-top: 1px dotted #000;
-  padding-top: 5px;
-  font-size: 10px;
-  color: pink;  
-}
+/* sticky */
 .sticky{
     width: 114px;
     height:95px;
@@ -36,22 +35,30 @@ body{
     background-color:#FFFF99; 
     font-size:10px;
 }
+
 .sticky .header {
   border-bottom: 1px solid #333;
   padding: 1px;
+	position: relative;
 }
 
-.sticky .header .delete_sticky_link{
-  right: -5px;
+.sticky .header .delete_link{
+	position: absolute;
+  right: 5px;
   margin-left: 105px;
   font-weight: bold;
-}
-
-.sticky .header a.delete_sticky_link {
   text-decoration:none;
 }
 
 
 .sticky .body{ 
   margin: 5px;
+}
+
+/* footer */
+#footer{
+  font-size: 10px;
+/*	border: 1px solid black;*/
+	background-color: #007799;
+	color:#fff;
 }
