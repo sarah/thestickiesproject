@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20100109181919) do
   end
 
   create_table "surfaces", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

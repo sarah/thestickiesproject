@@ -4,35 +4,41 @@ body{
 
 /* header */
 #header{
-	background-color: #aaa;
-	color:#fff;
+  background-color: #aaa;
+  color:#fff;
 }
 
 #stage{
-	background-color: #fff;
+  background-color: #fff;
 }
 #header ul.navigation{
   position:absolute;
   right: 5px;
   top: 67px;
   list-style:none;
-/*	background-color: #EEE4CF;*/
-	margin: 0;
+/*  background-color: #EEE4CF;*/
+  margin: 0;
 }
 #header ul.navigation li{
   display:inline;
   padding: 0 5px;
-	margin: 0;
-/*	border-right: 2px solid #eee;*/
-	font-size: 18px;
+  margin: 0;
+/*  border-right: 2px solid #eee;*/
+  font-size: 18px;
 }
 #header ul.navigation li a{
-	text-decoration: none;
-	color: #007799;
+  text-decoration: none;
+  color: #007799;
 }
 #header ul.navigation li a:hover{
-	color: #fff;
+  color: #fff;
 }
+
+#header #surface_header {
+  position:absolute;
+  left:400px;
+  top:5px;
+  }
 
 /* sticky */
 .sticky{
@@ -51,11 +57,11 @@ body{
 .sticky .header {
   border-bottom: 1px solid #333;
   padding: 1px;
-	position: relative;
+  position: relative;
 }
 
 .sticky .header .delete_link{
-	position: absolute;
+  position: absolute;
   right: 5px;
   margin-left: 105px;
   font-weight: bold;
@@ -70,6 +76,6 @@ body{
 /* footer */
 #footer{
   font-size: 10px;
-	background-color: #eee;
-	color:#aaa;
+  background-color: #eee;
+  color:#aaa;
 }

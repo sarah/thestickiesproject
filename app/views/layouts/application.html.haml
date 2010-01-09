@@ -14,6 +14,7 @@
         %ul.navigation
           %li=link_to "about", "http://thestickiesproject.wordpress.com/about"
           %li=link_to "blog", "http://thestickiesproject.wordpress.com"
+        =yield :surface_header
         =yield :new_sticky
     #stage
       =yield
