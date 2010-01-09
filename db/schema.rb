@@ -9,12 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091229201833) do
+ActiveRecord::Schema.define(:version => 20100109181919) do
 
   create_table "stickies", :force => true do |t|
     t.text     "content"
     t.integer  "left"
     t.integer  "top"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "surface_id"
+  end
+
+  create_table "surfaces", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
