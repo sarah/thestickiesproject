@@ -38,8 +38,19 @@ body{
   position:absolute;
   left:400px;
   top:5px;
-  }
+}
 
+#header #surface_header #new_surface_form {
+  position: fixed;
+  right: 20px;
+  top: 5px;
+  width: 400px;
+}
+
+#header #surface_header #new_surface_form .buttons {
+  margin-top:-24px;
+  
+}
 /* sticky */
 .sticky{
     width: 114px;
