@@ -1,0 +1,142 @@
+<p>In the last installment in this series, we had started investigating what was needed to integrate with the jEditable inline editing component. We had written a couple functions to get it working, then did some investigation of ScrewUnit to learn how to write examples for the code. Along the way, I noticed that there were some design smells with the global functions, including very low cohesion between them. As a first step, we wrote an example for our update handler on a global TSP object: TSP.update_sticky_text_handler.</p>
+
+require("spec_helper.js");
+rails_require('tsp');
+
+Screw.Unit(function(){
+  describe("TSP", function(){
+    describe("#update_sticky_text_handler", function(){
+      it("returns the value passed in", function(){
+        var value = TSP.update_sticky_text_handler("new text", null);
+        expect(value).to(equal, "new text");
+      });
+    });
+  });
+});
+
+var TSP = {
+  update_sticky_text_handler : function(value, settings){
+                                 return value;
+                               }
+};
+
+
+This can be used to attach to our sticky div using the following code:
+
+<div class='sticky'>
+  <div class="header"></div>
+  <div class="body">
+    <div class="editable" title="Double-click to edit">Double-click to edit</div>
+  </div>
+  <div class="footer"></div>
+</div>
+
+var EDITABLE_STICKY_PROPS = { type : 'textarea'};
+function hookup_sticky_editing(){
+  var handler = TSP.get().handlers.update_sticky_text;
+  $('.sticky .editable').editable(handler, EDITABLE_STICKY_PROPS);
+}
+$(document).ready(hookup_sticky_editing);
+
+Now, what do we need to do to get this updating on the server. Well, based on the workings of the jEditable component, TSP.update_sticky_text_handler is callled in the context of the div.editable node. So, we we can abstract our steps into the following:
+
+<ol>
+  <li>construct some sort of sticky object from the div.editable (this)</li>
+  <li>call sticky.update_content()</li>
+</ol>
+
+So, let's write examples for it:
+
+
+Screw.Unit(function(){
+  describe("TSP.Handlers", function(){
+    describe("#update_sticky_text", function(){
+      it("returns the value passed in", function(){
+        var editable_div = {};
+        var sticky = {};
+        stub(TSP.Lookups, 'get_sticky_parent_for').and_return(sticky);
+        stub(sticky, 'update_content');
+        var value = TSP.Handlers.update_sticky_text("new text", null);
+        expect(value).to(equal, "new text");
+      });
+
+      it("updates the sticky value with the passed value", function(){
+        var editable_div = {};
+        var sticky = mock();
+
+        stub(TSP.Lookups, 'get_sticky_parent_for').and_return(sticky);
+        sticky.should_receive('update_content').with_arguments('new content').exactly(1);
+
+        TSP.Handlers.update_sticky_text.apply(editable_div, ['new content', null]);
+      });
+    });
+  });
+});
+
+<h3>Well, how did I get here?</h3>
+This is a lot of code, and a bit of a leap from where we were. So, rather than just explain it, let's walk through the steps that it took to get there.
+
+So, at the heart, we need to call #update_content on some sort of 'sticky' object. Let's write that example:
+
+
+it("updates the sticky value with the passed value", function(){
+  var editable_div = {};
+  var sticky = mock();
+
+  sticky.should_receive('update_content').with_arguments('new content').exactly(1);
+
+  TSP.Handlers.update_sticky_text.apply(editable_div, ['new content', null]);
+});
+
+Running this gives us the following failure in Blue Ridge:
+
+image: listening_to_test_2_1.jpg
+
+Well, this is a sensible failure. My sticky mock was expecting to have #update_content called, but it wasn't. Of course, my code looks like:
+
+TSP.Handlers = {
+  update_sticky_text: function(value, settings){
+    return value;
+   }
+};
+
+Let's get this working. Well, we need a way for #update_sticky_text to get the sticky object. The jEdit component runs it in the div.editable node, so we have access to that. I don't know how we are going to go about translating, so we'll just make something up:
+
+
+it("updates the sticky value with the passed value", function(){
+  var editable_div = {};
+  var sticky = mock();
+
+  stub(TSP.Lookups, 'get_sticky').and_return(sticky);
+  sticky.should_receive('update_content').with_arguments('new content').exactly(1);
+
+  TSP.Handlers.update_sticky_text.apply(editable_div, ['new content', null]);
+});
+
+So, we made up a TSP.Lookups object that we'll use to get sticky objects. The name is a bit off, but we'll roll with it. Let's run the example and see what we get:
+
+img: listening_to_test_2_2
+
+That's a really strange failure message. We can see that it is coming from the smoke framework, so I'm guessing it has something to do with the call to #stub. I won't go into the smoke source here, but it is because TSP.Lookups is undefined. Taking the smallest steps possible and abiding by Bryan Liles' awesome "change the message or make it pass" mantra, we add the following code:
+
+TSP.Lookups = {
+};
+
+We are now back to a reasonable expectation failure:
+
+img: listening_to_test_2_1
+
+Let's get it called:
+
+TSP.Handlers = {
+  update_sticky_text: function(value, settings){
+    var sticky = TSP.Lookups.get_sticky(this);
+    sticky.update_content(value);
+    return value;
+   }
+};
+
+
+
+
+
