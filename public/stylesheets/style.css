@@ -40,6 +40,10 @@ body{
   top:5px;
 }
 
+#header #surface_header h1 {
+  margin-top: 0px;
+}
+
 #header #surface_header #new_surface_form {
   position: fixed;
   right: 20px;

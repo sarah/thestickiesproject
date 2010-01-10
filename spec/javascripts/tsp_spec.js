@@ -145,6 +145,7 @@ Screw.Unit(function(){
             verify_argument_to_jquery_post_when_calling(surface,'update_name',[name], function(args){
                 expect(args[0]).to(equal, url);
                 expect(args[1]["surface[name]"]).to(equal, name);
+                expect(args[1]["_method"]).to(equal, "put");
               });
           });
         });
