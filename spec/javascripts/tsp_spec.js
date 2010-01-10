@@ -12,8 +12,13 @@ Helpers.sticky_div = function(){
   return $('.sticky');
 };
 
+Helpers.get_stage_selector = function(){
+  return '#stage';
+};
+
 var get_editable_div = Helpers.editable_div;
 var get_sticky_div = Helpers.sticky_div;
+var get_stage_selector = Helpers.get_stage_selector;
 
 
 Screw.Unit(function(){
@@ -108,11 +113,11 @@ Screw.Unit(function(){
       });
 
       it("can draw the sticky in the dom", function(){
-        sticky.place_on('#stage');
-        var stage = $('#stage');
+        sticky.place_on(get_stage_selector());
+        var stage = $(get_stage_selector());
 
           expect(stage).to(contain_selector, '.sticky');
-          var sticky_el = $('#stage .sticky');
+          var sticky_el = $(get_stage_selector() + ' .sticky');
         $(['.header','.header .delete_link',  
           '.body', 
           '.body .editable', 
@@ -128,6 +133,12 @@ Screw.Unit(function(){
   });
 
   describe("tsp.lookups", function(){
+    describe("surface lookups", function() {
+      describe("object returns from #current_surface", function() {
+        
+      });
+    });
+
     describe("sticky lookups", function() {
       var sticky_div;
       var editable_div;
@@ -155,7 +166,7 @@ Screw.Unit(function(){
           describe("#destroy", function(){
             before(function(){
               sticky_to_destroy = $("<div id='to_remove' class='sticky' data-delete-url='/delete_me'></div>");
-              $('#stage').append(sticky_to_destroy);
+              $(get_stage_selector()).append(sticky_to_destroy);
               sticky = tsp.lookups.sticky_from(sticky_to_destroy);
               });
 
@@ -173,7 +184,7 @@ Screw.Unit(function(){
               sticky.destroy();
 
               $ = old$;
-              expect($('#stage')).to_not(contain_selector, '#to_remove');
+              expect($(get_stage_selector())).to_not(contain_selector, '#to_remove');
             });
           });
 
