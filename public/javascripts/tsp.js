@@ -1,33 +1,51 @@
 var TSP = {};
 TSP.get = function() {
+
+  var json_post = function(url, method, params) {
+    var common_params = {"_method" : method, authenticity_token : AUTH_TOKEN};
+    $.extend(common_params, params);
+    $.post(url, common_params, null, "json");
+  };
+
+  var update = function(update_params){
+    var url = this.update_url();
+    json_post(url, "put", update_params);
+  };
+
   var sticky = function(sticky_element) {
-      var update = function(update_params){
-        var params = {"_method" : "put", authenticity_token : AUTH_TOKEN};
-        $.extend(params, update_params);
-        var url = sticky_element.attr('data-update-url');
-        $.post(url, params, null, "json");
+      var dom_element = sticky_element;
+
+      var destroy = function(){
+        var url = dom_element.attr('data-delete-url');
+        json_post(url, "delete");
       };
         
       return {
+        update_url: function() {
+          return dom_element.attr('data-update-url');
+        },
         update_content:function(content){
-          update({"sticky[content]" : content});
+          update.apply(this, [{"sticky[content]" : content}]);
         },
         update_position:function(position){
-          update({"sticky[left]" : position.left, "sticky[top]" : position.top});
+          update.apply(this, [{"sticky[left]" : position.left, "sticky[top]" : position.top}]);
         },
         destroy: function(){
-          var url = sticky_element.attr('data-delete-url');
-          var params = {"_method" : "delete", authenticity_token : AUTH_TOKEN};
-          $.post(url, params, null, "json");
+          destroy();
           sticky_element.remove();
         }
       };
   };
 
   var surface = function(element) {
+    var dom_element = element;
+
     return {
+      update_url: function() {
+        return dom_element.attr('data-surface-update-url');
+      },
       update_name: function(new_name) {
-        $.post(element.attr('data-surface-update-name-url'), {"surface[name]" : new_name});
+        update.apply(this, [{"surface[name]" : new_name}]);
       }
     };
   };
