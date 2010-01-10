@@ -1,27 +1,35 @@
 var TSP = {};
 TSP.get = function() {
   var sticky = function(sticky_element) {
-        var update = function(update_params){
-          var params = {"_method" : "put", authenticity_token : AUTH_TOKEN};
-          $.extend(params, update_params);
-          var url = sticky_element.attr('data-update-url');
-          $.post(url, params, null, "json");
-        };
+      var update = function(update_params){
+        var params = {"_method" : "put", authenticity_token : AUTH_TOKEN};
+        $.extend(params, update_params);
+        var url = sticky_element.attr('data-update-url');
+        $.post(url, params, null, "json");
+      };
         
-        return {
-          update_content:function(content){
-                          update({"sticky[content]" : content});
-                         },
-          update_position:function(position){
-                           update({"sticky[left]" : position.left, "sticky[top]" : position.top});
-                          },
-destroy: function(){
-           var url = sticky_element.attr('data-delete-url');
+      return {
+        update_content:function(content){
+          update({"sticky[content]" : content});
+        },
+        update_position:function(position){
+          update({"sticky[left]" : position.left, "sticky[top]" : position.top});
+        },
+        destroy: function(){
+          var url = sticky_element.attr('data-delete-url');
           var params = {"_method" : "delete", authenticity_token : AUTH_TOKEN};
-           $.post(url, params, null, "json");
-           sticky_element.remove();
-         }
-        };
+          $.post(url, params, null, "json");
+          sticky_element.remove();
+        }
+      };
+  };
+
+  var surface = function(element) {
+    return {
+      update_name: function(new_name) {
+        $.post(element.attr('data-surface-update-name-url'), {"surface[name]" : new_name});
+      }
+    };
   };
 
   var builders = {
@@ -42,12 +50,15 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
   };
   var lookups = {
       sticky_element_from: function(element){
-                             return $(element).closest(".sticky");
-                           },
+        return $(element).closest(".sticky");
+      },
       sticky_from: function(element) {
-                     var sticky_element = lookups.sticky_element_from(element);
-                     return sticky(sticky_element);
-                   },
+        var sticky_element = lookups.sticky_element_from(element);
+        return sticky(sticky_element);
+      },
+      current_surface: function() {
+        return surface($('#stage'));
+      }
   };
 
   var handlers = {
