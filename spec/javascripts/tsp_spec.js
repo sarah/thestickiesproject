@@ -67,6 +67,30 @@ Screw.Unit(function(){
         tsp.handlers.update_sticky_text.apply(get_editable_div(), ['new content', null]);
       });
     });
+
+    describe("#update_surface_name", function(){
+      var mock_surface = function(tsp){
+      var surface = mock();
+      stub(tsp.lookups, 'current_surface').and_return(surface);
+      stub(surface, 'update_name');
+      return surface;
+      };
+
+      var surface;
+      before(function(){
+        surface = mock_surface(tsp);
+        });
+      it("returns the value passed in", function(){
+        var value = tsp.handlers.update_surface_name.apply(get_editable_div(), ['new name', null]);
+        expect(value).to(equal, "new name");
+      });
+
+      it("updates the surface value with the passed value", function(){
+        surface.should_receive('update_name').with_arguments('this name').exactly(1);
+
+        tsp.handlers.update_surface_name.apply(get_editable_div(), ['this name', null]);
+      });
+    });
   });
 
   describe("tsp.builders", function(){
@@ -104,84 +128,86 @@ Screw.Unit(function(){
   });
 
   describe("tsp.lookups", function(){
-    var sticky_div;
-    var editable_div;
-    before(function(){
-      sticky_div = $('.sticky');
-      editable_div = $('.sticky .body .editable');
-    });
-
-    describe("#sticky_element_from", function(){
-      it("returns sticky element when passed child element", function(){
-        var div = tsp.lookups.sticky_element_from(editable_div);
-        expect_true(div.hasClass('sticky'));
+    describe("sticky lookups", function() {
+      var sticky_div;
+      var editable_div;
+      before(function(){
+        sticky_div = $('.sticky');
+        editable_div = $('.sticky .body .editable');
       });
 
-      it("returns sticky element when passed sticky element ", function(){
-        var div = tsp.lookups.sticky_element_from(sticky_div);
-        expect_true(div.hasClass('sticky'));
-      });
-    });
-    
-    describe("sticky object returned from #sticky_from", function(){
-        before(function(){
-          sticky = tsp.lookups.sticky_from(editable_div);
+      describe("#sticky_element_from", function(){
+        it("returns sticky element when passed child element", function(){
+          var div = tsp.lookups.sticky_element_from(editable_div);
+          expect_true(div.hasClass('sticky'));
         });
-        describe("#destroy", function(){
+
+        it("returns sticky element when passed sticky element ", function(){
+          var div = tsp.lookups.sticky_element_from(sticky_div);
+          expect_true(div.hasClass('sticky'));
+        });
+      });
+      
+      describe("sticky object returned from #sticky_from", function(){
           before(function(){
-            sticky_to_destroy = $("<div id='to_remove' class='sticky' data-delete-url='/delete_me'></div>");
-            $('#stage').append(sticky_to_destroy);
-            sticky = tsp.lookups.sticky_from(sticky_to_destroy);
+            sticky = tsp.lookups.sticky_from(editable_div);
+          });
+          describe("#destroy", function(){
+            before(function(){
+              sticky_to_destroy = $("<div id='to_remove' class='sticky' data-delete-url='/delete_me'></div>");
+              $('#stage').append(sticky_to_destroy);
+              sticky = tsp.lookups.sticky_from(sticky_to_destroy);
+              });
+
+            it("posts to delete-url", function(){
+              verify_argument_to_jquery_post_when_calling(sticky.destroy,null, function(args){
+                  expect(args[0]).to(equal, "/delete_me");
+                });
             });
 
-          it("posts to delete-url", function(){
-            verify_argument_to_jquery_post_when_calling(sticky.destroy,null, function(args){
-                expect(args[0]).to(equal, "/delete_me");
-              });
+            it("removes the sticky element", function(){
+              var old$ = $;
+              $ = {};
+              stub($, 'post');
+
+              sticky.destroy();
+
+              $ = old$;
+              expect($('#stage')).to_not(contain_selector, '#to_remove');
+            });
           });
 
-          it("removes the sticky element", function(){
-            var old$ = $;
-            $ = {};
-            stub($, 'post');
+          describe("#update_content", function(){
+            it("posts the update to update-url", function(){
+              sticky_div.attr('data-update-url', '/dummy_url');
+              verify_argument_to_jquery_post_when_calling(sticky.update_content,"hello", function(args){
+                  expect(args[0]).to(equal, "/dummy_url");
+                });
+            });
+            
+            it("posts the value passed in", function(){
+              verify_argument_to_jquery_post_when_calling(sticky.update_content,"hello", function(args){
+                  expect(args[1]["sticky[content]"]).to(equal, "hello");
+                });
+            });
+          });
 
-            sticky.destroy();
+          describe("#update_position", function(){
+             it("posts the update to update-url", function(){
+              sticky_div.attr('data-update-url', '/dummy_url');
+              verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
+                  expect(args[0]).to(equal, "/dummy_url");
+                });
+             });
 
-            $ = old$;
-            expect($('#stage')).to_not(contain_selector, '#to_remove');
+             it("posts the left and top values", function(){
+              verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
+                  expect(args[1]["sticky[left]"]).to(equal, 10);
+                  expect(args[1]["sticky[top]"]).to(equal, 20);
+                });
+             });
           });
         });
-
-        describe("#update_content", function(){
-          it("posts the update to update-url", function(){
-            sticky_div.attr('data-update-url', '/dummy_url');
-            verify_argument_to_jquery_post_when_calling(sticky.update_content,"hello", function(args){
-                expect(args[0]).to(equal, "/dummy_url");
-              });
-          });
-          
-          it("posts the value passed in", function(){
-            verify_argument_to_jquery_post_when_calling(sticky.update_content,"hello", function(args){
-                expect(args[1]["sticky[content]"]).to(equal, "hello");
-              });
-          });
-        });
-
-        describe("#update_position", function(){
-           it("posts the update to update-url", function(){
-            sticky_div.attr('data-update-url', '/dummy_url');
-            verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
-                expect(args[0]).to(equal, "/dummy_url");
-              });
-           });
-
-           it("posts the left and top values", function(){
-            verify_argument_to_jquery_post_when_calling(sticky.update_position, {left:10, top:20}, function(args){
-                expect(args[1]["sticky[left]"]).to(equal, 10);
-                expect(args[1]["sticky[top]"]).to(equal, 20);
-              });
-           });
-        });
-      });
+    });
   });
 });

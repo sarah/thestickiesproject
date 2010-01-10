@@ -47,7 +47,7 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
       sticky_from: function(element) {
                      var sticky_element = lookups.sticky_element_from(element);
                      return sticky(sticky_element);
-                   }
+                   },
   };
 
   var handlers = {
@@ -66,7 +66,12 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
                           var position = { left : left, top : top };
                           var sticky = tsp.lookups.sticky_from(ui.helper);
                           sticky.update_position(position);
-                        }
+                        },
+    update_surface_name: function(value, settings){
+                           var surface = tsp.lookups.current_surface();
+                           surface.update_name(value);
+                           return value;
+                       }
   };
 
   var tsp = {};
