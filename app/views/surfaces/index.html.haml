@@ -1,4 +1,6 @@
 %h2 Surfaces
 %ul
   -@surfaces.each do |surface|
-    %li=link_to surface.name, surface_path(surface)
+    %li{:id => dom_id(surface)}
+      =link_to surface.name, surface_path(surface)
+      =link_to "delete",  surface_path(surface), {:method => :delete, :confirm => "Really?"}

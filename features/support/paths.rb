@@ -8,6 +8,8 @@ module NavigationHelpers
     when /the surface page for "([^"]*)"/
       surface = Surface.find_by_name($1)
       surface_path(surface)
+    when /the surfaces list page/
+      surfaces_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
         "Now, go and add a mapping in #{__FILE__}"
