@@ -133,24 +133,6 @@ Screw.Unit(function(){
   });
 
   describe("tsp.lookups", function(){
-    describe("surface lookups", function() {
-      describe("object returned from #current_surface", function() {
-        describe("#update_name", function() {
-          it("puts the new name to the data-surface-update-url", function() {
-            var stage_element = $(get_stage_selector());
-            var url = stage_element.attr('data-surface-update-url');
-
-            var surface = tsp.lookups.current_surface();
-
-            verify_argument_to_jquery_post_when_calling(surface,'update_name',[name], function(args){
-                expect(args[0]).to(equal, url);
-                expect(args[1]["surface[name]"]).to(equal, name);
-                expect(args[1]["_method"]).to(equal, "put");
-              });
-          });
-        });
-      });
-    });
 
     describe("sticky lookups", function() {
       var sticky_div;

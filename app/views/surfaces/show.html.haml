@@ -1,6 +1,8 @@
 -content_for :surface_header do
   #surface_header
-    %h1.editable=@surface.name
+    %h1
+      =@surface.name
+      =link_to 'edit', edit_surface_path(@surface)
     #new_surface_form
       =render 'new', :surface => Surface.new
 
@@ -16,4 +18,3 @@
     build_sticky(sticky_params).place_on('#stage');
 
 =javascript_include_tag "stickies"
-=javascript_include_tag "surfaces"

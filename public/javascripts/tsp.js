@@ -37,18 +37,6 @@ TSP.get = function() {
       };
   };
 
-  var surface = function(element) {
-    var dom_element = element;
-
-    return {
-      update_url: function() {
-        return dom_element.attr('data-surface-update-url');
-      },
-      update_name: function(new_name) {
-        update.apply(this, [{"surface[name]" : new_name}]);
-      }
-    };
-  };
 
   var builders = {
     sticky:function(options){

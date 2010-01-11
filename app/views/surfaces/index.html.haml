@@ -1,0 +1,4 @@
+%h2 Surfaces
+%ul
+  -@surfaces.each do |surface|
+    %li=link_to surface.name, surface_path(surface)
