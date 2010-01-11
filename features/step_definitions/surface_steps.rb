@@ -1,5 +1,5 @@
 Given /^I have a surface "([^\"]*)"$/ do |name|
-  Surface.create :name => name
+  Surface.create! :name => name
 end
 
 When /^I submit the surface name "([^\"]*)"$/ do |name|

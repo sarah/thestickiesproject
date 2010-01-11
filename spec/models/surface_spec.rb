@@ -20,6 +20,11 @@ describe Surface do
     Surface.create!(@valid_attributes)
   end
 
+  it "requires a unique name" do
+    Surface.create!(:name => "my name")
+    Surface.new(:name => "my name").should_not be_valid
+  end
+  
   context "invalid name" do
     it "resets the name to what it was" do
       surface = Surface.create!(@valid_attributes)
