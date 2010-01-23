@@ -63,7 +63,7 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
         return sticky(sticky_element);
       },
       current_surface: function() {
-        return surface($('#stage'));
+        return surface($('#surface'));
       }
   };
 
