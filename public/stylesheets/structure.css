@@ -27,7 +27,7 @@ height: 20px; /*Height of bottom frame div*/
 overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
 }
 
-#stage{
+#surface{
 position: fixed; 
 top: 90px; /*Set top value to HeightOfTopFrameDiv*/
 left: 0;

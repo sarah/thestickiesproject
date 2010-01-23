@@ -6,12 +6,17 @@ function hookup_sticky_editing(){
 }
 function hookup_draggability(){
   var handler = TSP.get().handlers.update_sticky_position;
-  $('.sticky').draggable({ stop: handler, containment: "#stage" });
+  $('.sticky').draggable({ stop: handler, containment: "#surface" });
 }
 function hookup_sticky_delete(){
   var handler = TSP.get().handlers.destroy_sticky;
   $('.sticky .delete_link').click(handler);
 }
+function hookup_sticky_new(){
+  var handler = TSP.get().handlers.create_sticky;
+  $('#new_sticky_button').click(handler);
+}
 $(document).ready(hookup_sticky_editing);
 $(document).ready(hookup_draggability);
 $(document).ready(hookup_sticky_delete);
+$(document).ready(hookup_sticky_new);

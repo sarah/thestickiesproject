@@ -13,7 +13,7 @@ Helpers.sticky_div = function(){
 };
 
 Helpers.get_stage_selector = function(){
-  return '#stage';
+  return '#surface';
 };
 
 var get_editable_div = Helpers.editable_div;
@@ -44,6 +44,13 @@ Screw.Unit(function(){
         tsp.handlers.destroy_sticky.apply(delete_div, []);
       });
     });
+
+    describe("#create_sticky", function(){
+      it("post to create_sticky_url", function(){
+        
+      });
+    });
+
     describe("#update_sticky_position", function(){
       it("calls update_position on sticky", function(){
         var ui_obj = { position : {
