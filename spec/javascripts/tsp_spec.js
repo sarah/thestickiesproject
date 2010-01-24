@@ -142,6 +142,9 @@ Screw.Unit(function(){
       before(function(){
         sticky = TSP.get().builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me', delete_url: '/delete_me'});
       });
+      after(function(){
+        get_stickies_div().empty();
+        });
       it("contains the properties passed in", function(){
         expect(sticky.left).to(equal, 5);
         expect(sticky.top).to(equal, 10);
@@ -151,11 +154,11 @@ Screw.Unit(function(){
       });
 
       it("can draw the sticky in the dom", function(){
-        sticky.place_on(get_surface_selector());
-        var surface = $(get_surface_selector());
-
-          expect(surface).to(contain_selector, '.sticky');
-          var sticky_el = $(get_surface_selector() + ' .sticky');
+        sticky.place_on(get_stickies_selector());
+        var stickies = get_stickies_div();
+        expect(stickies).to(contain_selector, '.sticky');
+          
+        var sticky_el = stickies.find('.sticky');
         $(['.header','.header .delete_link',  
           '.body', 
           '.body .editable', 
