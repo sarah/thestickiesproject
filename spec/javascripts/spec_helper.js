@@ -34,3 +34,5 @@ var verify_argument_to_jquery_post_when_calling = function(binding_object, metho
 
 
 p = function(to_log) { console.log(to_log); };
+
+require('helpers.js');
