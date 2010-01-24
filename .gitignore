@@ -6,3 +6,4 @@ config/database.yml
 webrat*
 coverage/*
 coverage.data
+restart.txt
