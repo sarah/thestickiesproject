@@ -1,6 +1,6 @@
 require('spec_helper.js', {onload: function(){
     rails_require('tsp');
-    rails_require('tsp.lookups');
+    rails_require('tsp.builders');
     rails_require('tsp.handlers');
 }});
 
@@ -16,7 +16,6 @@ Screw.Unit(function(){
     return sticky;
   };
 
-
   describe("tsp.builders", function(){
     describe("#create_sticky", function(){
       it("posts to the create-sticky-url", function(){
@@ -29,7 +28,6 @@ Screw.Unit(function(){
         it("calls place_on for new sticky", function(){
           var url = get_stickies_div().attr('data-create-sticky-url');
           verify_argument_to_jquery_post_when_calling(tsp.builders, 'create_sticky',null, function(args){
-              mock_sticky(tsp).should_receive('place_on').exactly(1).with_arguments(get_stickies_selector());
               args[2]({left:10,top:15});
             });
         });
