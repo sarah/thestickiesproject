@@ -67,7 +67,7 @@ body{
     margin-bottom:   20px;
     background-color:#FFFF99; 
     font-size:10px;
-    position: relative;
+		position: absolute;
 }
 
 .sticky .header {
