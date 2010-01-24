@@ -69,22 +69,9 @@ TSP.get = function() {
             return new_sticky;
            }
   };
-  var lookups = {
-      sticky_element_from: function(element){
-        return $(element).closest(".sticky");
-      },
-      sticky_from: function(element) {
-        var sticky_element = lookups.sticky_element_from(element);
-        return sticky(sticky_element);
-      },
-      current_surface: function() {
-        return surface($('#surface'));
-      }
-  };
 
 
   var tsp = {};
-  TSP.lookups = lookups;
   TSP.builders = builders;
   $.extend(tsp, TSP);
   return tsp; 
