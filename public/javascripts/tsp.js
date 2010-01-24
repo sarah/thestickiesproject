@@ -41,7 +41,10 @@ TSP.get = function() {
   var builders = {
     create_sticky: function(){
           var url = $('#stickies').attr('data-create-sticky-url');
-          $.post(url);
+          $.post(url, null, function(response_json) {
+               var sticky = builders.sticky(response_json)
+               sticky.place_on("#stickies");
+              }, "json");
          },
     sticky:function(options){
             var sticky_element=function(options){
@@ -72,8 +75,7 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
 
   var handlers = {
     create_sticky: function() {
-                   var sticky = tsp.builders.create_sticky();
-                   sticky.place_on("#stickies");
+                     tsp.builders.create_sticky();
                    },
     destroy_sticky: function(){
                     var sticky = tsp.lookups.sticky_from(this);

@@ -36,7 +36,9 @@ Screw.Unit(function(){
     var sticky = mock();
     stub(tsp.lookups, 'sticky_from').and_return(sticky);
     stub(tsp.builders, 'create_sticky').and_return(sticky);
+    stub(tsp.builders, 'sticky').and_return(sticky);
     stub(sticky, 'update_content');
+    stub(sticky, 'place_on');
     return sticky;
   };
 
@@ -58,7 +60,6 @@ Screw.Unit(function(){
 
     describe("#create_sticky", function(){
       it("places created sticky on #stickies", function(){
-        mock_sticky(tsp).should_receive('place_on').with_arguments(get_stickies_selector());
         tsp.handlers.create_sticky();
       });
     });
@@ -124,6 +125,15 @@ Screw.Unit(function(){
         verify_argument_to_jquery_post_when_calling(tsp.builders, 'create_sticky',null, function(args){
           expect(args[0]).to(equal, url);
           });
+      });
+      describe("function for successful post", function(){
+        it("calls place_on for new sticky", function(){
+          var url = get_stickies_div().attr('data-create-sticky-url');
+          verify_argument_to_jquery_post_when_calling(tsp.builders, 'create_sticky',null, function(args){
+              mock_sticky(tsp).should_receive('place_on').exactly(1).with_arguments(get_stickies_selector());
+              args[2]({left:10,top:15});
+            });
+        });
       });
     });
 

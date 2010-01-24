@@ -9,7 +9,7 @@
 -content_for :new_sticky do
   %input{:type => 'button', :value => 'New Sticky', :id => 'new_sticky_button'}
     
-#stickies
+#stickies{'data-create-sticky-url' => surface_stickies_url(@surface)}
       
 %script
   var build_sticky = TSP.get().builders.sticky;
