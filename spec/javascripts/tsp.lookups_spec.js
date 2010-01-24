@@ -7,7 +7,7 @@ Screw.Unit(function(){
   var tsp;
   before(function(){
     tsp  = TSP.get();
-    });
+  });
 
   describe("tsp.lookups", function(){
 

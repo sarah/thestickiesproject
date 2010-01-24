@@ -5,20 +5,17 @@ require('spec_helper.js', {onload: function(){
 }});
 
 Screw.Unit(function(){
-  var mock_sticky = function(tsp){
-    var sticky = mock();
-    stub(tsp.lookups, 'sticky_from').and_return(sticky);
-    stub(tsp.builders, 'create_sticky').and_return(sticky);
-    stub(tsp.builders, 'sticky').and_return(sticky);
-    stub(sticky, 'update_content');
-    stub(sticky, 'place_on');
-    return sticky;
-  };
-
   var tsp;
   before(function(){
     tsp  = TSP.get();
-    });
+  });
+
+  var mock_sticky = function(tsp){
+    var sticky = mock();
+    stub(tsp.lookups, 'sticky_from').and_return(sticky);
+    stub(sticky, 'update_content');
+    return sticky;
+  };
 
   describe("tsp.handlers", function(){
 

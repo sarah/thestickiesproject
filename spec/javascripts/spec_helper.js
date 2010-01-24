@@ -11,12 +11,6 @@ Screw.Matchers['expect_called'] = function(obj, func_name, block){
   this.expect_true(got_called);
 };
 
-var stub_call = function(obj, func, ret){
-  var mock = Smoke.Mock(obj);
-  mock.should_receive(func).at_least(0, 'times').and_return(ret);
-  return mock;
-}
-
 rails_require("jquery.jeditable.mini");
 rails_require("jquery-ui-1.7.2.custom.min");
 
@@ -31,8 +25,5 @@ var verify_argument_to_jquery_post_when_calling = function(binding_object, metho
   $.post = old_post;
   block(delivered_args);
 };
-
-
-p = function(to_log) { console.log(to_log); };
 
 require('helpers.js');
