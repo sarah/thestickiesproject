@@ -41,10 +41,7 @@ TSP.get = function() {
   var builders = {
     create_sticky: function(){
           var url = $('#stickies').attr('data-create-sticky-url');
-          $.post(url, null, function(response_json) {
-               var sticky = builders.sticky(response_json)
-               sticky.place_on("#stickies");
-              }, "json");
+          $.post(url, null, function(response_json) { builders.sticky(response_json).place_on("#stickies"); }, "json");
          },
     sticky:function(options){
             var sticky_element=function(options){
