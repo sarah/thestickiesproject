@@ -39,6 +39,10 @@ TSP.get = function() {
 
 
   var builders = {
+    create_sticky: function(){
+          var url = $('#stickies').attr('data-create-sticky-url');
+          $.post(url);
+         },
     sticky:function(options){
             var sticky_element=function(options){
 return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-update-url='"+options.update_url+"'><div class='header'>"+options.id+"<a class='delete_link'>x</a></div><div class='body'><div class='editable'>"+options.content+"</div></div><div class='footer'></div></div>");
@@ -51,7 +55,6 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
               sticky_el.animate({left: this.left, top: this.top},'slow');
             };
             return new_sticky;
-             
            }
   };
   var lookups = {
@@ -68,6 +71,10 @@ return $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-upda
   };
 
   var handlers = {
+    create_sticky: function() {
+                   var sticky = tsp.builders.create_sticky();
+                   sticky.place_on("#stickies");
+                   },
     destroy_sticky: function(){
                     var sticky = tsp.lookups.sticky_from(this);
                     sticky.destroy();

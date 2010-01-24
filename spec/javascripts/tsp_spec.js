@@ -16,8 +16,18 @@ Helpers.get_surface_selector = function(){
   return '#surface';
 };
 
+Helpers.get_stickies_selector = function(){
+  return "#stickies";
+}
+
+Helpers.stickies_div = function() {
+  return $(Helpers.get_stickies_selector());
+};
+
 var get_editable_div = Helpers.editable_div;
 var get_sticky_div = Helpers.sticky_div;
+var get_stickies_div = Helpers.stickies_div;
+var get_stickies_selector = Helpers.get_stickies_selector;
 var get_surface_selector = Helpers.get_surface_selector;
 
 
@@ -25,6 +35,7 @@ Screw.Unit(function(){
   var mock_sticky = function(tsp){
     var sticky = mock();
     stub(tsp.lookups, 'sticky_from').and_return(sticky);
+    stub(tsp.builders, 'create_sticky').and_return(sticky);
     stub(sticky, 'update_content');
     return sticky;
   };
@@ -46,8 +57,9 @@ Screw.Unit(function(){
     });
 
     describe("#create_sticky", function(){
-      it("post to create_sticky_url", function(){
-        
+      it("places created sticky on #stickies", function(){
+        mock_sticky(tsp).should_receive('place_on').with_arguments(get_stickies_selector());
+        tsp.handlers.create_sticky();
       });
     });
 
@@ -106,6 +118,15 @@ Screw.Unit(function(){
   });
 
   describe("tsp.builders", function(){
+    describe("#create_sticky", function(){
+      it("posts to the create-sticky-url", function(){
+        var url = get_stickies_div().attr('data-create-sticky-url');
+        verify_argument_to_jquery_post_when_calling(tsp.builders, 'create_sticky',null, function(args){
+          expect(args[0]).to(equal, url);
+          });
+      });
+    });
+
     describe("sticky object returned from #sticky", function(){
       var sticky;
       before(function(){
