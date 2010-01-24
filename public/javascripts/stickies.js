@@ -10,7 +10,7 @@ function hookup_draggability(){
 }
 function hookup_sticky_delete(){
   var handler = TSP.get().handlers.destroy_sticky;
-  $('.sticky .delete_link').click(handler);
+  $('.sticky .delete_link').live('click', handler);
 }
 function hookup_sticky_new(){
   var handler = TSP.get().handlers.create_sticky;

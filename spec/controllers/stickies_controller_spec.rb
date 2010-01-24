@@ -9,7 +9,19 @@ describe StickiesController do
 
     it "returns the new sticky as json" do
       post :create, :surface_id => surface.name
-      response.body.should == Sticky.first.to_json(:only => [:id, :content, :left, :top])
+      sticky = Sticky.first
+      json = {:id  => sticky.id, :content => sticky.content, :left => sticky.left, :top => sticky.top,
+              :delete_url => surface_sticky_url(surface, sticky),
+              :update_url => surface_sticky_url(surface, sticky)}
+      response.body.should == json.to_json
+    end
+  end
+
+  context "DELETE /surfaces/:surface_name/stickies/:id" do
+    let(:sticky) { surface.stickies.create(:content => 'irrelevant', :left => 0, :top => 0) }
+    it "does not redirect" do
+      delete :destroy, :surface_id => surface.name, :id => sticky.id
+      response.should_not be_redirect
     end
   end
 

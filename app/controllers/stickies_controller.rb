@@ -2,10 +2,18 @@ class StickiesController < ResourceController::Base
   belongs_to :surface
 
   create.response do |wants|
-    wants.json { render :json => object.to_json(:only => [:id, :content, :left, :top]) }
+    wants.json { 
+      json = {:id  => object.id, :content => object.content, :left => object.left, :top => object.top,
+              :delete_url => surface_sticky_url(parent_object, object),
+              :update_url => surface_sticky_url(parent_object, object)}
+      render :json => json 
+    }
   end
   update.response do |wants|
-    wants.json { render :blank => true }
+    wants.json { render :nothing => true }
+  end
+  destroy.response do |wants|
+    wants.json { render :nothing => true }
   end
 
   private
