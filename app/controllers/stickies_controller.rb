@@ -25,10 +25,6 @@ class StickiesController < ResourceController::Base
     @object ||= end_of_association_chain.stickies.find(param)
   end
 
-  def parent_object
-    @parent ||= parent_model.find_by_name(parent_param)
-  end
-
   def parent_association
     @parent ||= parent_object
   end
