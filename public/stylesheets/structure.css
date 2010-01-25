@@ -28,12 +28,18 @@ overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
 }
 
 #surface{
-position: fixed; 
-top: 90px; /*Set top value to HeightOfTopFrameDiv*/
-left: 0;
-right: 0;
-bottom: 20px; /*Set bottom value to HeightOfBottomFrameDiv*/
-overflow: none; 
+	position: fixed; 
+	top: 90px; /*Set top value to HeightOfTopFrameDiv*/
+	left: 0;
+	right: 0;
+	bottom: 20px; /*Set bottom value to HeightOfBottomFrameDiv*/
+	overflow: none; 
+	border: 1px solid blue;
+}
+
+#stickies{
+	border: 1px solid red;
+	height: 100%;
 }
 
 #header .content{
