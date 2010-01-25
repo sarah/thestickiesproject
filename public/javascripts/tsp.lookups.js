@@ -1,8 +1,11 @@
+var TSP;
+if(typeof TSP === "undefined"){
+  var TSP = {};
+}
 TSP.lookups = (function() {
-
   var ajax_helpers = TSP.get().ajax_helpers;
 
-  var sticky = function(sticky_element) {
+  function sticky(sticky_element) {
       var dom_element = sticky_element;
       return {
         update_url: function() {
@@ -22,18 +25,18 @@ TSP.lookups = (function() {
           sticky_element.remove();
         }
       };
-  };
+  }
 
   return {
       sticky_element_from: function(element){
         return $(element).closest(".sticky");
       },
       sticky_from: function(element) {
-        var sticky_element = TSP.lookups.sticky_element_from(element);
+        var sticky_element = TSP.get().lookups.sticky_element_from(element);
         return sticky(sticky_element);
       },
       current_surface: function() {
         return this.surface($('#surface'));
       }
   };
-})();
+}());
