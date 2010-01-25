@@ -1,5 +1,6 @@
 require('spec_helper.js', {onload: function(){
     rails_require('tsp');
+    rails_require('tsp.ajax_helpers');
     rails_require('tsp.lookups');
 }});
 

@@ -1,22 +1,6 @@
 TSP.lookups = (function() {
-  var json_helpers = (function() {
-    var json_post = function(url, method, params) {
-      var common_params = {"_method" : method, authenticity_token : AUTH_TOKEN};
-      $.extend(common_params, params);
-      $.post(url, common_params, null, "json");
-    };
-    return {
-      update : function(update_params){
-        var url = this.update_url();
-        json_post(url, "put", update_params);
-      },
 
-      destroy : function(sticky_element){
-        var url = this.delete_url();
-        json_post(url, "delete");
-      }
-    };
-  })();
+  var ajax_helpers = TSP.get().ajax_helpers;
 
   var sticky = function(sticky_element) {
       var dom_element = sticky_element;
@@ -28,13 +12,13 @@ TSP.lookups = (function() {
           return dom_element.attr('data-delete-url');
         },
         update_content:function(content){
-          json_helpers.update.apply(this, [{"sticky[content]" : content}]);
+          ajax_helpers.update.apply(this, [{"sticky[content]" : content}]);
         },
         update_position:function(position){
-          json_helpers.update.apply(this, [{"sticky[left]" : position.left, "sticky[top]" : position.top}]);
+          ajax_helpers.update.apply(this, [{"sticky[left]" : position.left, "sticky[top]" : position.top}]);
         },
         destroy: function(){
-          json_helpers.destroy.apply(this);
+          ajax_helpers.destroy.apply(this);
           sticky_element.remove();
         }
       };
