@@ -9,4 +9,7 @@ require 'rake/rdoctask'
 
 require 'tasks/rails'
 
+require 'jslint/tasks'
+JSLint.config_path = "config/jslint.yml"
+
 task :default => ["spec"]

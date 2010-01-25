@@ -1,12 +1,15 @@
 TSP.builders = (function() {
   var attach_handlers = function(sticky_element) {
-    var handler = TSP.get().handlers.update_sticky_position;
-    sticky_element.draggable({ stop: handler, containment: "#stickies" });
-    handler = TSP.get().handlers.update_sticky_text;
+    var handlers = TSP.get().handlers;
     var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', event : "dblclick", tooltip : "Double-click to edit", indicator : 'Saving...', placeholder : "Double-click to edit"};
-    sticky_element.find('.editable').editable(handler, EDITABLE_STICKY_PROPS);
-    handler = TSP.get().handlers.destroy_sticky;
-    sticky_element.find('.delete_link').click(handler);
+
+    sticky_element.draggable({ stop: handlers.update_sticky_position, containment: "#stickies" });
+
+    sticky_element.find('.editable').editable(handlers.update_sticky_text, EDITABLE_STICKY_PROPS);
+
+    sticky_element.find('.delete_link').click(handlers.destroy_sticky);
+
+    return sticky_element;
   };
 
 
@@ -16,12 +19,11 @@ TSP.builders = (function() {
             $.post(url, null, function(response_json) { 
                   TSP.get().builders.sticky(response_json).place_on("#stickies");
                 }, "json");
-           },
+          },
       sticky:function(options){
               var sticky_element=function(options){
                 var sticky_el = $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-update-url='"+options.update_url+"'><div class='header'>"+options.id+"<a class='delete_link'>x</a></div><div class='body'><div class='editable'>"+options.content+"</div></div><div class='footer'></div></div>");
-                attach_handlers(sticky_el);
-                return sticky_el;
+                return attach_handlers(sticky_el);
               };
 
 
@@ -34,6 +36,6 @@ TSP.builders = (function() {
               };
               return new_sticky;
 
-             }
+         }
   };
-})();
+}());
