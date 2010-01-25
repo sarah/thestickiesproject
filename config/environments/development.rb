@@ -21,4 +21,3 @@ config.action_mailer.raise_delivery_errors = false
 # config.gem 'rspec-rails'
 # config.gem 'cucumber'
 # config.gem 'webrat'
-config.gem 'jslint'

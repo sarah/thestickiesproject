@@ -11,8 +11,8 @@ Screw.Matchers['expect_called'] = function(obj, func_name, block){
   this.expect_true(got_called);
 };
 
-rails_require("jquery.jeditable.mini");
-rails_require("jquery-ui-1.7.2.custom.min");
+rails_require("vendor/jquery.jeditable.mini");
+rails_require("vendor/jquery-ui-1.7.2.custom.min");
 
 AUTH_TOKEN = "dummy_token";
 var verify_argument_to_jquery_post_when_calling = function(binding_object, method_to_call, arg_to_method_under_test, block){

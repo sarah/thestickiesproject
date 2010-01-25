@@ -1,7 +1,13 @@
+var TSP;
+if(typeof TSP === "undefined"){
+  var TSP = {};
+}
 TSP.builders = (function() {
   var attach_handlers = function(sticky_element) {
     var handlers = TSP.get().handlers;
-    var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', event : "dblclick", tooltip : "Double-click to edit", indicator : 'Saving...', placeholder : "Double-click to edit"};
+    var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', 
+                                  event : "dblclick", tooltip : "Double-click to edit",
+                                  indicator : 'Saving...', placeholder : "Double-click to edit"};
 
     sticky_element.draggable({ stop: handlers.update_sticky_position, containment: "#stickies" });
 
@@ -21,13 +27,22 @@ TSP.builders = (function() {
                 }, "json");
           },
       sticky:function(options){
-              var sticky_element=function(options){
-                var sticky_el = $("<div class='sticky' data-delete-url='"+options.delete_url+"' data-update-url='"+options.update_url+"'><div class='header'>"+options.id+"<a class='delete_link'>x</a></div><div class='body'><div class='editable'>"+options.content+"</div></div><div class='footer'></div></div>");
+              function sticky_element(options){
+                var sticky_el = $("<div class='sticky' data-delete-url='"+
+                                  options.delete_url+"' data-update-url='"+
+                                  options.update_url+"'><div class='header'>"+
+                                  options.id+"<a class='delete_link'>x</a></div><div class='body'>"+
+                                  "<div class='editable'>"+options.content+
+                                  "</div></div><div class='footer'></div></div>");
                 return attach_handlers(sticky_el);
-              };
+              }
 
 
-              var new_sticky = {left: options.left, top: options.top, content: options.content, update_url: options.update_url, id: options.id, delete_url: options.delete_url};
+              var new_sticky = {id: options.id, content: options.content,
+                                left: options.left, top: options.top, 
+                                update_url: options.update_url,
+                                delete_url: options.delete_url};
+
               new_sticky.place_on = function(container){
                 var sticky_el = sticky_element(this);
                 $(container).append(sticky_el);
