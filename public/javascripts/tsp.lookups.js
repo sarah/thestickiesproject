@@ -1,7 +1,5 @@
-var TSP;
-if(typeof TSP === "undefined"){
-  var TSP = {};
-}
+/*global $*/
+/*global TSP*/
 TSP.lookups = (function() {
   var ajax_helpers = TSP.get().ajax_helpers;
 

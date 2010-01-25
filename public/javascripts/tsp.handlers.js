@@ -1,7 +1,5 @@
-var TSP;
-if(typeof TSP === "undefined"){
-  var TSP = {};
-}
+/*global $*/
+/*global TSP*/
 TSP.handlers = (function() {
   var tsp = TSP.get();
   return {

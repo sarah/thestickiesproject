@@ -1,7 +1,5 @@
-var TSP;
-if(typeof TSP === "undefined"){
-  var TSP = {};
-}
+/*global $*/
+/*global TSP*/
 TSP.builders = (function() {
   var attach_handlers = function(sticky_element) {
     var handlers = TSP.get().handlers;

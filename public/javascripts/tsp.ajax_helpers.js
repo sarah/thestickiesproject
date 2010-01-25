@@ -1,7 +1,6 @@
-var TSP;
-if(typeof TSP === "undefined"){
-  var TSP = {};
-}
+/*global $*/
+/*global TSP*/
+/*global AUTH_TOKEN*/
 TSP.ajax_helpers = (function() {
   var ajax_post = function(url, method, params) {
     var common_params = {"_method" : method, authenticity_token : AUTH_TOKEN};
