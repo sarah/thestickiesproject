@@ -16,6 +16,15 @@ TSP.builders = (function() {
     return sticky_element;
   }
 
+  function sticky_element(options){
+    var sticky_el = $("<div class='sticky' data-delete-url='"+
+                      options.delete_url+"' data-update-url='"+
+                      options.update_url+"'><div class='header'>"+
+                      options.id+"<a class='delete_link'>x</a></div><div class='body'>"+
+                      "<div class='editable'>"+options.content+
+                      "</div></div><div class='footer'></div></div>");
+    return attach_handlers(sticky_el);
+  }
 
   return {
       create_sticky: function(){
@@ -25,17 +34,6 @@ TSP.builders = (function() {
                 }, "json");
           },
       sticky:function(options){
-              function sticky_element(options){
-                var sticky_el = $("<div class='sticky' data-delete-url='"+
-                                  options.delete_url+"' data-update-url='"+
-                                  options.update_url+"'><div class='header'>"+
-                                  options.id+"<a class='delete_link'>x</a></div><div class='body'>"+
-                                  "<div class='editable'>"+options.content+
-                                  "</div></div><div class='footer'></div></div>");
-                return attach_handlers(sticky_el);
-              }
-
-
               var new_sticky = {id: options.id, content: options.content,
                                 left: options.left, top: options.top, 
                                 update_url: options.update_url,
