@@ -1,7 +1,7 @@
 /*global $*/
 /*global TSP*/
 TSP.builders = (function() {
-  var attach_handlers = function(sticky_element) {
+  function attach_handlers(sticky_element) {
     var handlers = TSP.get().handlers;
     var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', 
                                   event : "dblclick", tooltip : "Double-click to edit",
@@ -14,7 +14,7 @@ TSP.builders = (function() {
     sticky_element.find('.delete_link').click(handlers.destroy_sticky);
 
     return sticky_element;
-  };
+  }
 
 
   return {
