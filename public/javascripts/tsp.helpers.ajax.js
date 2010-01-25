@@ -1,7 +1,8 @@
 /*global $*/
 /*global TSP*/
 /*global AUTH_TOKEN*/
-TSP.ajax_helpers = (function() {
+TSP.helpers = {};
+TSP.helpers.ajax = (function() {
   var ajax_post = function(url, method, params) {
     var common_params = {"_method" : method, authenticity_token : AUTH_TOKEN};
     $.extend(common_params, params);
@@ -17,4 +18,3 @@ TSP.ajax_helpers = (function() {
     }
   };
 }());
-

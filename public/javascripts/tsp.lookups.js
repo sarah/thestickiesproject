@@ -1,8 +1,7 @@
 /*global $*/
 /*global TSP*/
 TSP.lookups = (function() {
-  var ajax_helpers = TSP.get().ajax_helpers;
-
+  var ajax_helpers = TSP.get().helpers.ajax;
   function sticky(sticky_element) {
       var dom_element = sticky_element;
       return {
