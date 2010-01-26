@@ -16,6 +16,7 @@
       .content
         %h3 The Stickies Project
         %ul.navigation
+          %li=render "shared/user_nav"
           %li=link_to "about", "http://thestickiesproject.wordpress.com/about"
           %li=link_to "blog", "http://thestickiesproject.wordpress.com"
         =yield :surface_header

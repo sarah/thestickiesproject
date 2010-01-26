@@ -1,0 +1,5 @@
+-if signed_in?
+  =current_user.email | 
+  =link_to 'logout', sign_out_url
+-else
+  =link_to 'login', sign_in_url
