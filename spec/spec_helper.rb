@@ -54,3 +54,4 @@ Spec::Runner.configure do |config|
 end
 
 require 'g'
+require 'factory_girl'

@@ -1,5 +1,15 @@
+Given /^a user "([^\"]*)"$/ do |email|
+  User.create!(:email => email, :password => 'corey')
+end
+
 Given /^I have a surface "([^\"]*)"$/ do |name|
   Surface.create! :name => name
+end
+
+Given /^surface "([^\"]*)" is assigned to "([^\"]*)"$/ do |surface_name, email|
+  surface = Surface.find_by_name(surface_name)
+  user = User.find_by_email(email)
+  user.surfaces << surface
 end
 
 When /^I follow delete for surface "([^\"]*)"$/ do |name|
