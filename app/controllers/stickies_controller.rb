@@ -9,23 +9,13 @@ class StickiesController < ResourceController::Base
       render :json => json 
     }
   end
-  update.response do |wants|
-    wants.json { render :nothing => true }
-  end
+  update.wants.json { render :nothing => true }
   destroy.response do |wants|
     wants.json { render :nothing => true }
   end
 
   private
   def build_object
-    @object ||= end_of_association_chain.stickies.new(:left => 10, :top => 10)
-  end
-
-  def load_object
-    @object ||= end_of_association_chain.stickies.find(param)
-  end
-
-  def parent_association
-    @parent ||= parent_object
+    @object ||= end_of_association_chain.build(:left => 10, :top => 10)
   end
 end
