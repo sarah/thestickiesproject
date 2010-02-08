@@ -28,17 +28,17 @@ describe StickiesController do
   context "PUT /surfaces/:surface_name/stickies/:id" do
     let(:sticky) { surface.stickies.create(:content => 'irrelevant', :left => 0, :top => 0) }
     it "does not redirect" do
-      put :update, :surface_id => surface.name, :id => sticky.id, :sticky => {}
+      put :update, :surface_id => surface.name, :id => sticky.id, :sticky => {}, :format => :json
       response.should_not be_redirect
     end
 
     it "renders nothing" do
-      put :update, :surface_id => surface.name, :id => sticky.id, :sticky => {}
+      put :update, :surface_id => surface.name, :id => sticky.id, :sticky => {}, :format => :json
       response.body.should be_blank
     end
 
     it "updates the sticky" do
-      put :update, :surface_id => surface.name, :id => sticky.id, :sticky => {:content => 'updated'}
+      put :update, :surface_id => surface.name, :id => sticky.id, :sticky => {:content => 'updated'}, :format => :json
       Sticky.find(sticky.id).content.should == 'updated'
     end
   end
