@@ -14,7 +14,8 @@
   %body
     #header
       .content
-        %h3 The Stickies Project
+        %h3
+          %a{:href=>surfaces_url}The Stickies Project
         %ul.navigation
           %li=render "shared/user_nav"
           %li=link_to "about", "http://thestickiesproject.wordpress.com/about"
