@@ -2,8 +2,13 @@
   =render 'new', :surface => Surface.new
 
 %h2 Surfaces
+=link_to "My Surfaces", user_surfaces_path(current_user) if signed_in? && @user.nil?
+
 %ul
   -@surfaces.each do |surface|
     %li{:id => dom_id(surface)}
-      =link_to surface.name, surface_path(surface)
+      - if @user
+        =link_to surface.name, user_surface_path(@user, surface)
+      -else
+        =link_to surface.name, surface_path(surface)
       =link_to "delete",  surface_path(surface), {:method => :delete, :confirm => "Really?"}

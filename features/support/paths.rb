@@ -11,9 +11,13 @@ module NavigationHelpers
       new_password_path
     when /the new surface page/
       new_surface_path
-    when /the surface page for "([^"]*)"/
+    when /the surface page for "([^"]*)"$/
       surface = Surface.find_by_name($1)
       surface_path(surface)
+    when /the surface page for "([^"]*)" belonging to "([^"]*)"$/
+      surface = Surface.find_by_name($1)
+      user = User.find_by_email($2)
+      user_surface_path(user,surface)
     when /^the surfaces list page$/
       surfaces_path
     when /^the surfaces list page for "([^"]*)"/

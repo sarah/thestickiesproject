@@ -1,4 +1,5 @@
--semantic_form_for surface do |form|
+-action = signed_in? ? user_surfaces_path(current_user) : surfaces_path
+-semantic_form_for surface, :url => action do |form|
   -form.inputs do
     = form.input :name
   = form.buttons

@@ -1,4 +1,4 @@
-Feature: creating surfaces
+Feature: creating surfaces as a non logged in user
 
 
   Scenario: Create surface from new surface page
@@ -7,7 +7,6 @@ Feature: creating surfaces
     Then I should be on the surface page for "foo"
     And I should see "foo"
   
-  @wip
   Scenario: Create surface from new surface page - case sensitive
     Given I am on the new surface page
     When I submit the surface name "Foo"
