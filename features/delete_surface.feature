@@ -1,4 +1,4 @@
-Feature: deleting surfaces 
+Feature: deleting unclaimed surfaces
 
   Scenario: Delete surface from the surface list
     Given I have a surface "foo"

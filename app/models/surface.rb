@@ -1,6 +1,6 @@
 class Surface < ActiveRecord::Base
   has_many :stickies
-
+  belongs_to :user
   validates_presence_of :name
   validates_uniqueness_of :name
   validates_format_of :name, :with => /^([\sa-zA-Z0-9_-]+)$/

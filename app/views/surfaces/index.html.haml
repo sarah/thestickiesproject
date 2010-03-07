@@ -11,4 +11,5 @@
         =link_to surface.name, user_surface_path(@user, surface)
       -else
         =link_to surface.name, surface_path(surface)
-      =link_to "delete",  surface_path(surface), {:method => :delete, :confirm => "Really?"}
+      -link = surface.user ? user_surface_path(surface.user, surface) : surface_path(surface)
+      =link_to "delete",  link, {:method => :delete, :confirm => "Really?"}

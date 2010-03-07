@@ -20,7 +20,7 @@ module NavigationHelpers
       user_surface_path(user,surface)
     when /^the surfaces list page$/
       surfaces_path
-    when /^the surfaces list page for "([^"]*)"/
+    when /^the surfaces list page for "([^"]*)"$/
       user = User.find_by_email($1)
       user_surfaces_path(user)
     else

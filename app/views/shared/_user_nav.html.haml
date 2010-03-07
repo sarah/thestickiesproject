@@ -1,5 +1,9 @@
 -if signed_in?
-  =current_user.email | 
+  =current_user.email
+  |
+  =link_to "my surfaces", user_surfaces_path(current_user)
+  |
   =link_to 'logout', sign_out_url
+
 -else
   =link_to 'login', sign_in_url
