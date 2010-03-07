@@ -1,0 +1,5 @@
+#flash
+  -flash.each do |key, value|
+    -div_name = "flash_#{key}"
+    %div{:id => div_name}
+      =h value

@@ -1,5 +1,6 @@
 %h2
   Sign in
+= render '/shared/clearance_flash'
 - semantic_form_for :session, :url => session_path do |form|
   -form.inputs do
     = form.input :email

@@ -23,7 +23,7 @@ Rails::Initializer.run do |config|
   config.gem 'resource_controller'
   config.gem 'formtastic'
   config.gem "friendly_id"
-  config.gem 'clearance'
+  config.gem 'clearance', :version => ">=0.8.8"
   config.gem 'factory_girl'
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
