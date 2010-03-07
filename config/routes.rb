@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :surfaces, :has_many => :stickies
-  map.resources :surfaces, :has_many => :stickies, :path_prefix => '/:user_email', :name_prefix => 'user_'
+  map.resources :surfaces, :has_many => :stickies, :path_prefix => '/users/:user_id', :name_prefix => 'user_'
 
   map.root :controller => 'surfaces', :action => :index
 

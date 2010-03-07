@@ -1,4 +1,3 @@
-@focus
 Feature: Viewing surface lists
 
   Scenario: Viewing the list of surfaces

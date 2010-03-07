@@ -2,9 +2,14 @@ require 'spec_helper'
 
 describe SurfacesController do
   context "user-owned" do
-    describe "GET /corey@example.com/surfaces" do
+    describe "GET /users/:user_id/surfaces" do
       it "returns the surfaces connected to that user" do
-        pending
+        surfaces = double("surfaces")
+        user = double(User, :surfaces => surfaces)
+        surfaces.stub(:find).and_return(surfaces)
+        User.stub(:find).with("dummy").and_return(user)
+        get :index, :user_id => "dummy"
+        assigns[:surfaces].should be(surfaces)
       end
     end
   end
