@@ -1,0 +1,164 @@
+Claimed vs Unclaimed Surfaces
+
+One of the stories that we had for the stickies project was to allow people to create surfaces without logging in:
+
+Feature: Unclaimed Surfaces
+In order to easily see whether the stickies project has functionality I want to use
+As a visitor to the site
+I want to create a surface and stickies without registering
+
+We began calling this type of surface 'unclaimed.' You can try out the functionality immediately, see what it is all about, then decide whether you want to register for the site. Naturally, what you see is going to make you want to register. What happens to this surface, though, when you register? It would be nice if you could associate it with your user. This led to the idea of "Claimed Surfaces:"
+
+Feature: Claimed Surfaces
+In order to keep track of surfaces that I have created
+As a registered user
+I want to claim a surface and associate it to my account
+
+The idea of 'claimed' and 'unclaimed' are different from public and private, though. From a resource perspective, the URIs would be different:
+
+Unclaimed: /surfaces/:unclaimed-surface-name
+Claimed: users/:user_id/surfaces/:claimed-surface-name
+
+Note: We have talked about public and private surfaces, but those are later stories that change the nature of claimed surfaces. For now, there is no authorization functionality implemented. This also means that you can edit other users' surfaces.
+
+Previous cards related to editing surfaces had created the functionality related to 'unclaimed' surfaces. The question was how best to add the functionality for users to have surfaces associated with them. We wanted to do it as simply as possible. When we started the project, we decided that the idea of a user had no intrinsic value on its own. Instead, we wanted to wait to see what value-creating feature would cause us to need the concept. And, here we are, 'claimed surfaces.' We discussed other options, including a simple naming system, where you could create a group of surfaces that would stand in for user. In the end, looking at the next stories coming (spoiler: public and private surfaces), we decided that adding users made sense here. So, how best to add this functionality? Could we add claimed surfaces without making many changes to our system? As it turns out, it took very little effort at all to add this functionality while keeping the unclaimed surfaces working.
+
+As it stood, we had cucumber features for unclaimed surfaces.
+Note: in the interest of brevity, I'm only going to show the basic cucumber scenarios.
+
+Feature: Creating an unclaimed surface
+
+  Scenario: Create surface from new surface page
+    Given I am on the new surface page
+    When I submit the surface name "foo"
+    Then I should be on the surface page for "foo"
+
+And it was passing. I wanted to add something like:
+
+Feature: Creating a claimed surface
+
+  Scenario: Create surface from new surface page
+    Given I am logged in as user "coreyhaines@example.com"
+    And I am on the new surface page
+    When I submit the surface name "foo"
+    Then I should be on the surface page for "foo" belonging to "coreyhaines@example.com"
+
+The first step we did was to implement user registration/login/etc. Well, to say we 'implemented' it would be a bit of overkill. After all, we are in the rails ecosystem. We downloaded Clearance, by the prolific guys at Thoughtbot and went through the quick and easy instructions to implement a ready-made user-authentication system. In the end, I think we spent about 4 pomodoros this. Why so long? Well, we initially had used an older version, found they had a dependency on Factory-Girl (go figure), so we had to install that. The Clearance-generated cucumber features for user and session functionality were still failing. We stumbled a bit creating our own factories, as they hadn't been brought over when we generated. After a pomodoro, or two, we decided to look again at the documentation and realized that there was a newer version. We scrapped what we had, installed the newer version, generated it, and voila, everything worked great. So, we now had a working user authentication system, which also included registration (with confirmation emails) and forgotten password. Yeah, Clearance is pretty awesome.
+
+But, this was just a precursor to getting our own cucumber feature passing. Let's start going through the 'change the message or make it pass' loop to get it implemented. First pass, we get that the "I am logged in as user..." step isn't defined. Well, looking at the Clearance-generated scenarios, we see that we can use the following steps:
+
+Given I am signed up and confirmed as "coreyhaines@example.com/password"
+And I sign in as "coreyhaines@example.com"
+
+to create a user and login. The feature changes to incorporate this.
+
+Feature: Creating a claimed surface
+
+  Scenario: Create surface from new surface page
+    Given I am signed up and confirmed as "coreyhaines@example.com/password"
+    And I sign in as "coreyhaines@example.com"
+    And I am on the new surface page
+    When I submit the surface name "foo"
+    Then I should be on the surface page for "foo" belonging to "coreyhaines@example.com"
+
+Now, the creation of the surface uses the same steps as the unclaimed surface scenario, so we don't have any worries there. In fact, I'm happy that we can reuse those, as we want the user experience to be the same whether you are logged in or not. The rub is that last step:
+
+    Then I should be on the surface page for "foo" belonging to "coreyhaines@example.com"
+
+When we run cucumber, we find that there is no path defined for this step. We have a path for an unclaimed surface, but nothing for specifying it is claimed. At this point, we notice that there is a bit of a language mismatch. From a rails perspective, we are talking about surfaces belonging to a user, but we keep bouncing between the terms 'belonging to' and 'claimed.' Sarah talked about the importance of keeping the metaphor going through our language (ubiquitous language as James Martin points out in the comments to her post), so let's change this step:
+
+    Then I should be on the surface page for "foo" claimed by "coreyhaines@example.com"
+
+Changing the term didn't get us any closer to having a path for it, though. Let's go look at implementing it.
+
+  when /the surface page for "([^"]*)" claimed by "([^"]*)"$/
+    surface = Surface.find_by_name($1)
+    user = User.find_by_email($2)
+    user_surface_path(user,surface)
+
+When I run this, I find that I don't have a user_surface_path. Of course I don't, because the routes only have 
+
+  map.resources :surfaces, :has_many => :stickies
+
+This provides me with all the basic xxx_surface routes, but I want to also support having routes that include a user. Reading through the rails documentation a bit (routing is always one of those places that I stumble upon new capabilities), I find that I can add some options:
+
+  map.resources :surfaces, :has_many => :stickies, :path_prefix => '/users/:user_id', :name_prefix => 'user_'
+
+I want to support both, so what happens if I just put add the above line, keeping the basic map.resources :surfaces above it? Will I get two sets of routes? Spoiler Alert: Yes, it works. So, if I do a rake routes, I'll see both the basic surface routes, as well as ones related to xxx_user_surface routes. Very sweet! Let's run cucumber and see where we stand. Ah, the functionality seems to work, but the path we are on is wrong:
+
+  expected: "/users/1/surfaces/foo",
+  got: "/surfaces/foo" (using ==)
+
+This makes sense, we don't have anything that would cause the controller to route us to different URL. Now, we are using resource_controller, so I actually think this should be given to us for "free." Let's see if what it would take. Well, first off, we need the new surface form to send to the correct url:
+
+  unclaimed: POST /surfaces
+  claimed: POST /users/:user_id/surfaces
+
+This is a matter of using the Clearance helpers. Let's change from
+
+  -semantic_form_for surface do |form|
+    -form.inputs do
+      = form.input :name
+    = form.buttons
+
+to
+
+-action = signed_in? ? user_surfaces_path(current_user) : surfaces_path
+-semantic_form_for surface, :url => action do |form|
+  -form.inputs do
+    = form.input :name
+  = form.buttons
+
+This should cause the form to post to the desired url depending on whether we are signed in.
+
+When we run this, we still don't get routed to the correct url (still going to /surfaces/foo). This is because the surfaces controller doesn't realize that we are trying to scope our surface to a user. Luckily, we are using James Golick's most excellent resource controller gem (yes, it really is most excellent). How does this help us? Well, it supports nested controllers. All we have to do is tell the controller that surfaces can belong to users by adding the following line to the surfaces controller:
+
+  belongs_to :user
+
+Yup, that's all it takes for the controller to become aware of a relationship between the user and the surface. When we run our cucumber feature, though, we get an exception at an unexpected point in the scenario:
+
+  Given I am signed up and confirmed as "person@example.com/password" # features/step_definitions/clearance_steps.rb:20
+  And I sign in as "person@example.com/password"                      # features/step_definitions/clearance_steps.rb:90
+    undefined method `surfaces' for #<User:0x3678844> (NoMethodError)
+    (eval):2:in `click_button'
+    ./features/step_definitions/webrat_steps.rb:20:in `/^(?:|I )press "([^\"]*)"$/'
+    features/create_surfaces_logged_in.feature:4:in `And I sign in as "person@example.com/password"'
+
+This makes sense. When we log in, we are going to the index page for surfaces. Resource Controller is trying to set the @surfaces variable to the surfaces scoped to the user we just logged in as (after login, we route to /users/:user_id/surfaces). This is an easy enough fix, let's add the relationship to the User model:
+
+  class User &lt; ActiveRecord::Base
+    include Clearance::User
+
+    has_many :surfaces
+  end
+
+Let's run our cucumber feature. Wow! It passes. Let's run the cucumber feature creating an unclaimed surface. Beautiful! That passes, as well. So, looking back, we added the ability to create a claimed surface by adding effectively 3 lines of code: get the form posting to the correct URL, let Resource Controller know that surfaces can belong to users and let the user model know that it has surfaces. Pretty sweet!
+
+At this point, a question comes up: where are the rspec-level examples? Why didn't I write any isolation tests? This is a great question, and an interesting discussion point around the level of examples that are needed to drive out declarative statements for the underlying framework. I don't generally write an example for model relationships, relying on some behavior to cause me to write them. In this case, the model relationship was driven by the cucumber scenario. The belongs_to declaration in the surfaces controller sits in the same space for me: I'm declaring a relationship to the underlying framework, Resource Controller. The last question is the logic in the view, deciding which url to use. I tend not to write view specs, relying on cucumber to tell me if there is something missing. This is logic, though. Shouldn't it be tested? There are definite arguments for it. Actually, as we began rippling the concept of claimed surface through the rest of the CRUD operations on surfaces, we found this pattern to appear multiple times, resulting in a very definite need to refactor away the duplication. When refactoring, the tests are there to give us confidence that we haven't broken anything. In this case, the cucumber scenarios provide us with that confidence. They do this, because the scenarios were failing until the logic was added. This gives me a sense of security that they will catch any mistakes I make.
+
+
+As we filled out the rest of the CRUD operations on claimed surfaces, we found that we also needed to add the declaration to the surface model that it belonged to a user. This was
+
+  class Surface &lt; ActiveRecord::Base
+    belongs_to :user
+  end
+
+Adding this line completed the relationship between a surface and a user, and the stickies project now had the concept of 'claimed surfaces.' Once Clearance was installed, the driving out of the complete claimed surface CRUD took 4 pomodoros: 2 hours. Pretty quick work of what could have been a complicated architectural change.
+
+Just as a base point, the app currently supports user/session functionality, CRUD operations on claimed and unclaimed surfaces, and CRUD operations on stickies assigned to a surface. Here are the code stats (not including javascript or plugins):
+
++----------------------+-------+-------+---------+---------+-----+-------+
+| Name                 | Lines |   LOC | Classes | Methods | M/C | LOC/M |
++----------------------+-------+-------+---------+---------+-----+-------+
+| Controllers          |    45 |    36 |       4 |       2 |   0 |    16 |
+| Helpers              |     3 |     2 |       0 |       0 |   0 |     0 |
+| Models               |    19 |    16 |       3 |       0 |   0 |     0 |
+| Libraries            |     0 |     0 |       0 |       0 |   0 |     0 |
+| Model specs          |    58 |    51 |       0 |       0 |   0 |     0 |
+| View specs           |     0 |     0 |       0 |       0 |   0 |     0 |
+| Controller specs     |    95 |    81 |       0 |       0 |   0 |     0 |
++----------------------+-------+-------+---------+---------+-----+-------+
+| Total                |   220 |   186 |       7 |       2 |   0 |    91 |
++----------------------+-------+-------+---------+---------+-----+-------+
+  Code LOC: 54     Test LOC: 132     Code to Test Ratio: 1:2.4
+
