@@ -25,6 +25,8 @@ Rails::Initializer.run do |config|
   config.gem "friendly_id"
   config.gem 'clearance', :version => ">=0.8.8"
   config.gem 'factory_girl'
+  config.gem 'jslint_on_rails', :lib => "jslint" 
+  
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
