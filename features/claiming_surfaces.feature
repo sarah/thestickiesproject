@@ -21,4 +21,3 @@ Feature: Claiming a surface
     And surface "foo" is assigned to "sarah@example.com"
     And I am on the surface page for "foo" belonging to "sarah@example.com"
     Then I should not see "claim"
-
