@@ -24,3 +24,6 @@ When /^I submit the surface name "([^\"]*)"$/ do |name|
   click_button 'Create Surface'
 end
 
+When /^I claim the surface$/ do
+  click_link 'claim'
+end

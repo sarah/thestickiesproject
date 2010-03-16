@@ -15,6 +15,25 @@ describe SurfacesController do
   end
 
   context "non-user-owned surfaces" do
+    describe "PUT /surfaces/foo/claim" do
+      let(:user) {double(User)}
+      let(:surface) {double(Surface).as_null_object}
+      before(:each) do
+        controller.stub(:current_user).and_return(user)
+        Surface.stub(:find).and_return(surface)
+      end
+      it "assigns the surface to the current user" do
+        surface.should_receive(:user=).with(user)
+        surface.should_receive(:save)
+        put :claim, :id => 'irrelevant'
+      end
+
+      it "redirects me to the surface as assigned to the current_user" do
+        put :claim, :id => 'irrelevant'
+        response.should redirect_to(user_surface_url(user, surface))
+      end
+    end
+
     describe "GET /surfaces/foo" do
 
       it "assigns the surface's stickies" do
