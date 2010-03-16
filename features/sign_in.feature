@@ -28,5 +28,7 @@ Feature: Sign in
       Given I am signed up and confirmed as "email@person.com/password"
       When I go to the sign in page
       And I sign in as "email@person.com/password"
-      Then I should be on the surfaces list page for "email@person.com"
+      And I should be signed in
+      When I return next time
+      Then I should be signed in
 
