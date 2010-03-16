@@ -12,25 +12,30 @@ describe SurfacesController do
         assigns[:surfaces].should be(surfaces)
       end
     end
+
+    context "logged_in" do
+    end
   end
 
   context "non-user-owned surfaces" do
-    describe "PUT /surfaces/foo/claim" do
-      let(:user) {double(User)}
+    context "logged_in" do
+      let(:current_user) {double(User)}
       let(:surface) {double(Surface).as_null_object}
       before(:each) do
-        controller.stub(:current_user).and_return(user)
+        controller.stub(:current_user).and_return(current_user)
         Surface.stub(:find).and_return(surface)
       end
-      it "assigns the surface to the current user" do
-        surface.should_receive(:user=).with(user)
-        surface.should_receive(:save)
-        put :claim, :id => 'irrelevant'
-      end
+      describe "PUT /surfaces/foo/claim" do
+        it "assigns the surface to the current user" do
+          surface.should_receive(:user=).with(current_user)
+          surface.should_receive(:save)
+          put :claim, :id => 'irrelevant'
+        end
 
-      it "redirects me to the surface as assigned to the current_user" do
-        put :claim, :id => 'irrelevant'
-        response.should redirect_to(user_surface_url(user, surface))
+        it "redirects me to the surface as assigned to the current_user" do
+          put :claim, :id => 'irrelevant'
+          response.should redirect_to(user_surface_url(current_user, surface))
+        end
       end
     end
 
