@@ -4,7 +4,7 @@
       =@surface.name
       -url = @surface.user ? edit_user_surface_path(@surface.user, @surface) : edit_surface_path(@surface)
       =link_to 'edit', url
-      =link_to 'claim', claim_surface_url(@surface), {:method => :put}
+      =link_to 'claim', claim_surface_url(@surface), {:method => :put} if signed_in?
     #new_surface_form
       =render 'new', :surface => Surface.new
 
