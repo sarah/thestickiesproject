@@ -6,6 +6,7 @@ class SurfacesController < ResourceController::Base
   end
 
   def claim
+    head(401) and return if params[:user_id]
     load_object
     @surface.user = current_user
     @surface.save

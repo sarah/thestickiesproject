@@ -14,6 +14,25 @@ describe SurfacesController do
     end
 
     context "logged_in" do
+      let(:current_user) {double(User)}
+      let(:surface) {double(Surface)}
+      let(:user) { double(User) }
+
+      before(:each) do
+        controller.stub(:current_user).and_return(current_user)
+        User.stub(:find).and_return(user)
+        user.stub(:surfaces).and_return(double("surfaces", :find => surface))
+      end
+      describe "PUT /users/:user_id/surfaces/foo/claim" do
+        it "does not reassign the surface to the current_user" do
+          surface.should_not_receive(:user=).with(current_user)
+          put :claim, :id => 'irrelevant', :user_id => 'dummy'
+        end
+        it "returns a 401" do
+          put :claim, :id => 'irrelevant', :user_id => 'dummy'
+          response.response_code.should == 401
+        end
+      end
     end
   end
 
