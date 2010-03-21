@@ -7,7 +7,10 @@ TSP.builders = (function() {
                                   event : "dblclick", tooltip : "Double-click to edit",
                                   indicator : 'Saving...', placeholder : "Double-click to edit"};
 
-    sticky_element.draggable({ stop: handlers.update_sticky_position, containment: "#stickies" });
+    var dummy = function(event, ui) {
+    console.log('dragging' + ui.offset.top + " - " + ui.offset.left);
+    };
+    sticky_element.draggable({drag:dummy, stop: handlers.update_sticky_position, containment: "#stickies" });
 
     sticky_element.find('.editable').editable(handlers.update_sticky_text, EDITABLE_STICKY_PROPS);
 
@@ -42,7 +45,9 @@ TSP.builders = (function() {
               new_sticky.place_on = function(container){
                 var sticky_el = sticky_element(this);
                 $(container).append(sticky_el);
-                sticky_el.animate({left: this.left, top: this.top},'slow');
+                // sticky_el.animate({left: this.left, top: this.top},'slow');
+                sticky_el.css({left:this.left, top:this.top, position: 'absolute', display:"none"});
+                sticky_el.slideDown(1000);
                 return sticky_el;
               };
               return new_sticky;

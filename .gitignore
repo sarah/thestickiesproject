@@ -2,7 +2,7 @@
 tmp/*
 *.sqlite3
 config/database.yml
-.DS_STORE
+.DS_Store
 webrat*
 coverage/*
 coverage.data
