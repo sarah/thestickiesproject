@@ -14,7 +14,7 @@ module NavigationHelpers
     when /the surface page for "([^"]*)"$/
       surface = Surface.find_by_name($1)
       surface_path(surface)
-    when /the surface page for "([^"]*)" belonging to "([^"]*)"$/
+    when /the surface page for "([^"]*)" claimed by "([^"]*)"$/
       surface = Surface.find_by_name($1)
       user = User.find_by_email($2)
       user_surface_path(user,surface)
