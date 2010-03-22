@@ -11,9 +11,9 @@ var createSticky = function(createMovingVisitor){
 var createMovingVisitor = function(){
    var movingVisitor = {};
    movingVisitor.moveMyNeighbors = function(dx,dy,sticky){
-     var neighbors = sticky.getNeighbors();
-     neighbors[0].youAreBeingDragged();
-     neighbors[1].youAreBeingDragged();
+     $(sticky.getNeighbors()).each(function() {
+         this.youAreBeingDragged(dx,dy, movingVisitor);
+       });
    };
 
    return movingVisitor;
@@ -39,6 +39,18 @@ Screw.Unit(function(){
           expect(__args_moveMyNeighbors[1]).to(equal, dy);
         });
       });
+      // describe("#getMyNeighbors", function() {
+        // it("returns the neighbors from the 'neighbor lookup' function", function() {
+          // var neighbors = {};
+          // var getMyNeighbors = function() { return neighbors; };
+
+          // var sticky = createSticky($.noop, getMyNeighbors);
+
+          // var resulting_neighbors = sticky.getNeighbors();
+
+          // expect(resulting_neighbors).to(equal, neighbors);
+        // });
+      // });
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
@@ -46,16 +58,15 @@ Screw.Unit(function(){
           var movingVisitor = createMovingVisitor();
 
           var sticky = {};
-          var neighbor1 = {
-            wasToldToDrag: false,
-            youAreBeingDragged: function() { this.wasToldToDrag = true; }
-          };
-          var neighbor2 = {
-            wasToldToDrag: false,
-            youAreBeingDragged: function() { this.wasToldToDrag = true; }
-          };
 
-          var neighbors = [neighbor1, neighbor2];
+          var createNeighbor = function() {
+            return {
+              __args_wasToldToDrag : [],
+              wasToldToDrag: false,
+              youAreBeingDragged: function() { this.__args_wasToldToDrag = arguments; this.wasToldToDrag = true; }
+            };
+          };
+          var neighbors = [createNeighbor(), createNeighbor()];
           sticky.getNeighbors = function(){
             return neighbors;
           };
@@ -63,7 +74,14 @@ Screw.Unit(function(){
           movingVisitor.moveMyNeighbors(10,100, sticky);
 
           expect(neighbors[0].wasToldToDrag).to(equal, true);
+          expect(neighbors[0].__args_wasToldToDrag[0]).to(equal, 10);
+          expect(neighbors[0].__args_wasToldToDrag[1]).to(equal, 100);
+          expect(neighbors[0].__args_wasToldToDrag[2]).to(equal, movingVisitor);
+
           expect(neighbors[1].wasToldToDrag).to(equal, true);
+          expect(neighbors[1].__args_wasToldToDrag[0]).to(equal, 10);
+          expect(neighbors[1].__args_wasToldToDrag[1]).to(equal, 100);
+          expect(neighbors[1].__args_wasToldToDrag[2]).to(equal, movingVisitor);
         });
       });
     });
