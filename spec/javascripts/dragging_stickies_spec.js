@@ -1,11 +1,11 @@
 require('spec_helper.js', {onload: function(){
 }});
-var createSticky = function(createMovingVisitor){
+var createSticky = function(createMovingVisitor, neighborLookup){
   var sticky = {};
   sticky.youAreBeingDragged = function(dx, dy) {
    createMovingVisitor().moveMyNeighbors(dx,dy); 
   };
-
+  sticky.getNeighbors = function() { return neighborLookup(sticky); };
   return sticky;
 };
 var createMovingVisitor = function(){
@@ -15,7 +15,6 @@ var createMovingVisitor = function(){
          this.youAreBeingDragged(dx,dy, movingVisitor);
        });
    };
-
    return movingVisitor;
 };
 Screw.Unit(function(){
@@ -39,18 +38,20 @@ Screw.Unit(function(){
           expect(__args_moveMyNeighbors[1]).to(equal, dy);
         });
       });
-      // describe("#getMyNeighbors", function() {
-        // it("returns the neighbors from the 'neighbor lookup' function", function() {
-          // var neighbors = {};
-          // var getMyNeighbors = function() { return neighbors; };
+      describe("#getMyNeighbors", function() {
+        it("returns the neighbors from the 'neighbor lookup' function", function() {
+          var neighbors = {};
+          var __args_getMyNeighbors;
+          var getMyNeighbors = function() { __args_getMyNeighbors = arguments; return neighbors; };
 
-          // var sticky = createSticky($.noop, getMyNeighbors);
+          var sticky = createSticky($.noop, getMyNeighbors);
 
-          // var resulting_neighbors = sticky.getNeighbors();
+          var resulting_neighbors = sticky.getNeighbors();
 
-          // expect(resulting_neighbors).to(equal, neighbors);
-        // });
-      // });
+          expect(resulting_neighbors).to(equal, neighbors);
+          expect(__args_getMyNeighbors[0]).to(equal, sticky);
+        });
+      });
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
