@@ -76,18 +76,20 @@ Screw.Unit(function(){
           expect(__args_getMyNeighbors[0]).to(equal, sticky);
         });
       });
-      // describe("#getMyNeighbors", function() {
-        // it("returns the neighbors from the 'neighbor lookup' function", function() {
-          // var neighbors = {};
-          // var getMyNeighbors = function() { return neighbors; };
+      describe("#getMyNeighbors", function() {
+        it("returns the neighbors from the 'neighbor lookup' function", function() {
+          var neighbors = {};
+          var __args_getMyNeighbors;
+          var getMyNeighbors = function() { __args_getMyNeighbors = arguments; return neighbors; };
 
-          // var sticky = createSticky($.noop, getMyNeighbors);
+          var sticky = createSticky($.noop, getMyNeighbors);
 
-          // var resulting_neighbors = sticky.getNeighbors();
+          var resulting_neighbors = sticky.getNeighbors();
 
-          // expect(resulting_neighbors).to(equal, neighbors);
-        // });
-      // });
+          expect(resulting_neighbors).to(equal, neighbors);
+          expect(__args_getMyNeighbors[0]).to(equal, sticky);
+        });
+      });
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
