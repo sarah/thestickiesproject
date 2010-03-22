@@ -2,8 +2,11 @@ require('spec_helper.js', {onload: function(){
 }});
 var createSticky = function(createMovingVisitor, neighborLookup){
   var sticky = {};
-  sticky.youAreBeingDragged = function(dx, dy) {
-   createMovingVisitor().moveMyNeighbors(dx,dy); 
+  sticky.youAreBeingDragged = function(dx, dy, movingVisitor) {
+   if(!movingVisitor) {
+     movingVisitor = createMovingVisitor();
+   }
+   movingVisitor.moveMyNeighbors(dx,dy, sticky); 
   };
   sticky.getNeighbors = function() { return neighborLookup(sticky); };
   return sticky;
@@ -21,21 +24,42 @@ Screw.Unit(function(){
   describe("Dragging a sticky", function(){
     describe("Sticky", function() {
       describe("#youAreBeingDragged", function() {
-        it("tells the MoveVisitor to move neighbors", function(){
-          var __called_moveMyNeighbors = false;
-          var movingVisitor = {
-            moveMyNeighbors: function() { __args_moveMyNeighbors = arguments; __called_moveMyNeighbors = true; }
-          };
-          var createMovingVisitor = function() {  return movingVisitor; };
-          var sticky = createSticky(createMovingVisitor);
+        describe("no MovingVisitor given", function() {
+          it("tells a new MoveVisitor to move neighbors", function(){
+            var __called_moveMyNeighbors = false;
+            var movingVisitor = {
+              moveMyNeighbors: function() { __args_moveMyNeighbors = arguments; __called_moveMyNeighbors = true; }
+            };
+            var createMovingVisitor = function() {  return movingVisitor; };
+            var sticky = createSticky(createMovingVisitor);
 
-          var dx = 10;
-          var dy = 100;
-          sticky.youAreBeingDragged(dx, dy);
+            var dx = 10;
+            var dy = 100;
+            sticky.youAreBeingDragged(dx, dy);
 
-          expect(__called_moveMyNeighbors).to(equal, true);
-          expect(__args_moveMyNeighbors[0]).to(equal, dx);
-          expect(__args_moveMyNeighbors[1]).to(equal, dy);
+            expect(__called_moveMyNeighbors).to(equal, true);
+            expect(__args_moveMyNeighbors[0]).to(equal, dx);
+            expect(__args_moveMyNeighbors[1]).to(equal, dy);
+            expect(__args_moveMyNeighbors[2]).to(equal, sticky);
+          });
+        });
+        describe("existing MovingVisitor given", function() {
+          it("tells that MoveVisitor to move neighbors", function(){
+            var __called_moveMyNeighbors = false;
+            var movingVisitor = {
+              moveMyNeighbors: function() { __args_moveMyNeighbors = arguments; __called_moveMyNeighbors = true; }
+            };
+            var sticky = createSticky($.noop);
+
+            var dx = 10;
+            var dy = 100;
+            sticky.youAreBeingDragged(dx, dy, movingVisitor);
+
+            expect(__called_moveMyNeighbors).to(equal, true);
+            expect(__args_moveMyNeighbors[0]).to(equal, dx);
+            expect(__args_moveMyNeighbors[1]).to(equal, dy);
+            expect(__args_moveMyNeighbors[2]).to(equal, sticky);
+          });
         });
       });
       describe("#getMyNeighbors", function() {
