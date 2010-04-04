@@ -39,7 +39,7 @@ TSP.builders = (function() {
       sticky:function(options){
               var new_sticky = $.extend({}, options);
 
-              ne_sticky.place_on = function(container){
+              new_sticky.place_on = function(container){
                 var sticky_el = sticky_element(this);
                 $(container).append(sticky_el);
                 sticky_el.css({left:this.left, top:this.top, position: 'absolute', display:"none"});
