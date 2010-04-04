@@ -2,15 +2,14 @@
 /*global TSP*/
 TSP.builders = (function() {
   function attach_handlers(sticky_element) {
+
     var handlers = TSP.get().handlers;
     var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', 
                                   event : "dblclick", tooltip : "Double-click to edit",
                                   indicator : 'Saving...', placeholder : "Double-click to edit"};
 
-    var dummy = function(event, ui) {
-    console.log('dragging' + ui.offset.top + " - " + ui.offset.left);
-    };
-    sticky_element.draggable({drag:dummy, stop: handlers.update_sticky_position, containment: "#stickies" });
+ 
+    sticky_element.draggable({stop: handlers.update_sticky_position, containment: "#stickies" });
 
     sticky_element.find('.editable').editable(handlers.update_sticky_text, EDITABLE_STICKY_PROPS);
 
