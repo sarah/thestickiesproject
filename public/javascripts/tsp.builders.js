@@ -34,15 +34,11 @@ TSP.builders = (function() {
                 }, "json");
           },
       sticky:function(options){
-              var new_sticky = {id: options.id, content: options.content,
-                                left: options.left, top: options.top, 
-                                update_url: options.update_url,
-                                delete_url: options.delete_url};
+              var new_sticky = $.extend({}, options);
 
               new_sticky.place_on = function(container){
                 var sticky_el = sticky_element(this);
                 $(container).append(sticky_el);
-                sticky_el.animate({left: this.left, top: this.top},'slow');
                 return sticky_el;
               };
               return new_sticky;
