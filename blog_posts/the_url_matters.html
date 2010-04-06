@@ -1,0 +1,36 @@
+I ran into 2 interesting situations while working on claimed/unclaimed surfaces that appeared different, but both were solved by referring back to some base principles, specifically the 4 rules of simple design.
+
+First: what should the URL for unclaimed surfaces be? My first thought was /surfaces; That seemed reasonable. Then I wondered about using /surfaces/unclaimed. Is the extra part of the URL unnecessary, is it a violation of YAGNI?
+
+Second: what should the URL for viewing your claimed surfaces be? Should it be /surfaces/claimed, showing the surfaces belonging to the logged-in user? Or, should I be explicit and use /users/:id/surfaces? Should I also add /users/:id/surfaces/claimed?
+
+The 4 rules of simple design are as follows:
+
+Passes all tests
+Contains no duplication
+Reveals Intent
+Is Small
+
+On an aside, J.B. Rainsberger makes a convincing argument that there are really only 2 rules: no duplication and reveals intent. He talks about it in this video interview.
+
+Unclaimed Surfaces
+
+Thinking about this, I realised that the decision to use /surfaces as the url broke the rule about revealing intent. This rule can also be thought of as 'named clearly.' What is the expectation of /surfaces? In general, it is used as the index, or the list of all surfaces. Giving it a filter (unclaimed) is a violation of this. Another interpretation of 'reveals intent' is the Principle of Least Surprise - you shouldn't be surprised when you access something.
+
+Being explicit also opens you up to extensibility and future enhancements without having to worry about it. No, I'm not saying that you should be designing for unknown future requirements, but, given a choice, I like to choose the path which will give me the most flexibility in the future. Having explicit filters on the /surfaces URL provides both a precedent and a mechanism for this.
+
+
+Claimed Surfaces
+
+When using an authentication system in Rails, you generally are given a #current_user method on your controller. This allows you access to at least the id of the logged-in user. Unfortunately, I often will see people taking a shortcut when accessing resources, thereby creating a severe inconsistency in their addressing scheme. In our case, it would be using #current_user to scope the surfaces given when accessing /surfaces. This seems reasonable, since it feels like overkill to provide the user id on the URL: /users/:id/surfaces. We already have the user id, don't we? Don't the 4 rules say we shouldn't have duplication? Yes, they do, but this isn't really duplication.
+
+The idea of duplication isn't necessarily about explicit code, but also about concepts. The DRY principle (don't repeat yourself) is a form of 'every concept should have a single representation in your system.' There is a nice corollary that every representation should be of one concept.
+
+Suppose you have /users/:id/surfaces to view some claimed surfaces (other people's), yet you have /surfaces or /surfaces/claimed to see your own. The concept of 'surfaces claimed by a user' now has two different representations in the system. Turning the YAGNI principle to this leads us to see that we don't need two different representations; a single one will do.
+
+What about duplication between the user ids: if my id is 3, then I have /users/3/surfaces, and I also have a 3 in my session somewhere, stored as 'current user id.' Is this duplication? I say it isn't, since they represent two different concepts: the user who has claimed those surfaces and the user who is logged in. It is just happenstance when they coincide.
+
+Should it be /users/:id/surfaces/claimed?
+
+This is an interesting question. One one hand, we do have /surfaces/unclaimed, so it seems as though the symmetry of having /users/:id/surfaces/claimed is desirable. But, taking this URL apart, we can notice something important: there is duplication in concept. The URL /users/:id/surfaces reads as 'the surfaces belonging to the user represented by :id.' The /surfaces/claimed reads 'the surfaces claimed by ...' Since 'belonging to' and 'claimed by' are synonyms in our system, we can see that the single URL /users/:id/surfaces/claimed has duplication in it. Since we have already seen that the prefix /users/:id is needed, the /claimed suffix should be dropped.
+
