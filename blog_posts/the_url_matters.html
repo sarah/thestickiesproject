@@ -54,4 +54,48 @@ So, all of this discussion has lead us to the following identifiers for our coll
 
 
 
+-- comment responses --
+
+- comment
+Doug (dgou@mac.com)
+
+I’m surprised that you didn’t continue the symmetry.
+Having /surfaces/unclaimed on the one hand and
+/users/:user_id/surfaces on the other seems visually and conceptually jarring.
+
+In the first case, /surfaces is more primitive and in the second case /surfaces is nested in a higher organization. Further, in the second case, /users/:user_id/surfaces doesn’t have children.
+
+I’m curious why the pattern isn’t /users/:user_id/surfaces where there is a common user_id for anonymous?
+
+- reply
+
+Thanks for the question. This is an interesting idea, and I can appreciate the URL-symmetry that it would present, but it has a disconnect with our conceptual domain. There are also a couple technical issues behind it.
+
+- There is currently no concept of 'claiming' a surface that has already been claimed, effectively 'stealing' a surface, if you will. Having a concept of an anonymous user that has claimed these surfaces would bring this into play. This is added complexity and possible confusion when you discuss what users allow 'stealing' of their surfaces. Why is there a specific user that allows this (the anonymous user), as opposed to any other user?
+
+- When you visit the site without logging in, you are not automatically logged-in as an 'anonymous' user, you are actually in a state of 'not logged in.' Having a user automatically logged in as 'anonymous' raises the concept of 'switching accounts.' That is, if you are logged-in as User A, do you need to log out before you log in as User B? Having an anonymous user would lead to one of two options: you can switch to be a different account without logging in; or, you must log out and re-log in.
+
+I'm uncomfortable with the option of switching accounts at this point, as it does not seem to coincide with the usual conventions I see surrounding account access. It also adds complexity (being able to both log out and switch logins) that would be included for an unnecessary new concept: 'anonymous user.'
+
+I fancy the other option even less, as it goes against the idea that a user should be able to rapidly use our system without worrying about having an account.
+
+
+- comment
+Kerry Buckley
+kerryjbuckley@gmail.com
+
+I wonder whether there’s still a case for having a generic “my surfaces” URI, as well as the one containing the user ID. It might just display my surfaces directly, or it might redirect to the canonical URI for surfaces belonging to my user.
+
+To my mind, “my surfaces” (represented by something like /surfaces/mine or /my/surfaces) is a separate concept. I might want to send someone a link to my surfaces (/users/3/surfaces), but I also might want to say “to view your own surfaces, you need to request /surfaces/mine” – without a distinct “my surfaces” URI, the latter isn’t possible.
+
+What do you think?
+
+
+- reply
+
+This is a definite possibility in the future. I've seen this sort of strategy successfully employed in other applications that I've worked on. For us, I could go with something like /my/surfaces, /surfaces/mine or /users/me/surfaces. Right now, we haven't run prioritized a use-case like that, so we haven't looked into adding it. When the time comes, though, I like those options.
+
+
+
+
 
