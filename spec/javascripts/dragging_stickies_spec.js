@@ -13,10 +13,14 @@ var createSticky = function(createMovingVisitor, neighborLookup){
 };
 var createMovingVisitor = function(){
    var movingVisitor = {};
+   var visited = [];
    movingVisitor.moveMyNeighbors = function(dx,dy,sticky){
-     $(sticky.getNeighbors()).each(function() {
+     var toVisit = $(sticky.getNeighbors()).filter(function(){
+         return visited.indexOf(this.id) === -1;
+     });
+     $(toVisit).each(function() {
          this.youAreBeingDragged(dx,dy, movingVisitor);
-       });
+       }).each(function(){visited.push(this.id);});
    };
    return movingVisitor;
 };
@@ -79,19 +83,48 @@ Screw.Unit(function(){
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
+        it("does not tell a sticky that was already visited to drag", function(){
+          var movingVisitor = createMovingVisitor();
+
+          var createNeighbor = function(id) {
+            return {
+              __args_wasToldToDrag : [],
+              wasToldToDrag: false,
+              youAreBeingDragged: function() { this.__args_wasToldToDrag = arguments; this.wasToldToDrag = true; },
+              id: id
+            };
+          };
+          var stickyNeighborToBoth = createNeighbor(1); 
+          var stickyNeighborToFirst =  createNeighbor(2);
+          var stickyNeighborToSecond = createNeighbor(3);
+
+          var firstSticky = {};
+          firstSticky.getNeighbors = function() { return [stickyNeighborToFirst, stickyNeighborToBoth]; }
+
+          var secondSticky = {};
+          secondSticky.getNeighbors = function() { return [stickyNeighborToSecond, stickyNeighborToBoth]; }
+
+          movingVisitor.moveMyNeighbors(10,100, firstSticky);
+          stickyNeighborToBoth.wasToldToDrag = false;
+          movingVisitor.moveMyNeighbors(10,100, secondSticky);
+
+          expect(stickyNeighborToBoth.wasToldToDrag).to(equal, false);
+          expect(stickyNeighborToSecond.wasToldToDrag).to(equal, true);
+        });
         it("tells the sticky's neighbor to drag", function(){
           var movingVisitor = createMovingVisitor();
 
           var sticky = {};
 
-          var createNeighbor = function() {
+          var createNeighbor = function(id) {
             return {
               __args_wasToldToDrag : [],
               wasToldToDrag: false,
-              youAreBeingDragged: function() { this.__args_wasToldToDrag = arguments; this.wasToldToDrag = true; }
+              youAreBeingDragged: function() { this.__args_wasToldToDrag = arguments; this.wasToldToDrag = true; },
+              id: id
             };
           };
-          var neighbors = [createNeighbor(), createNeighbor()];
+          var neighbors = [createNeighbor(1), createNeighbor(2)];
           sticky.getNeighbors = function(){
             return neighbors;
           };
