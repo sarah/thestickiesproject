@@ -2,7 +2,7 @@
 /*global TSP*/
 TSP.builders = (function() {
   function attach_handlers(sticky_element) {
-    var handlers = TSP.get().handlers;
+    var handlers = TSP.get().event_handlers;
     var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', 
                                   event : "dblclick", tooltip : "Double-click to edit",
                                   indicator : 'Saving...', placeholder : "Double-click to edit"};

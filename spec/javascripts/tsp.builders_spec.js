@@ -1,7 +1,7 @@
 require('spec_helper.js', {onload: function(){
     rails_require('tsp');
     rails_require('tsp.builders');
-    rails_require('tsp.handlers');
+    rails_require('tsp.event_handlers');
 }});
 
 Screw.Unit(function(){

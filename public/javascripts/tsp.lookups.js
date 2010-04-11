@@ -2,8 +2,8 @@
 /*global TSP*/
 TSP.lookups = (function() {
   var ajax_helpers = TSP.get().helpers.ajax;
-  function sticky(sticky_element) {
-      var dom_element = sticky_element;
+  function sticky_behaviors_for(sticky_dom_element) {
+      var dom_element = sticky_dom_element;
       return {
         update_url: function() {
           return dom_element.attr('data-update-url');
@@ -19,7 +19,7 @@ TSP.lookups = (function() {
         },
         destroy: function(){
           ajax_helpers.destroy.apply(this);
-          sticky_element.remove();
+          dom_element.remove();
         }
       };
   }
@@ -30,7 +30,7 @@ TSP.lookups = (function() {
       },
       sticky_from: function(element) {
         var sticky_element = TSP.get().lookups.sticky_element_from(element);
-        return sticky(sticky_element);
+        return sticky_behaviors_for(sticky_element);
       },
       current_surface: function() {
         return this.surface($('#surface'));

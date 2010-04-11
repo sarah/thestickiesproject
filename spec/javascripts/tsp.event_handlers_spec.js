@@ -3,7 +3,7 @@ require('spec_helper.js', {onload: function(){
     rails_require('tsp.builders');
     rails_require('tsp.helpers.ajax');
     rails_require('tsp.lookups');
-    rails_require('tsp.handlers');
+    rails_require('tsp.event_handlers');
 }});
 
 Screw.Unit(function(){
@@ -19,20 +19,20 @@ Screw.Unit(function(){
     return sticky;
   };
 
-  describe("tsp.handlers", function(){
+  describe("tsp.event_handlers", function(){
 
     describe("#destroy_sticky", function(){
 
       it("calls destroy on sticky", function(){
         var delete_div = {};
         mock_sticky(tsp).should_receive('destroy').exactly(1);
-        tsp.handlers.destroy_sticky.apply(delete_div, []);
+        tsp.event_handlers.destroy_sticky.apply(delete_div, []);
       });
     });
 
     describe("#create_sticky", function(){
       it("places created sticky on #stickies", function(){
-        tsp.handlers.create_sticky();
+        tsp.event_handlers.create_sticky();
       });
     });
 
@@ -44,7 +44,7 @@ Screw.Unit(function(){
         var event_obj = 'unused';
 
         mock_sticky(tsp).should_receive('update_position').exactly(1).with_arguments({left : 15, top : 100});
-        tsp.handlers.update_sticky_position(event_obj, ui_obj);
+        tsp.event_handlers.update_sticky_position(event_obj, ui_obj);
       });
     });
 
@@ -54,14 +54,14 @@ Screw.Unit(function(){
         sticky = mock_sticky(tsp);
         });
       it("returns the value passed in", function(){
-        var value = tsp.handlers.update_sticky_text.apply(get_editable_div(), ['new text', null]);
+        var value = tsp.event_handlers.update_sticky_text.apply(get_editable_div(), ['new text', null]);
         expect(value).to(equal, "new text");
       });
 
       it("updates the sticky value with the passed value", function(){
         sticky.should_receive('update_content').with_arguments('new content').exactly(1);
 
-        tsp.handlers.update_sticky_text.apply(get_editable_div(), ['new content', null]);
+        tsp.event_handlers.update_sticky_text.apply(get_editable_div(), ['new content', null]);
       });
     });
 
@@ -78,14 +78,14 @@ Screw.Unit(function(){
         surface = mock_surface(tsp);
         });
       it("returns the value passed in", function(){
-        var value = tsp.handlers.update_surface_name.apply(get_editable_div(), ['new name', null]);
+        var value = tsp.event_handlers.update_surface_name.apply(get_editable_div(), ['new name', null]);
         expect(value).to(equal, "new name");
       });
 
       it("updates the surface value with the passed value", function(){
         surface.should_receive('update_name').with_arguments('this name').exactly(1);
 
-        tsp.handlers.update_surface_name.apply(get_editable_div(), ['this name', null]);
+        tsp.event_handlers.update_surface_name.apply(get_editable_div(), ['this name', null]);
       });
     });
   });
