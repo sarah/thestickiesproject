@@ -20,14 +20,14 @@ Screw.Unit(function(){
         editable_div = $('.sticky .body .editable');
       });
 
-      describe("#sticky_element_from", function(){
+      describe("#parent_sticky_dom_element_for", function(){
         it("returns sticky element when passed child element", function(){
-          var div = tsp.lookups.sticky_element_from(editable_div);
+          var div = tsp.lookups.parent_sticky_dom_element_for(editable_div);
           expect_true(div.hasClass('sticky'));
         });
 
         it("returns sticky element when passed sticky element ", function(){
-          var div = tsp.lookups.sticky_element_from(sticky_div);
+          var div = tsp.lookups.parent_sticky_dom_element_for(sticky_div);
           expect_true(div.hasClass('sticky'));
         });
       });

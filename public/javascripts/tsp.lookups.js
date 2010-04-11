@@ -25,11 +25,11 @@ TSP.lookups = (function() {
   }
 
   return {
-      sticky_element_from: function(element){
+      parent_sticky_dom_element_for: function(element){
         return $(element).closest(".sticky");
       },
       actions_on: function(element) {
-        var sticky_element = TSP.get().lookups.sticky_element_from(element);
+        var sticky_element = TSP.get().lookups.parent_sticky_dom_element_for(element);
         return sticky_behaviors_for(sticky_element);
       },
       current_surface: function() {
