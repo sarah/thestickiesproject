@@ -26,43 +26,49 @@ var createMovingVisitor = function(){
 };
 Screw.Unit(function(){
   describe("Dragging a sticky", function(){
+    function expectCalled(object) {
+      expect(object.wasFunctionCalled).to(equal, true);
+      var expectedArgs = $.makeArray(arguments).splice(1);
+      $(expectedArgs).each(function(index, arg){
+       expect(object.passedArguments[index]).to(equal, arg);
+      });
+    }
     describe("Sticky", function() {
       describe("#youAreBeingDragged", function() {
+        function expectNeighborsMoved(visitor, dx, dy, sticky){
+          expectCalled(visitor,dx,dy,sticky);
+        }
+        function createMovingVisitor() {  
+          return {
+           wasFunctionCalled: false, 
+           passedArguments: [],
+           moveMyNeighbors: function(){
+            this.passedArguments = arguments;
+            this.wasFunctionCalled = true; 
+           }
+          };
+        };
+        function returnThis(argument){ 
+          return function() { return argument; };
+        }
         describe("no MovingVisitor given", function() {
           it("tells a new MoveVisitor to move neighbors", function(){
-            var __called_moveMyNeighbors = false;
-            var movingVisitor = {
-              moveMyNeighbors: function() { __args_moveMyNeighbors = arguments; __called_moveMyNeighbors = true; }
-            };
-            var createMovingVisitor = function() {  return movingVisitor; };
-            var sticky = createSticky(createMovingVisitor);
+            var movingVisitor = createMovingVisitor();
+            var sticky = createSticky(returnThis(movingVisitor));
 
-            var dx = 10;
-            var dy = 100;
-            sticky.youAreBeingDragged(dx, dy);
+            sticky.youAreBeingDragged(10, 100);
 
-            expect(__called_moveMyNeighbors).to(equal, true);
-            expect(__args_moveMyNeighbors[0]).to(equal, dx);
-            expect(__args_moveMyNeighbors[1]).to(equal, dy);
-            expect(__args_moveMyNeighbors[2]).to(equal, sticky);
+            expectNeighborsMoved(movingVisitor, 10, 100, sticky);
           });
         });
         describe("existing MovingVisitor given", function() {
           it("tells that MoveVisitor to move neighbors", function(){
-            var __called_moveMyNeighbors = false;
-            var movingVisitor = {
-              moveMyNeighbors: function() { __args_moveMyNeighbors = arguments; __called_moveMyNeighbors = true; }
-            };
+            var movingVisitor = createMovingVisitor();
             var sticky = createSticky($.noop);
 
-            var dx = 10;
-            var dy = 100;
-            sticky.youAreBeingDragged(dx, dy, movingVisitor);
+            sticky.youAreBeingDragged(10, 100, movingVisitor);
 
-            expect(__called_moveMyNeighbors).to(equal, true);
-            expect(__args_moveMyNeighbors[0]).to(equal, dx);
-            expect(__args_moveMyNeighbors[1]).to(equal, dy);
-            expect(__args_moveMyNeighbors[2]).to(equal, sticky);
+            expectNeighborsMoved(movingVisitor, 10, 100, sticky);
           });
         });
       });
@@ -83,63 +89,68 @@ Screw.Unit(function(){
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
-        it("does not tell a sticky that was already visited to drag", function(){
-          var movingVisitor = createMovingVisitor();
-
-          var createNeighbor = function(id) {
+          function expectDragged(neighbor,dx,dy, visitor){
+            if(arguments.size > 1) {
+              expectCalled(neighbor, dx, dy, visitor);
+            }else {
+              expectCalled(neighbor);
+            }
+          }
+          function createNeighbor(id) {
             return {
-              __args_wasToldToDrag : [],
-              wasToldToDrag: false,
-              youAreBeingDragged: function() { this.__args_wasToldToDrag = arguments; this.wasToldToDrag = true; },
+              wasFunctionCalled: false,
+              passedArguments : [],
+              youAreBeingDragged: function() { 
+                this.passedArguments = arguments; 
+                this.wasFunctionCalled = true; },
               id: id
             };
           };
+          function expectNotDragged(neighbor){
+            expect(neighbor.wasToldToDrag).to(equal, false);
+          }
+          function returnThese() {
+            var outerArguments;
+            outerArguments = arguments;
+            return function(){ return outerArguments; };
+          };
+        it("does not tell a sticky that was already visited to drag", function(){
+          var movingVisitor = createMovingVisitor();
+
           var stickyNeighborToBoth = createNeighbor(1); 
           var stickyNeighborToFirst =  createNeighbor(2);
           var stickyNeighborToSecond = createNeighbor(3);
 
           var firstSticky = {};
-          firstSticky.getNeighbors = function() { return [stickyNeighborToFirst, stickyNeighborToBoth]; }
+          firstSticky.getNeighbors = returnThese(stickyNeighborToFirst, stickyNeighborToBoth);
 
           var secondSticky = {};
-          secondSticky.getNeighbors = function() { return [stickyNeighborToSecond, stickyNeighborToBoth]; }
+          secondSticky.getNeighbors = returnThese(stickyNeighborToSecond, stickyNeighborToBoth);
 
           movingVisitor.moveMyNeighbors(10,100, firstSticky);
           stickyNeighborToBoth.wasToldToDrag = false;
           movingVisitor.moveMyNeighbors(10,100, secondSticky);
 
-          expect(stickyNeighborToBoth.wasToldToDrag).to(equal, false);
-          expect(stickyNeighborToSecond.wasToldToDrag).to(equal, true);
+          expectNotDragged(stickyNeighborToBoth);
+          expectDragged(stickyNeighborToFirst);
+          expectDragged(stickyNeighborToSecond);
         });
+
         it("tells the sticky's neighbor to drag", function(){
           var movingVisitor = createMovingVisitor();
 
           var sticky = {};
 
-          var createNeighbor = function(id) {
-            return {
-              __args_wasToldToDrag : [],
-              wasToldToDrag: false,
-              youAreBeingDragged: function() { this.__args_wasToldToDrag = arguments; this.wasToldToDrag = true; },
-              id: id
-            };
-          };
-          var neighbors = [createNeighbor(1), createNeighbor(2)];
-          sticky.getNeighbors = function(){
-            return neighbors;
-          };
+          var neighborOne = createNeighbor(1);
+          var neighborTwo = createNeighbor(2);
+          sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
 
           movingVisitor.moveMyNeighbors(10,100, sticky);
 
-          expect(neighbors[0].wasToldToDrag).to(equal, true);
-          expect(neighbors[0].__args_wasToldToDrag[0]).to(equal, 10);
-          expect(neighbors[0].__args_wasToldToDrag[1]).to(equal, 100);
-          expect(neighbors[0].__args_wasToldToDrag[2]).to(equal, movingVisitor);
 
-          expect(neighbors[1].wasToldToDrag).to(equal, true);
-          expect(neighbors[1].__args_wasToldToDrag[0]).to(equal, 10);
-          expect(neighbors[1].__args_wasToldToDrag[1]).to(equal, 100);
-          expect(neighbors[1].__args_wasToldToDrag[2]).to(equal, movingVisitor);
+          expectDragged(neighborOne, 10, 100, movingVisitor);
+          expectDragged(neighborTwo, 10, 100, movingVisitor);
+
         });
       });
     });
