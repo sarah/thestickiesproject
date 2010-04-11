@@ -32,15 +32,15 @@ Screw.Unit(function(){
         });
       });
       
-      describe("sticky object returned from #sticky_from", function(){
+      describe("actions returned from #actions_on", function(){
           before(function(){
-            sticky = tsp.lookups.sticky_from(editable_div);
+            sticky = tsp.lookups.actions_on(editable_div);
           });
           describe("#destroy", function(){
             before(function(){
               sticky_to_destroy = $("<div id='to_remove' class='sticky' data-delete-url='/delete_me'></div>");
               $(get_surface_selector()).append(sticky_to_destroy);
-              sticky = tsp.lookups.sticky_from(sticky_to_destroy);
+              sticky = tsp.lookups.actions_on(sticky_to_destroy);
               });
 
             it("posts to delete-url", function(){

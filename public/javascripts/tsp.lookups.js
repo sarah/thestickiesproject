@@ -28,7 +28,7 @@ TSP.lookups = (function() {
       sticky_element_from: function(element){
         return $(element).closest(".sticky");
       },
-      sticky_from: function(element) {
+      actions_on: function(element) {
         var sticky_element = TSP.get().lookups.sticky_element_from(element);
         return sticky_behaviors_for(sticky_element);
       },
