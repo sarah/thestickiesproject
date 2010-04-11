@@ -33,21 +33,26 @@ Screw.Unit(function(){
        expect(object.passedArguments[index]).to(equal, arg);
       });
     }
+    function createDouble(id, functionName) {
+      var object = {
+       wasFunctionCalled: false, 
+       passedArguments: [],
+       id: id
+      };
+      object[functionName] = function(){
+        this.passedArguments = arguments;
+        this.wasFunctionCalled = true; 
+        };
+      return object;
+    }
     describe("Sticky", function() {
       describe("#youAreBeingDragged", function() {
+        function createMovingVisitor(id) {  
+          return createDouble(id, "moveMyNeighbors");
+        };
         function expectNeighborsMoved(visitor, dx, dy, sticky){
           expectCalled(visitor,dx,dy,sticky);
         }
-        function createMovingVisitor() {  
-          return {
-           wasFunctionCalled: false, 
-           passedArguments: [],
-           moveMyNeighbors: function(){
-            this.passedArguments = arguments;
-            this.wasFunctionCalled = true; 
-           }
-          };
-        };
         function returnThis(argument){ 
           return function() { return argument; };
         }
@@ -103,6 +108,9 @@ Screw.Unit(function(){
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
+          function createNeighbor(id) {
+            return createDouble(id, "youAreBeingDragged");
+          };
           function expectDragged(neighbor,dx,dy, visitor){
             if(arguments.size > 1) {
               expectCalled(neighbor, dx, dy, visitor);
@@ -110,18 +118,8 @@ Screw.Unit(function(){
               expectCalled(neighbor);
             }
           }
-          function createNeighbor(id) {
-            return {
-              wasFunctionCalled: false,
-              passedArguments : [],
-              youAreBeingDragged: function() { 
-                this.passedArguments = arguments; 
-                this.wasFunctionCalled = true; },
-              id: id
-            };
-          };
           function expectNotDragged(neighbor){
-            expect(neighbor.wasToldToDrag).to(equal, false);
+            expect(neighbor.wasFunctionCalled).to(equal, false);
           }
           function returnThese() {
             var outerArguments;
@@ -142,7 +140,7 @@ Screw.Unit(function(){
           secondSticky.getNeighbors = returnThese(stickyNeighborToSecond, stickyNeighborToBoth);
 
           movingVisitor.moveMyNeighbors(10,100, firstSticky);
-          stickyNeighborToBoth.wasToldToDrag = false;
+          stickyNeighborToBoth.wasFunctionCalled = false;
           movingVisitor.moveMyNeighbors(10,100, secondSticky);
 
           expectNotDragged(stickyNeighborToBoth);
