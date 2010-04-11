@@ -31,7 +31,7 @@ Screw.Unit(function(){
     describe("sticky object returned from #sticky", function(){
       it("contains the properties passed in", function(){
         var sticky;
-        sticky = tsp.builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me', delete_url: '/delete_me'});
+        sticky = tsp.builders.create_sticky_dom_element({left: 5, top: 10, content: 'my content', update_url: '/update_me', delete_url: '/delete_me'});
         expect(sticky.left).to(equal, 5);
         expect(sticky.top).to(equal, 10);
         expect(sticky.content).to(equal, 'my content');

@@ -79,6 +79,20 @@ I'm uncomfortable with the option of switching accounts at this point, as it doe
 
 I fancy the other option even less, as it goes against the idea that a user should be able to rapidly use our system without worrying about having an account.
 
+-- reply to comment
+
+Curious.
+
+I find this notion of ‘not logged in’ vs. ‘logged in as x’ weird. You still have to do access checks, but now instead of just checking the current user, don’t you have to check ‘is their a user’? If not, act in some anonymous way. If so, act according to privileges of current user?
+
+It seems to be a distinction without a difference except the pain of having to check twice (kind of like in C where you have to check a char *x to see if x is NULL before you can check *x.). Effectively, in your code, do you have the knowledge of ‘an anonymous user’, but it isn’t it spread out (not DRY) all over the place, synthesizing the behaviour of an anonymous user instead of leveraging your existing user handling code by actually having an anonymous user? Put another way, wouldn’t having an anonymous user just be a variation on the Null Object patern? (http://en.wikipedia.org/wiki/Null_Object_pattern)
+
+I’ve found that the Null Object pattern is immensely powerful for dealing with (i.e. avoiding) these kinds of special checks situations.
+
+But I don’t know enough about your implementation to make any more specific comments/questions.
+
+---- reply to reply
+
 
 - comment
 Kerry Buckley

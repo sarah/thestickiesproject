@@ -7,10 +7,7 @@ TSP.builders = (function() {
                                   event : "dblclick", tooltip : "Double-click to edit",
                                   indicator : 'Saving...', placeholder : "Double-click to edit"};
 
-    var dummy = function(event, ui) {
-    console.log('dragging' + ui.offset.top + " - " + ui.offset.left);
-    };
-    sticky_element.draggable({drag:dummy, stop: handlers.update_sticky_position, containment: "#stickies" });
+    sticky_element.draggable({stop: handlers.update_sticky_position, containment: "#stickies" });
 
     sticky_element.find('.editable').editable(handlers.update_sticky_text, EDITABLE_STICKY_PROPS);
 
@@ -19,7 +16,7 @@ TSP.builders = (function() {
     return sticky_element;
   }
 
-  function sticky_element(options){
+  function create_sticky_dom_element(options){
     var sticky_el = $("<div class='sticky' data-delete-url='"+
                       options.delete_url+"' data-update-url='"+
                       options.update_url+"'><div class='header'>"+
@@ -29,25 +26,25 @@ TSP.builders = (function() {
     return attach_handlers(sticky_el);
   }
 
+  function place_sticky_dom_element_on_surface(stage_selector) {
+    var sticky_el = create_sticky_dom_element(this);
+    $(stage_selector).append(sticky_el);
+    sticky_el.css({left:this.left, top:this.top, position: 'absolute', display:"none"});
+    sticky_el.slideDown(1000);
+    return sticky_el;
+  };
+
   return {
       create_sticky: function(){
             var url = $('#stickies').attr('data-create-sticky-url');
             $.post(url, null, function(response_json) { 
-                  TSP.get().builders.sticky(response_json).place_on("#stickies");
+                  TSP.get().builders.create_sticky_dom_element(response_json).place_on("#stickies");
                 }, "json");
           },
-      sticky:function(options){
+      create_sticky_dom_element:function(options){
               var new_sticky = $.extend({}, options);
-
-              new_sticky.place_on = function(container){
-                var sticky_el = sticky_element(this);
-                $(container).append(sticky_el);
-                sticky_el.css({left:this.left, top:this.top, position: 'absolute', display:"none"});
-                sticky_el.slideDown(1000);
-                return sticky_el;
-              };
+              new_sticky.place_on = place_sticky_dom_element_on_surface;
               return new_sticky;
-
          }
   };
 }());
