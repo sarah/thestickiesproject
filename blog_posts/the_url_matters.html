@@ -93,6 +93,15 @@ But I don’t know enough about your implementation to make any more specific co
 
 ---- reply to reply
 
+The notion of 'logged in' vs 'not logged in' is simply a matter of whether the user has logged in. When first going to the site, before you provide your credentials, you are considered 'not logged in.' You can still use the application, though. Once you provide credentials (logging in), then you are provided with basically one more option: viewing your own surfaces. The benefit of not having an 'anonymous' user is that you don't have to act in some anonymous way before login. Everyone, whether logged in or not, can access unclaimed surfaces through /surfaces/unclaimed. Once you log in as user 'x' (with id 5), then you can start accessing surfaces claimed by user 5, as well, through /users/5/surfaces. There are very little access checks, and in fact fewer when you don't have an anonymous user object. The null object pattern would add unnecessary complexity to the code.
+
+I think we are talking on two different levels of complexity, though: conceptual and code. We are working hard to minimize the complexity in the concepts, relying on the general principle that simplifying your concepts generally leads to naturally simple code. In our domain, there is no concept of an anonymous user at all. This easily bleeds into the code itself. From a code-oriented perspective, you have two routes: unclaimed and claimed. Unclaimed renders the collection Surface.unclaimed, while the claimed route renders the collection user.surfaces. Because we are relying on the resource locators to define which specific collection to view, the need for scattering user code around goes away entirely. The rest of the system, though, stays the same, as you end up always dealing with a collection of surfaces, regardless of where they came from. When accessing the unclaimed surfaces, you don't need to do any access checks at all.
+
+By keeping your resource locators clean, you end up with this sort of flexibility for almost free.
+
+
+
+
 
 - comment
 Kerry Buckley
