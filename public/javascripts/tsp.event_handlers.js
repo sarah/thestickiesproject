@@ -21,13 +21,6 @@ TSP.event_handlers = (function() {
                    }
   };
   var surface_actions = {
-  
-    update_name: function(value, settings){
-                           var surface = tsp.lookups.current_surface();
-                           surface.update_name(value);
-                           return value;
-                   },
-
     create_sticky: function() {
                      tsp.builders.create_sticky();
                    }
