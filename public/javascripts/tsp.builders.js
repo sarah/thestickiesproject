@@ -2,16 +2,16 @@
 /*global TSP*/
 TSP.builders = (function() {
   function attach_handlers(sticky_element) {
-    var handlers = TSP.get().event_handlers;
+    var handlers = TSP.get().event_handlers.stickies;
     var EDITABLE_STICKY_PROPS = { type : 'textarea', onblur : 'submit', 
                                   event : "dblclick", tooltip : "Double-click to edit",
                                   indicator : 'Saving...', placeholder : "Double-click to edit"};
 
-    sticky_element.draggable({stop: handlers.update_sticky_position, containment: "#stickies" });
+    sticky_element.draggable({stop: handlers.update_position, containment: "#stickies" });
 
-    sticky_element.find('.editable').editable(handlers.update_sticky_text, EDITABLE_STICKY_PROPS);
+    sticky_element.find('.editable').editable(handlers.update_text, EDITABLE_STICKY_PROPS);
 
-    sticky_element.find('.delete_link').click(handlers.destroy_sticky);
+    sticky_element.find('.delete_link').click(handlers.destroy);
 
     return sticky_element;
   }
@@ -32,7 +32,7 @@ TSP.builders = (function() {
     sticky_el.css({left:this.left, top:this.top, position: 'absolute', display:"none"});
     sticky_el.slideDown(1000);
     return sticky_el;
-  };
+  }
 
   return {
       create_sticky: function(){
