@@ -20,17 +20,21 @@ TSP.event_handlers = (function() {
                       actions.update_position(position);
                    }
   };
-  var surface_actions = {};
-  return {
-    stickies: sticky_actions,
-    create_sticky: function() {
-                     tsp.builders.create_sticky();
-                   },
-    update_surface_name: function(value, settings){
+  var surface_actions = {
+  
+    update_name: function(value, settings){
                            var surface = tsp.lookups.current_surface();
                            surface.update_name(value);
                            return value;
+                   },
+
+    create_sticky: function() {
+                     tsp.builders.create_sticky();
                    }
+  };
+  return {
+    stickies: sticky_actions,
+    surfaces: surface_actions
   };
 }());
 
