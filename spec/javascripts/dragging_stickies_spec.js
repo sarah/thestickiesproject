@@ -33,7 +33,7 @@ Screw.Unit(function(){
        expect(object.passedArguments[index]).to(equal, arg);
       });
     }
-    function createDouble(id, functionName) {
+    function createSpy(id, functionName) {
       var object = {
        wasFunctionCalled: false, 
        passedArguments: [],
@@ -48,22 +48,22 @@ Screw.Unit(function(){
     describe("Sticky", function() {
       describe("#youAreBeingDragged", function() {
         function createMovingVisitor(id) {  
-          return createDouble(id, "moveMyNeighbors");
+          return createSpy(id, "moveMyNeighbors");
         };
         function expectNeighborsMoved(visitor, dx, dy, sticky){
           expectCalled(visitor,dx,dy,sticky);
         }
-        function returnThis(argument){ 
+        function functionThatReturns(argument){ 
           return function() { return argument; };
         }
         describe("no MovingVisitor given", function() {
           it("tells a new MoveVisitor to move neighbors", function(){
-            var movingVisitor = createMovingVisitor();
-            var sticky = createSticky(returnThis(movingVisitor));
+            var movingVisitor = createSpy("1", "moveMyNeighbors");
+            var sticky = createSticky(functionThatReturns(movingVisitor));
 
             sticky.youAreBeingDragged(10, 100);
 
-            expectNeighborsMoved(movingVisitor, 10, 100, sticky);
+            expectCalled(movingVisitor, 10, 100, sticky);
           });
         });
         describe("existing MovingVisitor given", function() {
@@ -109,7 +109,7 @@ Screw.Unit(function(){
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
           function createNeighbor(id) {
-            return createDouble(id, "youAreBeingDragged");
+            return createSpy(id, "youAreBeingDragged");
           };
           function expectDragged(neighbor,dx,dy, visitor){
             if(arguments.size > 1) {
