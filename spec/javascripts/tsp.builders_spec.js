@@ -10,12 +10,6 @@ Screw.Unit(function(){
     tsp  = TSP.get();
   });
 
-  var mock_sticky = function(tsp){
-    var sticky = mock();
-    stub(tsp.builders, 'sticky').and_return(sticky);
-    return sticky;
-  };
-
   describe("tsp.builders", function(){
     describe("#create_sticky", function(){
       it("posts to the create-sticky-url", function(){
@@ -35,14 +29,9 @@ Screw.Unit(function(){
     });
 
     describe("sticky object returned from #sticky", function(){
-      var sticky;
-      before(function(){
-        sticky = TSP.get().builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me', delete_url: '/delete_me'});
-      });
-      after(function(){
-        get_stickies_div().empty();
-        });
       it("contains the properties passed in", function(){
+        var sticky;
+        sticky = tsp.builders.sticky({left: 5, top: 10, content: 'my content', update_url: '/update_me', delete_url: '/delete_me'});
         expect(sticky.left).to(equal, 5);
         expect(sticky.top).to(equal, 10);
         expect(sticky.content).to(equal, 'my content');

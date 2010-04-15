@@ -1,0 +1,52 @@
+As I've been learning how to test javascript, moving from a test-first to a test-driven approach, I've started to extract some guidelines for my designs. The majority of them come from listening to my tests: when I feel pain in testing something, I look to see what that is telling me about my design. I've a few definite ideas forming about some differences in the techniques I use when I'm testing javascript, versus when I'm testing Ruby or C#/Java. They aren't fully formed, yet, but this blog post outlines a few of them.
+
+Get away from the DOM as soon as possible
+
+Even with great tools like jQuery, interacting with the browser blows big time. So, build a very thin layer at the entry points to your system, detach yourself from the actual dom by creating javascript object wrappers and manipulate those. This has a lot of benefits, including the usual ones gained from isolation. A lot of times, I hear people talk about javascript being all UI/view code. In the stickies project, we are putting the majority of our system in javascript, using the browser as an application platform. This means that we have view code and domain logic all running in there. So, as with any architecture, you should be isolating the UI and just testing the innards.
+
+So, I have a general rule, only a small set of functions are allowed to pass a string into the root jQuery selector, a la $(<string)>, the rest of the functions, if they access the dom at all, must use a context-based find, such as $(element).find(<string>). This keeps the code ignorant of any unnecessary structural details. Most of the these functions that work on the dom would be highly encapsulated inside javascript objects.
+
+Side story: When I was first learning about test-first programming, I had to build a user interface for the automation tool I was writing. I was pairing with Bob Koss at the time, and I had come to work in the morning after struggling all night with the idea of writing tests for the user interface. I asked him about it, and he reinforced the rule that most people believe, but few people truly do: there should be no logic at all in your user interface. That is, the layer directly behind the UI should be receiving events, grabbing the data and sending it to the underlying logic components. I've been doing it religiously ever since. When you start moving heavily from test-first to test-driven, you really start to see that you can't do anything but isolate the user interface. After all, when your executable examples are treated as a client of your system, your UI will just be the second client, heavily relying on a well-defined api.
+
+Object creation is cheap
+
+In the stickies project, a sticky is represented on the screen by a div. Plugins, such as jQuery UI, interact with our system via the DOM, not via our javascript objects. So, why not have the div be the canonical 'sticky' object, spinning up javascript-based 'stickies' whenever we need them. Create a builder function that takes a div and returns a javascript object. However, we don't persist these javascript objects, they are built on an as needed basis, generally due to a stimulus from a user event, then thrown away when we are done reacting to the event. This also allows us to easily test our functionality by passing in dummy objects that we create in our tests. Yeah, we could use jQuery to spin up some dummy dom elements, but then you have a lot of unnecessary cruft around.
+
+Test doubles are free
+
+One beauty of javascript's prototype-based nature, as opposed to being class-based, is that the concept of 'type' really frees itself from the usual tight-coupling with 'class' that most people think of. A javascript object is this: {}. That's it. Nothing more than that. What type is it? Well, no real type, yet. Want to change the type of it? Add some behaviors, either by mixing in a new prototype or just add the individual behaviors, yourself. Using jQuery makes this very easy, as it has an extend function, which you can use to easily mix in behaviors. This allows you to very easily evolve the type of an object as it moves through it's lifetime.
+
+What does this mean for test doubles? Well, you don't need anything other than {} to create yourself a test double. Need to stub out a behavior?
+
+function functionUnderTest(collaborator) {
+  return 2 + collaborator.foo('hello');
+
+}
+
+Do something like
+
+var double = {};
+double.foo = function() { return 5; }
+functionUnderTest(double);
+
+Because functions in javascript are closures, you can even do something like:
+
+var double, returnValue;
+returnValue = 5;
+double = {};
+double.foo = function() { return returnValue; }
+functionUnderTest(double);
+
+Want to capture the arguments? That's easy, too:
+
+var double, __args_stubbedFunction;
+__args_stubbedFunction = 5;
+double = {};
+double.foo = function() { __args_stubbedFunction = arguments; }
+functionUnderTest(double);
+
+I'll leave it as an exercise to the reader how to both capture the arguments and return a value. :)
+
+As I've been spinning my own doubles, I'm starting to notice a few patterns begging to be extracted. Stubbing a function with a given return value and collecting the arguments given is a common task. It is the most common activity that I do. I occasionally do it on existing objcts, but most of the time it is on doubles that I've spun up to pass in. I've allowed the duplication to persist for a while, trying different techniques, but I've pretty much settled on the one. This means that it is time to extract it. I don't know whether they will come out into a cohesive set that could be called a doubling framework, or just stay a set of functions that I reuse. I'll definitely put it out on github, though.
+
+There are other things I've learned, but I want to end this and get it posted. We are doing our best to post regularly, so you can expect more thoughts on javascript while we continue to build the stickies project. We are close to initial feature complete, so a beta release is on the horizon. No specific date, yet, but it will be soon.

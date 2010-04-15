@@ -1,0 +1,101 @@
+I ran into 2 interesting situations while working on claimed/unclaimed surfaces that appeared different, but they both ended up being very similar when deciding on the solutions.
+
+<i>First:</i> what should the URL for unclaimed surfaces be? My first thought was /surfaces; That seemed reasonable. Then I wondered about using /surfaces/unclaimed. Is the extra part of the URL unnecessary, is it a violation of YAGNI?
+
+<i>Second:</i> what should the URL for viewing your claimed surfaces be? Should it be /surfaces/claimed, showing the surfaces belonging to the logged-in user? Or, should I be explicit and use /users/:user_id/surfaces? Should I also add /users/:user_id/surfaces/claimed?
+
+I had an intuition about what the solutions should be, but, when I am uncertain, I like to fall back on base principles, such as the <a href="http://c2.com/xp/XpSimplicityRules.html">4 rules of simple design</a> and the <a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">SOLID</a> principles. I thought I would write a blog post outlining how I went about analyzing these 2 problems.
+
+<h3>Simple Design</h3>
+
+The 4 rules of simple design are as follows:
+
+<ul>
+  <li>Passes all tests</li>
+  <li>Reveals Intent</li>
+  <li>Contains no duplication</li>
+  <li>Is Small</li>
+</ul>
+
+<a href="http://www.twitter.com/jbrains">J.B. Rainsberger</a> makes a convincing argument that there are really only 2 rules: no duplication and reveals intent, since 'passing all tests' is like breathing and 'is small' comes naturally from the other principles.
+
+<!--more-->
+
+<h3>Unclaimed Surfaces </h3>
+
+A driving force in in the user experience for the stickies project is the ability to very quickly try the system, even before registering. The surfaces created by unregistered users are considered 'unclaimed' and public to everyone else. I wrote a <a href="http://thestickiesproject.wordpress.com/2010/03/09/claimed-and-unclaimed-surfaces/">blog post</a> outlining this approach a little while ago. A major and important decision is what the URL should be for these surfaces (Sarah wrote <a href="http://thestickiesproject.wordpress.com/2010/03/04/domain-modeling-for-dummies/">a post on our choice of domain</a>). The natural first thought would be /surfaces, since it seems like a natural root name.
+
+Thinking about this, though, I realised that the decision to use /surfaces as the url broke the rule about revealing intent. This rule can also be thought of as 'named clearly.' What is the usual expectation of a URL like /surfaces? In general, it is used as the index, or the list of all surfaces. Giving it an implicit filter (unclaimed) is a violation of this. Another interpretation of 'reveals intent' is the Principle of Least Surprise - you shouldn't be surprised when you access something. An explicit URL for the unclaimed surfaces would be /surfaces/unclaimed.
+
+Being explicit also opens you up to extensibility and future enhancements without having to worry about it. No, I'm not saying that you should be designing for unknown future requirements, but, given a choice, I like to choose the path which will give me the most flexibility in the future. Having explicit filters on the /surfaces URL, such as /unclaimed, provides both a precedent and a mechanism for this. I am a firm follower of the SOLID principles, and one of my favorites is the Open-Closed principle: systems should be open for extensibility, closed for modification. There are a lot of resources online with detailed explanations, but it boils down to this: build systems that can accept behavorial changes through extension without requiring modification of the core system. We can take this idea to our resource locators, as well. So, if we hide some implementation behind /surfaces, then we create the potential need to change what it means in the future. By relying on a form of extension, /surfaces/unclaimed, then we create a situation where we can more easily and predictable add future behaviors simply by adding a new filter: /surfaces/private or /surfaces/about_to_be_deleted, for example.
+
+
+<h3>Claimed Surfaces</h3>
+
+Viewing a user's claimed surfaces seems natural to use /users/:user_id/surfaces. Most people wouldn't argue with this. When using an authentication system in Rails, though generally you given a #current_user method on your controller. This provides access to the currently logged-in user. I often see people taking a shortcut when scoping resources. In our case, it would be using #current_user to scope the surfaces given when accessing /surfaces. So, when you access /surfaces, you are actually getting the equivalent of current_user.surfaces, or, all the surfaces belonging to the logged-in user. This seems reasonable, since it feels like overkill to provide the user id on the URL: /users/:user_id/surfaces. We already have the user id, don't we? Don't the 4 rules say we shouldn't have duplication? Yes, they do, but this isn't really duplication. In addition, this scheme creates a severe inconsistency in the addressing scheme due to a subtle implication of the DRY principle.
+
+The idea of duplication isn't just about code, but more importantly about concepts. The DRY principle (don't repeat yourself) is a form of 'every concept should have a single representation in your system.' There is a nice corollary that every representation should be of one concept.
+
+Suppose you use /users/:user_id/surfaces to view some claimed surfaces (other people's), yet /surfaces or /surfaces/claimed to see your own. The concept of 'surfaces claimed by a user' now has two different representations in the system. The second rule of simple design (eliminate duplication) comes into play, so we should eliminate one of them; since we already have a concrete use for /users/:user_id/surfaces, it makes sense to stick with that.
+
+What about duplication between the location of the user id: if my id is 3, then I have /users/3/surfaces, and I also have a 3 in my session somewhere, stored as 'current user id.' Is this duplication? No, it isn't; it is just happenstance that they coincide. When eliminating duplication, it is important to remember that you sometimes have constants which represent different concepts. In this case, the concepts are 'user owning the viewed surfaces' and 'user currently logged in.'
+
+<b>Aside:</b> This idea of a number representing two different concepts comes up a lot at coderetreat. According to the rules of Conway's Game of Life, a live cell stays alive if it has 3 neighbors, and a dead cell comes to life if it has 3 neighbors. It is common to see people refactor both of those 3's into a single representation. This generally leads to less understandable code, as the meaning gets lost, muddled in a haze between two different thoughts. It also makes the system less flexible, as the extraction of the 'magic number'-ness of it becomes difficult, due to an unnecessary coupling between the two different rules.
+
+Should it be /users/:user_id/surfaces/claimed?
+
+This is an interesting question. One one hand, we do have /surfaces/unclaimed, so it seems as though the symmetry of having /users/:user_id/surfaces/claimed is desirable. But, taking this URL apart, we can notice something important: there is duplication in concept. The URL /users/:user_id/surfaces reads as 'the surfaces belonging to the user represented by :id.' The /surfaces/claimed reads 'the surfaces claimed by ...' Since 'belonging to' and 'claimed by' are synonyms in our system, we can see that the single URL /users/:user_id/surfaces/claimed has duplication in it. Since we have already seen that the prefix /users/:user_id is needed, the /claimed suffix should be dropped.
+
+So, all of this discussion has lead us to the following identifiers for our collections:
+
+/surfaces - all surfaces, both claimed and unclaimed. What does this mean, how best to represent it? I'm not sure, and I don't think we'll implement this quite yet;
+/surfaces/unclaimed - all unclaimed surfaces;
+/users/:user_id/surfaces - all claimed surfaces for user represented by :id;
+
+
+
+-- comment responses --
+
+- comment
+Doug (dgou@mac.com)
+
+I’m surprised that you didn’t continue the symmetry.
+Having /surfaces/unclaimed on the one hand and
+/users/:user_id/surfaces on the other seems visually and conceptually jarring.
+
+In the first case, /surfaces is more primitive and in the second case /surfaces is nested in a higher organization. Further, in the second case, /users/:user_id/surfaces doesn’t have children.
+
+I’m curious why the pattern isn’t /users/:user_id/surfaces where there is a common user_id for anonymous?
+
+- reply
+
+Thanks for the question. This is an interesting idea, and I can appreciate the URL-symmetry that it would present, but it has a disconnect with our conceptual domain. There are also a couple technical issues behind it.
+
+- There is currently no concept of 'claiming' a surface that has already been claimed, effectively 'stealing' a surface, if you will. Having a concept of an anonymous user that has claimed these surfaces would bring this into play. This is added complexity and possible confusion when you discuss what users allow 'stealing' of their surfaces. Why is there a specific user that allows this (the anonymous user), as opposed to any other user?
+
+- When you visit the site without logging in, you are not automatically logged-in as an 'anonymous' user, you are actually in a state of 'not logged in.' Having a user automatically logged in as 'anonymous' raises the concept of 'switching accounts.' That is, if you are logged-in as User A, do you need to log out before you log in as User B? Having an anonymous user would lead to one of two options: you can switch to be a different account without logging in; or, you must log out and re-log in.
+
+I'm uncomfortable with the option of switching accounts at this point, as it does not seem to coincide with the usual conventions I see surrounding account access. It also adds complexity (being able to both log out and switch logins) that would be included for an unnecessary new concept: 'anonymous user.'
+
+I fancy the other option even less, as it goes against the idea that a user should be able to rapidly use our system without worrying about having an account.
+
+
+- comment
+Kerry Buckley
+kerryjbuckley@gmail.com
+
+I wonder whether there’s still a case for having a generic “my surfaces” URI, as well as the one containing the user ID. It might just display my surfaces directly, or it might redirect to the canonical URI for surfaces belonging to my user.
+
+To my mind, “my surfaces” (represented by something like /surfaces/mine or /my/surfaces) is a separate concept. I might want to send someone a link to my surfaces (/users/3/surfaces), but I also might want to say “to view your own surfaces, you need to request /surfaces/mine” – without a distinct “my surfaces” URI, the latter isn’t possible.
+
+What do you think?
+
+
+- reply
+
+This is a definite possibility in the future. I've seen this sort of strategy successfully employed in other applications that I've worked on. For us, I could go with something like /my/surfaces, /surfaces/mine or /users/me/surfaces. Right now, we haven't run prioritized a use-case like that, so we haven't looked into adding it. When the time comes, though, I like those options.
+
+
+
+
+
