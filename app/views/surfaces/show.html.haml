@@ -14,10 +14,12 @@
 #stickies{'data-create-sticky-url' => surface_stickies_url(@surface)}
       
 %script
-  var build_sticky = TSP.get().builders.sticky;
+  var create_sticky_dom_element = TSP.get().builders.create_sticky_dom_element;
   var sticky_params;
+
   -@stickies.sort{|a,b|a.id <=> b.id}.each do |sticky|
     ==sticky_params = {id:#{sticky.id}, left:#{sticky.left}, top:#{sticky.top}, content:'#{h sticky.content}', delete_url: '#{surface_sticky_url(@surface, sticky)}', update_url:'#{surface_sticky_url(@surface, sticky)}'};
-    build_sticky(sticky_params).place_on('#stickies');
+
+    create_sticky_dom_element(sticky_params).place_on('#stickies');
 
 =javascript_include_tag "stickies"
