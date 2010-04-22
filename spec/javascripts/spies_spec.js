@@ -51,14 +51,14 @@ Screw.Unit(function(){
         expect(obj.wasCalled("wasCalled")).to(equal, true);
       });
 
-      it("can reset to restore function", function() {
+      it("can stopSpying to restore function", function() {
           var obj, originalCalled;
           originalCalled = false;
           obj = { foo: function() { originalCalled = true; } };
 
           obj = spyOn(obj, "foo");
 
-          obj.reset();
+          obj.stopSpying();
 
           obj.foo();
 
