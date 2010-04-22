@@ -1,6 +1,7 @@
+/*global $*/
 var spyOn = (function() {
   function createSpyBehaviorsFor(functionName, originalFunction, returnValue) {
-    var functionWasCalled, passedArguments;
+    var functionWasCalled, passedArguments, spyBehavior;
     functionWasCalled = false;
     passedArguments = [];
     
