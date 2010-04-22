@@ -19,6 +19,19 @@ Screw.Unit(function(){
         expect(obj.passedArguments(1)).to(equal, "argument1");
         expect(obj.passedArguments(2)).to(equal, "argument2");
       });
+
+      it("keeps a count of how many arguments passed", function() {
+        var obj;
+
+        obj = { foo: noop };
+
+        obj = spyOn(obj, "foo");
+
+        obj.foo("argument1", "argument2");
+
+        expect(obj.countOfPassedArguments()).to(equal, 2);
+      });
+
       it("returns the desired value", function() {
         var obj, returnValue;
         obj = { foo: noop };
@@ -63,6 +76,36 @@ Screw.Unit(function(){
           obj.foo();
 
           expect(originalCalled).to(equal, true);
+      });
+
+      describe("#resetSpy", function() {
+        it("resets to not having been called", function() {
+            var obj;
+
+            obj = { foo: function() { } };
+
+            obj = spyOn(obj, "foo");
+
+            obj.foo();
+
+            obj.resetSpy();
+
+            expect(obj.wasCalled()).to(equal, false);
+        });
+
+        it("resets the passedArguments to empty", function() {
+            var obj;
+
+            obj = { foo: function() { } };
+
+            obj = spyOn(obj, "foo");
+
+            obj.foo("1", "2", "3");
+
+            obj.resetSpy();
+
+            expect(obj.countOfPassedArguments()).to(equal, 0);
+        });
       });
     });
   });
