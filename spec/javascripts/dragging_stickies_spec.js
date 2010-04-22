@@ -69,20 +69,29 @@ Screw.Unit(function(){
               sticky.youAreBeingDragged(10, 100);
 
               expect(movingVisitor.wasCalled("moveMyNeighbors")).to(equal, true);
+              expect(movingVisitor.passedArguments(1)).to(equal, 10);
+              expect(movingVisitor.passedArguments(2)).to(equal, 100);
+              expect(movingVisitor.passedArguments(3)).to(equal, sticky);
+            });
+          });
+
+          describe("existing MovingVisitor given", function() {
+            it("tells that MoveVisitor to move neighbors", function(){
+              var movingVisitor;
+              movingVisitor = spyOn({}, "moveMyNeighbors");
+
+              var sticky = createSticky($.noop);
+
+              sticky.youAreBeingDragged(10, 100, movingVisitor);
+
+              expect(movingVisitor.wasCalled("moveMyNeighbors")).to(equal, true);
+              expect(movingVisitor.passedArguments(1)).to(equal, 10);
+              expect(movingVisitor.passedArguments(2)).to(equal, 100);
+              expect(movingVisitor.passedArguments(3)).to(equal, sticky);
             });
           });
         });
 
-        describe("no MovingVisitor given", function() {
-          it("tells a new MoveVisitor to move neighbors", function(){
-            var movingVisitor = createSpy("1", "moveMyNeighbors");
-            var sticky = createSticky(functionThatReturns(movingVisitor));
-
-            sticky.youAreBeingDragged(10, 100);
-
-            expectCalled(movingVisitor, 10, 100, sticky);
-          });
-        });
         describe("no MovingVisitor given", function() {
           it("tells a new MoveVisitor to move neighbors", function(){
             var movingVisitor = createSpy("1", "moveMyNeighbors");
