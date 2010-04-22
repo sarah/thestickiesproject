@@ -85,32 +85,16 @@ Screw.Unit(function(){
         });
       });
       describe("#getMyNeighbors", function() {
-        describe("using spies.js", function() {
-          it("returns the neighbors from the 'neighbor lookup' function", function() {
-            var neighbors = {foo: 1};
-            var spy = spyOn({}, "getMyNeighbors", neighbors);
-
-            var sticky = createSticky($.noop, spy.getMyNeighbors);
-
-            var resulting_neighbors = sticky.getNeighbors();
-
-            expect(resulting_neighbors).to(equal, neighbors);
-            expect(spy.passedArguments(1)).to(equal, sticky);
-          });
-        });
-      });
-      describe("#getMyNeighbors", function() {
         it("returns the neighbors from the 'neighbor lookup' function", function() {
-          var neighbors = {};
-          var __args_getMyNeighbors;
-          var getMyNeighbors = function() { __args_getMyNeighbors = arguments; return neighbors; };
+          var neighbors = {foo: 1};
+          var spy = spyOn({}, "getMyNeighbors", neighbors);
 
-          var sticky = createSticky($.noop, getMyNeighbors);
+          var sticky = createSticky($.noop, spy.getMyNeighbors);
 
           var resulting_neighbors = sticky.getNeighbors();
 
           expect(resulting_neighbors).to(equal, neighbors);
-          expect(__args_getMyNeighbors[0]).to(equal, sticky);
+          expect(spy.passedArguments(1)).to(equal, sticky);
         });
       });
     });
