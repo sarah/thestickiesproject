@@ -1,4 +1,5 @@
 require('spec_helper.js', {onload: function(){
+    rails_require('vendor/spies');
 }});
 var createSticky = function(createMovingVisitor, neighborLookup){
   var sticky = {};
@@ -56,6 +57,32 @@ Screw.Unit(function(){
         function functionThatReturns(argument){ 
           return function() { return argument; };
         }
+        describe("using spies.js", function() {
+          describe("no MovingVisitor given", function() {
+            it("tells a new MoveVisitor to move neighbors", function(){
+              var movingVisitor;
+
+              movingVisitor = spyOn({}, "moveMyNeighbors");
+
+              var sticky = createSticky(functionThatReturns(movingVisitor));
+
+              sticky.youAreBeingDragged(10, 100);
+
+              expect(movingVisitor.wasCalled("moveMyNeighbors")).to(equal, true);
+            });
+          });
+        });
+
+        describe("no MovingVisitor given", function() {
+          it("tells a new MoveVisitor to move neighbors", function(){
+            var movingVisitor = createSpy("1", "moveMyNeighbors");
+            var sticky = createSticky(functionThatReturns(movingVisitor));
+
+            sticky.youAreBeingDragged(10, 100);
+
+            expectCalled(movingVisitor, 10, 100, sticky);
+          });
+        });
         describe("no MovingVisitor given", function() {
           it("tells a new MoveVisitor to move neighbors", function(){
             var movingVisitor = createSpy("1", "moveMyNeighbors");
