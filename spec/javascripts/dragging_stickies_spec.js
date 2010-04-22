@@ -99,6 +99,59 @@ Screw.Unit(function(){
       });
     });
     describe("MovingVisitor", function() {
+      describe("using spies.js", function() {
+        describe("#moveMyNeighbors", function() {
+          // it("does not tell a sticky that was already visited to drag", function(){
+            // var movingVisitor = createMovingVisitor();
+
+            // var stickyNeighborToBoth, stickyNeighborToFirst,
+                // stickyNeighborToSecond;
+            // stickyNeighborToBoth = spyOn({}, "youAreBeingDragged");
+            
+            // stickyNeighborToFirst = spyOn({}, "youAreBeingDragged");
+            // stickyNeighborToSecond = spyOn({}, "youAreBeingDragged");
+
+            // var firstSticky = {};
+            // firstSticky.getNeighbors = returnThese(stickyNeighborToFirst, stickyNeighborToBoth);
+
+            // var secondSticky = {};
+            // secondSticky.getNeighbors = returnThese(stickyNeighborToSecond, stickyNeighborToBoth);
+
+            // movingVisitor.moveMyNeighbors(10,100, firstSticky);
+            // stickyNeighborToBoth.wasFunctionCalled = false;
+            // movingVisitor.moveMyNeighbors(10,100, secondSticky);
+
+            // expectNotDragged(stickyNeighborToBoth);
+            // expectDragged(stickyNeighborToFirst);
+            // expectDragged(stickyNeighborToSecond);
+          // });
+          it("tells the sticky's neighbor to drag", function(){
+            var movingVisitor = createMovingVisitor();
+
+            var sticky = {};
+
+            var neighborOne = spyOn({}, "youAreBeingDragged");
+            var neighborTwo = spyOn({}, "youAreBeingDragged");
+
+            function returnThese() {
+              var outerArguments;
+              outerArguments = arguments;
+              return function(){ return outerArguments; };
+            };
+            sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
+
+            movingVisitor.moveMyNeighbors(10,100, sticky);
+
+            function expectDragged_spies(neighbor, dx, dy, visitor) {
+              expect(neighbor.passedArguments(1)).to(equal, dx);
+              expect(neighbor.passedArguments(2)).to(equal, dy);
+              expect(neighbor.passedArguments(3)).to(equal, visitor);
+            }
+            expectDragged_spies(neighborOne, 10, 100, movingVisitor);
+            expectDragged_spies(neighborTwo, 10, 100, movingVisitor);
+          });
+        });
+      });
       describe("#moveMyNeighbors", function() {
           function createNeighbor(id) {
             return createSpy(id, "youAreBeingDragged");
@@ -140,22 +193,6 @@ Screw.Unit(function(){
           expectDragged(stickyNeighborToSecond);
         });
 
-        it("tells the sticky's neighbor to drag", function(){
-          var movingVisitor = createMovingVisitor();
-
-          var sticky = {};
-
-          var neighborOne = createNeighbor(1);
-          var neighborTwo = createNeighbor(2);
-          sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
-
-          movingVisitor.moveMyNeighbors(10,100, sticky);
-
-
-          expectDragged(neighborOne, 10, 100, movingVisitor);
-          expectDragged(neighborTwo, 10, 100, movingVisitor);
-
-        });
       });
     });
   });
