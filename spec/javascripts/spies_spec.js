@@ -5,6 +5,18 @@ require("spec_helper.js", {onload: function() {
 Screw.Unit(function(){
   describe("#spyOn", function(){
     describe("single method", function() {
+      it("returns the desired value", function() {
+        var obj, returnValue;
+        obj = { foo: $.noop };
+
+        obj = spyOn(obj, "foo", "returnValue");
+
+        returnValue = obj.foo();
+
+        expect(returnValue).to(equal, "returnValue");
+
+      });
+
       it("tells if method was not called", function() {
         var obj;
         obj = { notCalled: $.noop };
