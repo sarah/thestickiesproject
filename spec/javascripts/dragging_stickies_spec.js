@@ -38,7 +38,7 @@ Screw.Unit(function(){
           describe("no MovingVisitor given", function() {
             it("tells a new MoveVisitor to move neighbors", function(){
               var movingVisitor;
-              movingVisitor = spyOn({}, "moveMyNeighbors");
+              movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
 
               var sticky = createSticky(functionThatReturns(movingVisitor));
 
@@ -50,7 +50,7 @@ Screw.Unit(function(){
           describe("existing MovingVisitor given", function() {
             it("tells that MoveVisitor to move neighbors", function(){
               var movingVisitor;
-              movingVisitor = spyOn({}, "moveMyNeighbors");
+              movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
 
               var sticky = createSticky($.noop);
 
@@ -64,7 +64,7 @@ Screw.Unit(function(){
       describe("#getMyNeighbors", function() {
         it("returns the neighbors from the 'neighbor lookup' function", function() {
           var neighbors = {foo: 1};
-          var spy = spyOn({}, "getMyNeighbors", neighbors);
+          var spy = Spies.spyOn({}, "getMyNeighbors", neighbors);
 
           var sticky = createSticky($.noop, spy.getMyNeighbors);
 
@@ -94,10 +94,10 @@ Screw.Unit(function(){
 
             var stickyNeighborToBoth, stickyNeighborToFirst,
                 stickyNeighborToSecond;
-            stickyNeighborToBoth = spyOn({id: 3}, "youAreBeingDragged");
+            stickyNeighborToBoth = Spies.spyOn({id: 3}, "youAreBeingDragged");
             
-            stickyNeighborToFirst = spyOn({id: 1}, "youAreBeingDragged");
-            stickyNeighborToSecond = spyOn({id: 2}, "youAreBeingDragged");
+            stickyNeighborToFirst = Spies.spyOn({id: 1}, "youAreBeingDragged");
+            stickyNeighborToSecond = Spies.spyOn({id: 2}, "youAreBeingDragged");
 
             var firstSticky = {};
             firstSticky.getNeighbors = returnThese(stickyNeighborToFirst, stickyNeighborToBoth);
@@ -119,8 +119,8 @@ Screw.Unit(function(){
 
             var sticky = {};
 
-            var neighborOne = spyOn({id: 1}, "youAreBeingDragged");
-            var neighborTwo = spyOn({id: 2}, "youAreBeingDragged");
+            var neighborOne = Spies.spyOn({id: 1}, "youAreBeingDragged");
+            var neighborTwo = Spies.spyOn({id: 2}, "youAreBeingDragged");
 
             sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
 

@@ -12,7 +12,7 @@ Screw.Unit(function(){
 
         obj = { foo: noop };
 
-        obj = spyOn(obj, "foo");
+        obj = Spies.spyOn(obj, "foo");
 
         obj.foo("argument1", "argument2");
 
@@ -25,7 +25,7 @@ Screw.Unit(function(){
 
         obj = { foo: noop };
 
-        obj = spyOn(obj, "foo");
+        obj = Spies.spyOn(obj, "foo");
 
         obj.foo("argument1", "argument2");
 
@@ -36,7 +36,7 @@ Screw.Unit(function(){
         var obj, returnValue;
         obj = { foo: noop };
 
-        obj = spyOn(obj, "foo", "returnValue");
+        obj = Spies.spyOn(obj, "foo", "returnValue");
 
         returnValue = obj.foo();
 
@@ -48,7 +48,7 @@ Screw.Unit(function(){
         var obj;
         obj = { notCalled: noop };
 
-        obj = spyOn(obj, "notCalled");
+        obj = Spies.spyOn(obj, "notCalled");
 
         expect(obj.wasCalled("notCalled")).to(equal, false);
       });
@@ -57,7 +57,7 @@ Screw.Unit(function(){
         var obj;
         obj = { called: noop };
 
-        obj = spyOn(obj, "called");
+        obj = Spies.spyOn(obj, "called");
 
         obj.called();
 
@@ -69,7 +69,7 @@ Screw.Unit(function(){
           originalCalled = false;
           obj = { foo: function() { originalCalled = true; } };
 
-          obj = spyOn(obj, "foo");
+          obj = Spies.spyOn(obj, "foo");
 
           obj.stopSpying();
 
@@ -84,7 +84,7 @@ Screw.Unit(function(){
 
             obj = { foo: function() { } };
 
-            obj = spyOn(obj, "foo");
+            obj = Spies.spyOn(obj, "foo");
 
             obj.foo();
 
@@ -98,7 +98,7 @@ Screw.Unit(function(){
 
             obj = { foo: function() { } };
 
-            obj = spyOn(obj, "foo");
+            obj = Spies.spyOn(obj, "foo");
 
             obj.foo("1", "2", "3");
 
