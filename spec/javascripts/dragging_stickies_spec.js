@@ -1,6 +1,4 @@
-require('spec_helper.js', {onload: function(){
-    rails_require('vendor/spies');
-}});
+require('spec_helper.js');
 var createSticky = function(createMovingVisitor, neighborLookup){
   var sticky = {};
   sticky.youAreBeingDragged = function(dx, dy, movingVisitor) {
