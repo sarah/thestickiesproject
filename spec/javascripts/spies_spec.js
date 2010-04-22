@@ -2,14 +2,15 @@ require("spec_helper.js");
 
 function spyOn(obj, functionName) {
   obj.wasCalled = function() { 
-    var called;
-    if(functionName === "notCalled") {
-      called = false; 
-    }else{
-      called = true;
-    }
-    return called;
+    return this.called;
   };
+
+  obj.called = false;
+
+  obj[functionName] = function() {
+    this.called = true;
+  };
+
   return obj;
 }
 Screw.Unit(function(){
