@@ -1,21 +1,30 @@
-function spyOn(obj, functionName) {
-  var returnValue = arguments[2];
+var spyOn = (function() {
+  function createSpyBehaviorsFor(functionName, originalFunction, returnValue) {
+    var called, passedArguments;
+    called = false;
+    passedArguments = [];
+    
+    obj = {
+      wasCalled: function() { return called; },
+      passedArguments: function(index) { return passedArguments[index]; },
+      reset: function() { this[functionName] = originalFunction; }
+    };
 
-  obj.wasCalled = function() { 
-    return this.called;
+    obj[functionName] = function() {
+      called = true;
+      passedArguments = arguments;
+      return returnValue;
+    };
+    return obj;
+  }
+
+  return function(obj, functionName) {
+    var returnValue = arguments[2];
+
+    var originalFunction = obj[functionName];
+
+    $.extend(obj, createSpyBehaviorsFor(functionName, originalFunction, returnValue));
+
+    return obj;
   };
-
-  obj.called = false;
-
-  var originalFunction = obj[functionName];
-  obj.reset = function() {
-    this[functionName] = originalFunction;
-  };
-
-  obj[functionName] = function() {
-    this.called = true;
-    return returnValue;
-  };
-
-  return obj;
-}
+}());
