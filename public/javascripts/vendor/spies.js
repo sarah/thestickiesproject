@@ -6,7 +6,7 @@ var spyOn = (function() {
     
     spyBehavior = {
       wasCalled: function() { return functionWasCalled; },
-      passedArguments: function(index) { return passedArguments[index]; },
+      passedArguments: function(index) { return passedArguments[index-1]; },
       stopSpying: function() { this[functionName] = originalFunction; }
     };
 

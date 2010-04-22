@@ -16,8 +16,8 @@ Screw.Unit(function(){
 
         obj.foo("argument1", "argument2");
 
-        expect(obj.passedArguments(0)).to(equal, "argument1");
-        expect(obj.passedArguments(1)).to(equal, "argument2");
+        expect(obj.passedArguments(1)).to(equal, "argument1");
+        expect(obj.passedArguments(2)).to(equal, "argument2");
       });
       it("returns the desired value", function() {
         var obj, returnValue;
