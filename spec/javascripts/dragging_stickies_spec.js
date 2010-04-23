@@ -48,12 +48,11 @@ Screw.Unit(function(){
           });
 
           describe("existing MovingVisitor given", function() {
-            it("tells that MoveVisitor to move neighbors", function(){
+            it("tells that MovingVisitor to move neighbors", function(){
               var movingVisitor;
               movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
 
               var sticky = createSticky($.noop);
-
               sticky.youAreBeingDragged(10, 100, movingVisitor);
 
               expectNeighborsMoved(movingVisitor, 10, 100, sticky);
@@ -67,7 +66,6 @@ Screw.Unit(function(){
           var spy = Spies.spyOn({}, "getMyNeighbors", neighbors);
 
           var sticky = createSticky($.noop, spy.getMyNeighbors);
-
           var resulting_neighbors = sticky.getNeighbors();
 
           expect(resulting_neighbors).to(equal, neighbors);

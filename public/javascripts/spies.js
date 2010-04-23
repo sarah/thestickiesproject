@@ -3,18 +3,18 @@ var Spies = {};
 Spies.spyOn = (function() {
   function createSpyBehaviorsFor(functionName, originalFunction, returnValue) {
     var functionWasCalled, passedArguments, spyBehavior;
-    functionWasCalled = false;
-    passedArguments = [];
-    
+
+    function initialize() {
+      functionWasCalled = false;
+      passedArguments = [];
+    }
+
     spyBehavior = {
       wasCalled: function() { return functionWasCalled; },
       passedArguments: function(index) { return passedArguments[index-1]; },
       countOfPassedArguments: function() { return passedArguments.length; },
       stopSpying: function() { this[functionName] = originalFunction; },
-      resetSpy: function() {
-        functionWasCalled = false;
-        passedArguments = [];
-      }
+      resetSpy: initialize
     };
 
     spyBehavior[functionName] = function() {
@@ -22,6 +22,9 @@ Spies.spyOn = (function() {
       passedArguments = arguments;
       return returnValue;
     };
+
+    spyBehavior.resetSpy();
+
     return spyBehavior;
   }
 
