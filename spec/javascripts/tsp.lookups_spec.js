@@ -44,14 +44,14 @@ Screw.Unit(function(){
               });
 
             it("posts to delete-url", function(){
-              verify_argument_to_jquery_post_when_calling(sticky, 'destroy',null, function(args){
-                  expect(args[0]).to(equal, "/delete_me");
+              verify_argument_to_jquery_post_when_calling_spies(sticky, 'destroy',null, function(spy){
+                  expect(spy.passedArguments(1)).to(equal, "/delete_me");
                 });
             });
 
             it("specifies method delete", function(){
-              verify_argument_to_jquery_post_when_calling(sticky,'destroy',null, function(args){
-                  expect(args[1]["_method"]).to(equal, "delete");
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'destroy',null, function(spy){
+                  expect(spy.passedArguments(2)["_method"]).to(equal, "delete");
                 });
             });
 
@@ -71,21 +71,21 @@ Screw.Unit(function(){
           describe("#update_content", function(){
             it("posts the update to update-url", function(){
               sticky_div.attr('data-update-url', '/dummy_url');
-              verify_argument_to_jquery_post_when_calling(sticky,'update_content',"hello", function(args){
-                  expect(args[0]).to(equal, "/dummy_url");
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'update_content',"hello", function(spy){
+                  expect(spy.passedArguments(1)).to(equal, "/dummy_url");
                 });
             });
             
             it("specifies the method as put", function(){
             sticky_div.attr('data-update-url', '/dummy_url');
-              verify_argument_to_jquery_post_when_calling(sticky,'update_content',"hello", function(args){
-                expect(args[1]["_method"]).to(equal, "put");
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'update_content',"hello", function(spy){
+                expect(spy.passedArguments(2)["_method"]).to(equal, "put");
               });
             });
 
             it("posts the value passed in", function(){
-              verify_argument_to_jquery_post_when_calling(sticky,'update_content',"hello", function(args){
-                  expect(args[1]["sticky[content]"]).to(equal, "hello");
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'update_content',"hello", function(spy){
+                  expect(spy.passedArguments(2)["sticky[content]"]).to(equal, "hello");
                 });
             });
           });
@@ -93,22 +93,23 @@ Screw.Unit(function(){
           describe("#update_position", function(){
              it("posts the update to update-url", function(){
               sticky_div.attr('data-update-url', '/dummy_url');
-              verify_argument_to_jquery_post_when_calling(sticky,'update_position', {left:10, top:20}, function(args){
-                  expect(args[0]).to(equal, "/dummy_url");
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'update_position', {left:10, top:20}, function(spy){
+                  expect(spy.passedArguments(1)).to(equal, "/dummy_url");
                 });
              });
 
              it("specifies the method as put", function(){
               sticky_div.attr('data-update-url', '/dummy_url');
-              verify_argument_to_jquery_post_when_calling(sticky,'update_position', {left:10, top:20}, function(args){
-                  expect(args[1]["_method"]).to(equal, "put");
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'update_position', {left:10, top:20}, function(spy){
+                  expect(spy.passedArguments(2)["_method"]).to(equal, "put");
                 });
              });
 
              it("posts the left and top values", function(){
-              verify_argument_to_jquery_post_when_calling(sticky,'update_position', {left:10, top:20}, function(args){
-                  expect(args[1]["sticky[left]"]).to(equal, 10);
-                  expect(args[1]["sticky[top]"]).to(equal, 20);
+              verify_argument_to_jquery_post_when_calling_spies(sticky,'update_position', {left:10, top:20}, function(spy){
+                  var data = spy.passedArguments(2);
+                  expect(data["sticky[left]"]).to(equal, 10);
+                  expect(data["sticky[top]"]).to(equal, 20);
                 });
              });
           });
