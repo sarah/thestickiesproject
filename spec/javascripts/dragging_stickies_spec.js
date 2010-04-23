@@ -34,29 +34,27 @@ Screw.Unit(function(){
         function functionThatReturns(argument){ 
           return function() { return argument; };
         }
-        describe("using spies.js", function() {
-          describe("no MovingVisitor given", function() {
-            it("tells a new MoveVisitor to move neighbors", function(){
-              var movingVisitor;
-              movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
+        describe("no MovingVisitor given", function() {
+          it("tells a new MoveVisitor to move neighbors", function(){
+            var movingVisitor;
+            movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
 
-              var sticky = createSticky(functionThatReturns(movingVisitor));
+            var sticky = createSticky(functionThatReturns(movingVisitor));
 
-              sticky.youAreBeingDragged(10, 100);
-              expectNeighborsMoved(movingVisitor, 10, 100, sticky);
-            });
+            sticky.youAreBeingDragged(10, 100);
+            expectNeighborsMoved(movingVisitor, 10, 100, sticky);
           });
+        });
 
-          describe("existing MovingVisitor given", function() {
-            it("tells that MovingVisitor to move neighbors", function(){
-              var movingVisitor;
-              movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
+        describe("existing MovingVisitor given", function() {
+          it("tells that MovingVisitor to move neighbors", function(){
+            var movingVisitor;
+            movingVisitor = Spies.spyOn({}, "moveMyNeighbors");
 
-              var sticky = createSticky($.noop);
-              sticky.youAreBeingDragged(10, 100, movingVisitor);
+            var sticky = createSticky($.noop);
+            sticky.youAreBeingDragged(10, 100, movingVisitor);
 
-              expectNeighborsMoved(movingVisitor, 10, 100, sticky);
-            });
+            expectNeighborsMoved(movingVisitor, 10, 100, sticky);
           });
         });
       });
@@ -74,59 +72,57 @@ Screw.Unit(function(){
       });
     });
     describe("MovingVisitor", function() {
-      describe("using spies.js", function() {
-        describe("#moveMyNeighbors", function() {
-          function expectDragged(neighbor, dx, dy, visitor) {
-            expect(neighbor.wasCalled("youAreBeingDragged")).to(equal, true);
-            expect(neighbor.passedArguments(1)).to(equal, dx);
-            expect(neighbor.passedArguments(2)).to(equal, dy);
-            expect(neighbor.passedArguments(3)).to(equal, visitor);
-          }
-          function returnThese() {
-            var outerArguments;
-            outerArguments = arguments;
-            return function(){ return outerArguments; };
-          };
-          it("does not tell a sticky that was already visited to drag", function(){
-            var movingVisitor = createMovingVisitor();
+      describe("#moveMyNeighbors", function() {
+        function expectDragged(neighbor, dx, dy, visitor) {
+          expect(neighbor.wasCalled("youAreBeingDragged")).to(equal, true);
+          expect(neighbor.passedArguments(1)).to(equal, dx);
+          expect(neighbor.passedArguments(2)).to(equal, dy);
+          expect(neighbor.passedArguments(3)).to(equal, visitor);
+        }
+        function returnThese() {
+          var outerArguments;
+          outerArguments = arguments;
+          return function(){ return outerArguments; };
+        };
+        it("does not tell a sticky that was already visited to drag", function(){
+          var movingVisitor = createMovingVisitor();
 
-            var stickyNeighborToBoth, stickyNeighborToFirst,
-                stickyNeighborToSecond;
-            stickyNeighborToBoth = Spies.spyOn({id: 3}, "youAreBeingDragged");
-            
-            stickyNeighborToFirst = Spies.spyOn({id: 1}, "youAreBeingDragged");
-            stickyNeighborToSecond = Spies.spyOn({id: 2}, "youAreBeingDragged");
+          var stickyNeighborToBoth, stickyNeighborToFirst,
+              stickyNeighborToSecond;
+          stickyNeighborToBoth = Spies.spyOn({id: 3}, "youAreBeingDragged");
+          
+          stickyNeighborToFirst = Spies.spyOn({id: 1}, "youAreBeingDragged");
+          stickyNeighborToSecond = Spies.spyOn({id: 2}, "youAreBeingDragged");
 
-            var firstSticky = {};
-            firstSticky.getNeighbors = returnThese(stickyNeighborToFirst, stickyNeighborToBoth);
+          var firstSticky = {};
+          firstSticky.getNeighbors = returnThese(stickyNeighborToFirst, stickyNeighborToBoth);
 
-            var secondSticky = {};
-            secondSticky.getNeighbors = returnThese(stickyNeighborToSecond, stickyNeighborToBoth);
+          var secondSticky = {};
+          secondSticky.getNeighbors = returnThese(stickyNeighborToSecond, stickyNeighborToBoth);
 
 
-            movingVisitor.moveMyNeighbors(10,100, firstSticky);
-            stickyNeighborToBoth.resetSpy();
-            movingVisitor.moveMyNeighbors(10,100, secondSticky);
+          movingVisitor.moveMyNeighbors(10,100, firstSticky);
+          stickyNeighborToBoth.resetSpy();
+          movingVisitor.moveMyNeighbors(10,100, secondSticky);
 
-            expectDragged(stickyNeighborToFirst, 10, 100, movingVisitor);
-            expectDragged(stickyNeighborToSecond, 10, 100, movingVisitor);
-            expect(stickyNeighborToBoth.wasCalled("youAreBeingDragged")).to(equal, false);
-          });
-          it("tells the sticky's neighbor to drag", function(){
-            var movingVisitor = createMovingVisitor();
+          expectDragged(stickyNeighborToFirst, 10, 100, movingVisitor);
+          expectDragged(stickyNeighborToSecond, 10, 100, movingVisitor);
+          expect(stickyNeighborToBoth.wasCalled("youAreBeingDragged")).to(equal, false);
+        });
+        it("tells the sticky's neighbor to drag", function(){
+          var movingVisitor = createMovingVisitor();
 
-            var sticky = {};
+          var sticky = {};
 
-            var neighborOne = Spies.spyOn({id: 1}, "youAreBeingDragged");
-            var neighborTwo = Spies.spyOn({id: 2}, "youAreBeingDragged");
+          var neighborOne = Spies.spyOn({id: 1}, "youAreBeingDragged");
+          var neighborTwo = Spies.spyOn({id: 2}, "youAreBeingDragged");
 
-            sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
+          sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
 
-            movingVisitor.moveMyNeighbors(10,100, sticky);
+          movingVisitor.moveMyNeighbors(10,100, sticky);
 
-            expectDragged(neighborOne, 10, 100, movingVisitor);
-            expectDragged(neighborTwo, 10, 100, movingVisitor);
-          });
+          expectDragged(neighborOne, 10, 100, movingVisitor);
+          expectDragged(neighborTwo, 10, 100, movingVisitor);
         });
       });
     });
