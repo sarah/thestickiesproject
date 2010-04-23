@@ -14,8 +14,8 @@ Screw.Unit(function(){
     describe("#create_sticky", function(){
       it("posts to the create-sticky-url", function(){
         var url = get_stickies_div().attr('data-create-sticky-url');
-        verify_argument_to_jquery_post_when_calling(tsp.builders, 'create_sticky',null, function(args){
-          expect(args[0]).to(equal, url);
+        verify_argument_to_jquery_post_when_calling_spies(tsp.builders, 'create_sticky',null, function(spy){
+          expect(spy.passedArguments(1)).to(equal, url);
           });
       });
       // describe("function for successful post", function(){

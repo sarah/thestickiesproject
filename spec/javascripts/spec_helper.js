@@ -21,4 +21,14 @@ var verify_argument_to_jquery_post_when_calling = function(binding_object, metho
   block(delivered_args);
 };
 
+function verify_argument_to_jquery_post_when_calling_spies(binding_object, method_to_call, arg_to_method_under_test, block){
+  var jquerySpy;
+  jquerySpy = Spies.spyOn($, "post");
+  try {
+    binding_object[method_to_call](arg_to_method_under_test);
+  } finally {
+    jquerySpy.stopSpying();
+  }
+  block(jquerySpy);
+};
 require('helpers.js');
