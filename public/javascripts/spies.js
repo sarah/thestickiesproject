@@ -1,17 +1,18 @@
 /*global $*/
 var Spies = {};
 Spies.stub = (function() {
-  var originalFunctions;
-  originalFunctions = {};
-
   return function(obj, functionName) {
     var returnValue;
     returnValue = arguments[2];
-    originalFunctions[functionName] = obj[functionName];
+
+    if(typeof obj["__originalFunctions"] === 'undefined') {
+      obj.__originalFunctions = {};
+    }
+    obj.__originalFunctions[functionName] = obj[functionName];
 
     obj[functionName] = function() { return returnValue; };
 
-    obj.removeStub = function(functionName) { this[functionName] = originalFunctions[functionName]; };
+    obj.removeStub = function(functionName) { this[functionName] = this.__originalFunctions[functionName]; };
     return obj;
   };
 }());

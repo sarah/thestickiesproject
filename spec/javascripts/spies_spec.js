@@ -3,6 +3,43 @@ require("spec_helper.js");
 Screw.Unit(function(){
 
   describe("#stub", function(){
+    describe("multiple objects", function() {
+      var objFoo, fooReturn, objBar, barReturn;
+      before(function() {
+        objFoo = { wasFooBazCalled: false,
+                   baz: function() { this.wasFooBazCalled = true; }
+                };
+        objBar = { wasBarBazCalled: false,
+                   baz: function() { this.wasBarBazCalled = true; }
+                };
+      });
+
+      it("can remove the stub on method with same name", function() {
+        objFoo = Spies.stub(objFoo, "baz");
+        objBar = Spies.stub(objBar, "baz");
+
+        objFoo.removeStub("baz");
+
+        objFoo.baz();
+        objBar.baz();
+
+        expect(objFoo.wasFooBazCalled).to(be_true);
+        expect(objBar.wasBarBazCalled).to(be_false);
+      });
+
+      it("can stub method on different objects", function() {
+
+        objFoo = Spies.stub(objFoo, "baz", "foo return");
+        objBar = Spies.stub(objBar, "baz", "bar return");
+
+        fooReturn = objFoo.baz();
+        barReturn = objBar.baz();
+
+        expect(fooReturn).to(equal, "foo return");
+        expect(barReturn).to(equal, "bar return");
+      });
+    });
+
     describe("multiple method", function() {
       var obj;
       before(function() {
