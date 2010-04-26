@@ -4,16 +4,25 @@ Screw.Unit(function(){
 
   describe("#stub", function(){
     describe("single method", function() {
+      var obj;
+      before(function() {
+        obj = { wasCalled:false, foo: function(){ this.wasCalled = true; } };
+      });
       it("prevents the original function from being called", function() {
-        var obj, wasCalled;
-        wasCalled = false;
-        obj = { foo: function() { wasCalled = true; } };
-
         Spies.stub(obj, "foo");
 
         obj.foo();
 
-        expect(wasCalled).to(be_false);
+        expect(obj.wasCalled).to(be_false);
+      });
+      
+      it("can be removed to allow the original function to be called again", function() {
+        Spies.stub(obj, "foo");
+
+        obj.removeStub("foo");
+      
+        obj.foo();
+        expect(obj.wasCalled).to(be_true);
       });
     });
   });
