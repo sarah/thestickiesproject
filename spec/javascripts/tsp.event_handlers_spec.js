@@ -14,8 +14,8 @@ Screw.Unit(function(){
 
   var mock_sticky = function(tsp){
     var sticky = mock();
-    stub(tsp.lookups, 'actions_on').and_return(sticky);
-    stub(sticky, 'update_content');
+    Spies.stub(tsp.lookups, 'actions_on', sticky);
+    Spies.stub(sticky, 'update_content');
     return sticky;
   };
 
