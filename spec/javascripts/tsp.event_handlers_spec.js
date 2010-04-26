@@ -24,9 +24,15 @@ Screw.Unit(function(){
       describe("#destroy", function(){
 
         it("calls destroy on sticky", function(){
-          var delete_div = {};
-          mock_sticky(tsp).should_receive('destroy').exactly(1);
-          tsp.event_handlers.stickies.destroy.apply(delete_div, []);
+            var delete_div, lookups, action_spy;
+            action_spy = Spies.spyOn({}, "destroy");
+
+            lookups = Spies.spyOn(tsp.lookups, "actions_on", action_spy);
+
+            tsp.event_handlers.stickies.destroy.apply(delete_div, []);
+            lookups.stopSpying();
+
+            expect(action_spy.wasCalled("destroy")).to(equal, true);
         });
       });
 
