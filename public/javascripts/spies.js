@@ -1,5 +1,12 @@
 /*global $*/
 var Spies = {};
+Spies.stub = function(obj, functionName) {
+  var called;
+  obj[functionName] = function() { called = true; };
+
+  return obj;
+};
+
 Spies.spyOn = (function() {
   function createSpyBehaviorsFor(functionName, originalFunction, returnValue) {
     var functionWasCalled, passedArguments, spyBehavior;

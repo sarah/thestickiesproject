@@ -1,6 +1,23 @@
 require("spec_helper.js");
 
 Screw.Unit(function(){
+
+  describe("#stub", function(){
+    describe("single method", function() {
+      it("prevents the original function from being called", function() {
+        var obj, wasCalled;
+        wasCalled = false;
+        obj = { foo: function() { wasCalled = true; } };
+
+        Spies.stub(obj, "foo");
+
+        obj.foo();
+
+        expect(wasCalled).to(be_false);
+      });
+    });
+  });
+
   describe("#spyOn", function(){
     var obj;
 
