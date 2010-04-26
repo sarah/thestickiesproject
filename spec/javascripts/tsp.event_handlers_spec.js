@@ -66,13 +66,5 @@ Screw.Unit(function(){
         });
       });
     });
-    describe("surfaces", function(){
-        // WTF!!!! 
-      describe("#create_sticky", function(){
-        it("places created sticky on #stickies", function(){
-          // tsp.event_handlers.surfaces.create_sticky();
-        });
-      });
-    });
   });
 });
