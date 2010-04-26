@@ -58,8 +58,8 @@ Screw.Unit(function(){
             it("removes the sticky element", function(){
               var old$ = $;
               $ = {};
-              stub($, 'post');
-              stub($, 'extend');
+              $ = Spies.stub($, 'post');
+              $ = Spies.stub($, 'extend');
 
               sticky.destroy();
 
