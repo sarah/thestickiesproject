@@ -1,10 +1,11 @@
 /*global $*/
 var Spies = {};
 Spies.stub = function(obj, functionName) {
-  var called, originalFunction;
+  var originalFunction, returnValue;
+  returnValue = arguments[2];
   originalFunction = obj[functionName];
 
-  obj[functionName] = function() { called = true; };
+  obj[functionName] = function() { return returnValue; };
 
   obj.removeStub = function() { this[functionName] = originalFunction; };
   return obj;

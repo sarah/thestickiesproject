@@ -24,6 +24,17 @@ Screw.Unit(function(){
         obj.foo();
         expect(obj.wasCalled).to(be_true);
       });
+
+      it("can be told to return a certain value", function() {
+        var returnValue;
+
+
+        Spies.stub(obj, "foo", "return value");
+
+        returnValue = obj.foo();
+
+        expect(returnValue).to(equal, "return value");
+      });
     });
   });
 
