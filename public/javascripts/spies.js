@@ -1,15 +1,20 @@
 /*global $*/
 var Spies = {};
-Spies.stub = function(obj, functionName) {
-  var originalFunction, returnValue;
-  returnValue = arguments[2];
-  originalFunction = obj[functionName];
+Spies.stub = (function() {
+  var originalFunctions;
+  originalFunctions = {};
 
-  obj[functionName] = function() { return returnValue; };
+  return function(obj, functionName) {
+    var returnValue;
+    returnValue = arguments[2];
+    originalFunctions[functionName] = obj[functionName];
 
-  obj.removeStub = function() { this[functionName] = originalFunction; };
-  return obj;
-};
+    obj[functionName] = function() { return returnValue; };
+
+    obj.removeStub = function(functionName) { this[functionName] = originalFunctions[functionName]; };
+    return obj;
+  };
+}());
 
 Spies.spyOn = (function() {
   function createSpyBehaviorsFor(functionName, originalFunction, returnValue) {

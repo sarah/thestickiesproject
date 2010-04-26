@@ -3,6 +3,61 @@ require("spec_helper.js");
 Screw.Unit(function(){
 
   describe("#stub", function(){
+    describe("multiple method", function() {
+      var obj;
+      before(function() {
+        obj = { wasFooCalled: false, wasBarCalled: false,
+                foo: function() { this.wasFooCalled = true; },
+                bar: function() { this.wasBarCalled = true; }
+              };
+      });
+      it("can stub one method, leaving the other", function() {
+        obj = Spies.stub(obj, "foo");
+
+        obj.foo();
+        obj.bar();
+
+        expect(obj.wasFooCalled).to(be_false);
+        expect(obj.wasBarCalled).to(be_true);
+      });
+
+      it("can stub both methods", function() {
+        obj = Spies.stub(obj, "foo");
+        obj = Spies.stub(obj, "bar");
+
+        obj.foo();
+        obj.bar();
+
+        expect(obj.wasFooCalled).to(be_false);
+        expect(obj.wasBarCalled).to(be_false);
+      });
+
+      it("can remove the stub from one method, leaving the other stubbed", function() {
+          obj = Spies.stub(obj, "foo");
+          obj = Spies.stub(obj, "bar");
+
+          obj.removeStub("foo");
+
+          obj.foo();
+          obj.bar();
+
+          expect(obj.wasFooCalled).to(be_true);
+          expect(obj.wasBarCalled).to(be_false);
+      });
+
+      it("can set a separate return value for each function stubbed", function() {
+          var fooReturn, barReturn;
+
+          obj = Spies.stub(obj, "foo", "foo return");
+          obj = Spies.stub(obj, "bar", "bar return");
+
+          fooReturn = obj.foo();
+          barReturn = obj.bar();
+
+          expect(fooReturn).to(equal, "foo return");
+          expect(barReturn).to(equal, "bar return");
+      });
+    });
     describe("single method", function() {
       var obj;
       before(function() {
