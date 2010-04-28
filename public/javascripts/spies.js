@@ -1,18 +1,26 @@
 /*global $*/
-var Spies = {};
+var Spies;
+if(Spies) {
+  throw "The Spies namespace has already been defined by a previously loaded library";
+}
+Spies = {};
 Spies.stub = (function() {
+  var originalFunctionsPerObject;
+  originalFunctionsPerObject = {};
+
   return function(obj, functionName) {
     var returnValue;
     returnValue = arguments[2];
 
-    if(typeof obj["__originalFunctions"] === 'undefined') {
-      obj.__originalFunctions = {};
+    if(typeof originalFunctionsPerObject[obj] === 'undefined') {
+      originalFunctionsPerObject[obj] = {};
     }
-    obj.__originalFunctions[functionName] = obj[functionName];
+
+    originalFunctionsPerObject[obj][functionName] = obj[functionName];
 
     obj[functionName] = function() { return returnValue; };
 
-    obj.removeStub = function(functionName) { this[functionName] = this.__originalFunctions[functionName]; };
+    obj.removeStub = function(functionName) { obj[functionName] = originalFunctionsPerObject[obj][functionName]; };
     return obj;
   };
 }());

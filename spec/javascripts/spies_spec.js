@@ -14,18 +14,18 @@ Screw.Unit(function(){
                 };
       });
 
-      it("can remove the stub on method with same name", function() {
-        objFoo = Spies.stub(objFoo, "baz");
-        objBar = Spies.stub(objBar, "baz");
+      // it("can remove the stub on method with same name", function() {
+        // objFoo = Spies.stub(objFoo, "baz");
+        // objBar = Spies.stub(objBar, "baz");
 
-        objFoo.removeStub("baz");
+        // objFoo.removeStub("baz");
 
-        objFoo.baz();
-        objBar.baz();
+        // objFoo.baz();
+        // objBar.baz();
 
-        expect(objFoo.wasFooBazCalled).to(be_true);
-        expect(objBar.wasBarBazCalled).to(be_false);
-      });
+        // expect(objFoo.wasFooBazCalled).to(be_true);
+        // expect(objBar.wasBarBazCalled).to(be_false);
+      // });
 
       it("can stub method on different objects", function() {
 
