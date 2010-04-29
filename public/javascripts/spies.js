@@ -5,22 +5,19 @@ if(Spies) {
 }
 Spies = {};
 Spies.stub = (function() {
-  var originalFunctionsPerObject;
-  originalFunctionsPerObject = {};
-
   return function(obj, functionName) {
     var returnValue;
     returnValue = arguments[2];
 
-    if(typeof originalFunctionsPerObject[obj] === 'undefined') {
-      originalFunctionsPerObject[obj] = {};
+    if(!obj.spyFramework) {
+      obj.spyFramework = {};
     }
 
-    originalFunctionsPerObject[obj][functionName] = obj[functionName];
+    obj.spyFramework[functionName] = obj[functionName];
 
     obj[functionName] = function() { return returnValue; };
 
-    obj.removeStub = function(functionName) { obj[functionName] = originalFunctionsPerObject[obj][functionName]; };
+    obj.removeStub = function(functionName) { obj[functionName] = obj.spyFramework[functionName]; };
     return obj;
   };
 }());
