@@ -13,11 +13,15 @@ Spies.stub = (function() {
       obj.spyFramework = {};
     }
 
-    obj.spyFramework[functionName] = obj[functionName];
+    if(!obj.spyFramework.stubs) {
+      obj.spyFramework.stubs = {};
+    }
+
+    obj.spyFramework.stubs[functionName] = obj[functionName];
 
     obj[functionName] = function() { return returnValue; };
 
-    obj.removeStub = function(functionName) { obj[functionName] = obj.spyFramework[functionName]; };
+    obj.removeStub = function(functionName) { obj[functionName] = obj.spyFramework.stubs[functionName]; };
     return obj;
   };
 }());
@@ -55,8 +59,14 @@ Spies.spyOn = (function() {
 
     var originalFunction = objectToSpyOn[functionName];
 
-    $.extend(objectToSpyOn, createSpyBehaviorsFor(functionName, originalFunction, returnValue));
+    var spyBehaviors = createSpyBehaviorsFor(functionName, originalFunction, returnValue);
+    objectToSpyOn.spyFramework = { spies: spyBehaviors };
+    var upper = {
+      stopSpying: spyBehaviors.stopSpying
+    };
 
+    upper[functionName] = spyBehaviors[functionName];
+    $.extend(objectToSpyOn, upper);
     return objectToSpyOn;
   };
 }());

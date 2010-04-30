@@ -142,8 +142,8 @@ Screw.Unit(function(){
 
         obj.foo("argument1", "argument2");
 
-        expect(obj.passedArguments(1)).to(equal, "argument1");
-        expect(obj.passedArguments(2)).to(equal, "argument2");
+        expect(obj.spyFramework.spies.passedArguments(1)).to(equal, "argument1");
+        expect(obj.spyFramework.spies.passedArguments(2)).to(equal, "argument2");
       });
 
       it("keeps a count of how many arguments passed", function() {
@@ -151,7 +151,7 @@ Screw.Unit(function(){
 
         obj.foo("argument1", "argument2");
         
-        expect(obj.countOfPassedArguments()).to(equal, 2);
+        expect(obj.spyFramework.spies.countOfPassedArguments()).to(equal, 2);
       });
 
       it("returns the desired value", function() {
@@ -168,7 +168,7 @@ Screw.Unit(function(){
       it("tells if method was not called", function() {
         obj = Spies.spyOn(obj, "foo");
 
-        expect(obj.wasCalled("foo")).to(be_false);
+        expect(obj.spyFramework.spies.wasCalled("foo")).to(be_false);
       });
 
       it("tells if method was called", function() {
@@ -176,7 +176,7 @@ Screw.Unit(function(){
 
         obj.foo();
 
-        expect(obj.wasCalled("foo")).to(be_true);
+        expect(obj.spyFramework.spies.wasCalled("foo")).to(be_true);
       });
 
       it("can stopSpying to restore function", function() {
@@ -200,9 +200,9 @@ Screw.Unit(function(){
 
             obj.foo();
 
-            obj.resetSpy();
+            obj.spyFramework.spies.resetSpy();
 
-            expect(obj.wasCalled()).to(be_false);
+            expect(obj.spyFramework.spies.wasCalled()).to(be_false);
         });
 
         it("resets the passedArguments to empty", function() {
@@ -210,9 +210,9 @@ Screw.Unit(function(){
 
             obj.foo("1", "2", "3");
 
-            obj.resetSpy();
+            obj.spyFramework.spies.resetSpy();
 
-            expect(obj.countOfPassedArguments()).to(equal, 0);
+            expect(obj.spyFramework.spies.countOfPassedArguments()).to(equal, 0);
         });
       });
     });
