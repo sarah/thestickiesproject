@@ -1,4 +1,3 @@
-/*global $*/
 var Spies;
 if(Spies) {
   throw "The Spies namespace has already been defined by a previously loaded library";
