@@ -131,12 +131,67 @@ Screw.Unit(function(){
   });
 
   describe("#spyOn", function(){
-    var obj;
+    describe("multiple objects", function() {
+      var obj1, obj2;
+      before(function() {
+        obj1 = Spies.spyOn({}, "foo");
+        obj2 = Spies.spyOn({}, "foo");
+      });
+      it("keeps track of which object had method called on it", function() {
 
-    before(function() {
-      obj = { foo: function() {} };
+        obj1.foo();
+
+        expect(obj1.spyFramework.spies.wasCalled("foo")).to(be_true);
+        expect(obj2.spyFramework.spies.wasCalled("foo")).to(be_false);
+      });
+
+      it("keeps track of the arguments passed to each object", function() {
+
+        obj1.foo("this was obj1");
+        obj2.foo("this was obj2");
+
+        expect(obj1.spyFramework.spies.passedArguments(1)).to(equal, "this was obj1");
+        expect(obj2.spyFramework.spies.passedArguments(1)).to(equal, "this was obj2");
+      });
+
+      describe("stop spying on one object", function() { 
+        it("can stop spying on one object", function() {
+            var wasCalled;
+            wasCalled = false;
+            obj1.bar = function() { wasCalled = true; };
+
+            obj1 = Spies.spyOn(obj1, "bar");
+            obj1.spyFramework.spies.stopSpying("bar");
+            
+            obj1.bar();
+
+            expect(wasCalled).to(be_true);
+        });
+
+        it("still spies on the other object", function() {
+            var wasCalled2, wasCalled1;
+            wasCalled1 = false;
+            wasCalled2 = false;
+            obj1.bar = function() { wasCalled1 = true; };
+            obj2.bar = function() { wasCalled2 = true; };
+
+            obj1 = Spies.spyOn(obj1, "bar");
+            obj2 = Spies.spyOn(obj2, "bar");
+            obj1.spyFramework.spies.stopSpying("bar");
+            
+            obj2.bar();
+
+            expect(obj2.spyFramework.spies.wasCalled("bar")).to(be_true);
+
+        });
+      });
     });
-    describe("single method", function() {
+    describe("single object", function() {
+      var obj;
+
+      before(function() {
+        obj = { foo: function() {} };
+      });
       it("keeps track of the arguments passed", function() {
         obj = Spies.spyOn(obj, "foo");
 
