@@ -39,8 +39,9 @@ Spies.spyOn = (function() {
       wasCalled: function() { return functionWasCalled; },
       passedArguments: function(index) { return passedArguments[index-1]; },
       countOfPassedArguments: function() { return passedArguments.length; },
-      stopSpying: function() { this[functionName] = originalFunction; },
-      resetSpy: initialize
+      stopSpying: function() { this.originalObject[functionName] = originalFunction; },
+      resetSpy: initialize,
+      originalObject: null
     };
 
     spyBehavior[functionName] = function() {
@@ -60,13 +61,11 @@ Spies.spyOn = (function() {
     var originalFunction = objectToSpyOn[functionName];
 
     var spyBehaviors = createSpyBehaviorsFor(functionName, originalFunction, returnValue);
-    objectToSpyOn.spyFramework = { spies: spyBehaviors };
-    var upper = {
-      stopSpying: spyBehaviors.stopSpying
-    };
 
-    upper[functionName] = spyBehaviors[functionName];
-    $.extend(objectToSpyOn, upper);
+    objectToSpyOn.spyFramework = { spies: spyBehaviors };
+
+    objectToSpyOn[functionName] = spyBehaviors[functionName];
+    spyBehaviors.originalObject = objectToSpyOn;
     return objectToSpyOn;
   };
 }());

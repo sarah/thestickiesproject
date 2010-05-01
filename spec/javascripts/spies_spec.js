@@ -187,7 +187,7 @@ Screw.Unit(function(){
 
           obj = Spies.spyOn(obj, "foo");
 
-          obj.stopSpying();
+          obj.spyFramework.spies.stopSpying();
 
           obj.foo();
 
