@@ -30,9 +30,9 @@ Screw.Unit(function(){
             lookups = Spies.spyOn(tsp.lookups, "actions_on", action_spy);
 
             tsp.event_handlers.stickies.destroy.apply(delete_div, []);
-            lookups.stopSpying();
+            lookups.spyFramework.spies.stopSpying();
 
-            expect(action_spy.wasCalled("destroy")).to(equal, true);
+            expect(action_spy.spyFramework.spies.wasCalled("destroy")).to(equal, true);
         });
       });
 

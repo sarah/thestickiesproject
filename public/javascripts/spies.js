@@ -27,7 +27,7 @@ Spies.stub = (function() {
 }());
 
 Spies.spyOn = (function() {
-  function createSpyBehaviorsFor(functionName, originalFunction, returnValue) {
+  function createSpyBehaviorsFor(objectToSpyOn, functionName, originalFunction, returnValue) {
     var functionWasCalled, passedArguments, spyBehavior;
 
     function initialize() {
@@ -39,9 +39,8 @@ Spies.spyOn = (function() {
       wasCalled: function() { return functionWasCalled; },
       passedArguments: function(index) { return passedArguments[index-1]; },
       countOfPassedArguments: function() { return passedArguments.length; },
-      stopSpying: function() { this.originalObject[functionName] = originalFunction; },
-      resetSpy: initialize,
-      originalObject: null
+      stopSpying: function() { objectToSpyOn[functionName] = originalFunction; },
+      resetSpy: initialize
     };
 
     spyBehavior[functionName] = function() {
@@ -60,12 +59,11 @@ Spies.spyOn = (function() {
 
     var originalFunction = objectToSpyOn[functionName];
 
-    var spyBehaviors = createSpyBehaviorsFor(functionName, originalFunction, returnValue);
+    var spyBehaviors = createSpyBehaviorsFor(objectToSpyOn, functionName, originalFunction, returnValue);
 
     objectToSpyOn.spyFramework = { spies: spyBehaviors };
 
     objectToSpyOn[functionName] = spyBehaviors[functionName];
-    spyBehaviors.originalObject = objectToSpyOn;
     return objectToSpyOn;
   };
 }());

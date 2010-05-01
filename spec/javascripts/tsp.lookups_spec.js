@@ -45,13 +45,13 @@ Screw.Unit(function(){
 
             it("posts to delete-url", function(){
               verify_argument_to_jquery_post_when_calling(sticky, 'destroy',null, function(spy){
-                  expect(spy.passedArguments(1)).to(equal, "/delete_me");
+                  expect(spy.spyFramework.spies.passedArguments(1)).to(equal, "/delete_me");
                 });
             });
 
             it("specifies method delete", function(){
               verify_argument_to_jquery_post_when_calling(sticky,'destroy',null, function(spy){
-                  expect(spy.passedArguments(2)["_method"]).to(equal, "delete");
+                  expect(spy.spyFramework.spies.passedArguments(2)["_method"]).to(equal, "delete");
                 });
             });
 
@@ -72,20 +72,20 @@ Screw.Unit(function(){
             it("posts the update to update-url", function(){
               sticky_div.attr('data-update-url', '/dummy_url');
               verify_argument_to_jquery_post_when_calling(sticky,'update_content',"hello", function(spy){
-                  expect(spy.passedArguments(1)).to(equal, "/dummy_url");
+                  expect(spy.spyFramework.spies.passedArguments(1)).to(equal, "/dummy_url");
                 });
             });
             
             it("specifies the method as put", function(){
             sticky_div.attr('data-update-url', '/dummy_url');
               verify_argument_to_jquery_post_when_calling(sticky,'update_content',"hello", function(spy){
-                expect(spy.passedArguments(2)["_method"]).to(equal, "put");
+                expect(spy.spyFramework.spies.passedArguments(2)["_method"]).to(equal, "put");
               });
             });
 
             it("posts the value passed in", function(){
               verify_argument_to_jquery_post_when_calling(sticky,'update_content',"hello", function(spy){
-                  expect(spy.passedArguments(2)["sticky[content]"]).to(equal, "hello");
+                  expect(spy.spyFramework.spies.passedArguments(2)["sticky[content]"]).to(equal, "hello");
                 });
             });
           });
@@ -94,20 +94,20 @@ Screw.Unit(function(){
              it("posts the update to update-url", function(){
               sticky_div.attr('data-update-url', '/dummy_url');
               verify_argument_to_jquery_post_when_calling(sticky,'update_position', {left:10, top:20}, function(spy){
-                  expect(spy.passedArguments(1)).to(equal, "/dummy_url");
+                  expect(spy.spyFramework.spies.passedArguments(1)).to(equal, "/dummy_url");
                 });
              });
 
              it("specifies the method as put", function(){
               sticky_div.attr('data-update-url', '/dummy_url');
               verify_argument_to_jquery_post_when_calling(sticky,'update_position', {left:10, top:20}, function(spy){
-                  expect(spy.passedArguments(2)["_method"]).to(equal, "put");
+                  expect(spy.spyFramework.spies.passedArguments(2)["_method"]).to(equal, "put");
                 });
              });
 
              it("posts the left and top values", function(){
               verify_argument_to_jquery_post_when_calling(sticky,'update_position', {left:10, top:20}, function(spy){
-                  var data = spy.passedArguments(2);
+                  var data = spy.spyFramework.spies.passedArguments(2);
                   expect(data["sticky[left]"]).to(equal, 10);
                   expect(data["sticky[top]"]).to(equal, 20);
                 });

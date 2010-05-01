@@ -17,7 +17,7 @@ function verify_argument_to_jquery_post_when_calling(binding_object, method_to_c
   try {
     binding_object[method_to_call](arg_to_method_under_test);
   } finally {
-    jquerySpy.stopSpying();
+    jquerySpy.spyFramework.spies.stopSpying();
   }
   block(jquerySpy);
 };
