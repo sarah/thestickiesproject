@@ -36,8 +36,9 @@ Spies.spyOn = (function() {
 
     spyBehavior = {
       wasCalled: function() { return functionWasCalled; },
-      passedArguments: function(index) { return passedArguments[index-1]; },
-      countOfPassedArguments: function() { return passedArguments.length; },
+      passedArguments: function(index) { 
+        if(arguments.length > 0) { return passedArguments[index-1]; }else{ return passedArguments; }
+      },
       stopSpying: function() { objectToSpyOn[functionName] = originalFunction; },
       resetSpy: initialize
     };

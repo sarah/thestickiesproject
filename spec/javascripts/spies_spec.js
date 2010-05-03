@@ -192,21 +192,26 @@ Screw.Unit(function(){
       before(function() {
         obj = { foo: function() {} };
       });
-      it("keeps track of the arguments passed", function() {
-        obj = Spies.spyOn(obj, "foo");
+      describe("dealing with passed arguments", function() {
+        it("allows you to access by index", function() {
+          obj = Spies.spyOn(obj, "foo");
 
-        obj.foo("argument1", "argument2");
+          obj.foo("argument1", "argument2");
 
-        expect(obj.spyFramework.spies.passedArguments(1)).to(equal, "argument1");
-        expect(obj.spyFramework.spies.passedArguments(2)).to(equal, "argument2");
-      });
+          expect(obj.spyFramework.spies.passedArguments(1)).to(equal, "argument1");
+          expect(obj.spyFramework.spies.passedArguments(2)).to(equal, "argument2");
+        });
 
-      it("keeps a count of how many arguments passed", function() {
-        obj = Spies.spyOn(obj, "foo");
+        it("allows you to access all of them", function() {
+          obj = Spies.spyOn(obj, "foo");
 
-        obj.foo("argument1", "argument2");
-        
-        expect(obj.spyFramework.spies.countOfPassedArguments()).to(equal, 2);
+          obj.foo("argument1", "argument2");
+          
+          
+          expect(obj.spyFramework.spies.passedArguments()[0]).to(equal, "argument1");
+          expect(obj.spyFramework.spies.passedArguments()[1]).to(equal, "argument2");
+          expect(obj.spyFramework.spies.passedArguments().length).to(equal, 2);
+        });
       });
 
       it("returns the desired value", function() {
@@ -267,7 +272,7 @@ Screw.Unit(function(){
 
             obj.spyFramework.spies.resetSpy();
 
-            expect(obj.spyFramework.spies.countOfPassedArguments()).to(equal, 0);
+            expect(obj.spyFramework.spies.passedArguments().length).to(equal, 0);
         });
       });
     });
