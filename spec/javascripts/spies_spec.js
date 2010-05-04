@@ -191,7 +191,7 @@ Screw.Unit(function(){
       describe("single object", function() {
         var obj, spies;
         before(function() {
-          obj = {foo: function() {}};
+          obj = {foo: function() {}, bar: function() {}};
           spies = Spies.v2.spyOn(obj, "foo");
         });
         it("tells if method was not called", function() {
@@ -201,6 +201,17 @@ Screw.Unit(function(){
         it("tells if method was called", function() {
           obj.foo();
           expect(spies.wasCalled()).to(be_true);
+        });
+
+        it("returns the desired value", function() {
+          var returnValue;
+
+          spy = Spies.v2.spyOn(obj, "bar", "returnValue");
+
+          returnValue = obj.bar();
+
+          expect(returnValue).to(equal, "returnValue");
+
         });
 
       });

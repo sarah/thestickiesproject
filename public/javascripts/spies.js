@@ -27,9 +27,10 @@ Spies.stub = (function() {
   };
 }());
 
-Spies.v2.spyOn = function(obj) {
+Spies.v2.spyOn = function(obj, functionName, returnValue) {
   var wasCalled;
   obj.foo = function() { wasCalled = true; };
+  obj.bar = function() { return returnValue; };
   return {
     wasCalled: function() {return wasCalled;}
   };
