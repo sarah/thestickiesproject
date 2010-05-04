@@ -229,6 +229,23 @@ Screw.Unit(function(){
             expect(originalCalled).to(be_true);
         });
 
+        describe("can resetSpy to forget previous interactions", function() {
+          it("resets to not having been called", function() {
+              obj.foo();
+
+              spies.resetSpy();
+
+              expect(spies.wasCalled()).to(be_false);
+          });
+
+          it("resets the passedArguments to empty", function() {
+              obj.foo("1", "2", "3");
+
+              spies.resetSpy();
+
+              expect(spies.passedArguments().length).to(equal, 0);
+          });
+        });
         describe("dealing with passed arguments", function() {
           it("allows you to access by index", function() {
             obj.foo("argument1", "argument2");
