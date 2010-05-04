@@ -37,6 +37,9 @@ Spies.v2.spyOn = function(obj, functionName, returnValue) {
     return returnValue;
   };
 
+  function resetOriginalFunction() {
+    obj[functionName] = originalFunction; 
+  }
   return {
     wasCalled: function() {return wasCalled;},
     passedArguments: function(index) {
@@ -46,7 +49,7 @@ Spies.v2.spyOn = function(obj, functionName, returnValue) {
         return capturedArgs[index - 1];
       }
     },
-    stopSpying: function() { obj[functionName] = originalFunction; }
+    stopSpying: resetOriginalFunction
   };
 };
 
