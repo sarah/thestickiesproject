@@ -3,6 +3,8 @@ if(Spies) {
   throw "The Spies namespace has already been defined by a previously loaded library";
 }
 Spies = {};
+Spies.v2 = {};
+
 Spies.stub = (function() {
   return function(obj, functionName) {
     var returnValue;
@@ -24,6 +26,10 @@ Spies.stub = (function() {
     return obj;
   };
 }());
+
+Spies.v2.spyOn = function() {
+  return {wasCalled: function() {}};
+};
 
 Spies.spyOn = (function() {
   function createSpyBehaviorsFor(objectToSpyOn, functionName, originalFunction, returnValue) {

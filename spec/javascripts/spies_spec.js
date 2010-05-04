@@ -186,8 +186,22 @@ Screw.Unit(function(){
         });
       });
     });
+
+    describe("v2", function() {
+      describe("single object", function() {
+        it("tells if method was not called", function() {
+          var obj, spies;
+          obj = {};
+          spies = Spies.v2.spyOn(obj, "foo");
+
+          expect(spies.wasCalled()).to(be_false);
+        });
+
+      });
+    });
+    
     describe("single object", function() {
-      var obj;
+      var obj, spies;
 
       before(function() {
         obj = { foo: function() {} };
