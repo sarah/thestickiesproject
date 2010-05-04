@@ -28,11 +28,22 @@ Spies.stub = (function() {
 }());
 
 Spies.v2.spyOn = function(obj, functionName, returnValue) {
-  var wasCalled;
-  obj.foo = function() { wasCalled = true; };
-  obj.bar = function() { return returnValue; };
+  var wasCalled, capturedArgs;
+  obj[functionName] = function() { 
+    capturedArgs = arguments;
+    wasCalled = true;
+    return returnValue;
+  };
+
   return {
-    wasCalled: function() {return wasCalled;}
+    wasCalled: function() {return wasCalled;},
+    passedArguments: function(index) {
+      if(arguments.length === 0) {
+        return capturedArgs;
+      } else {
+        return capturedArgs[index - 1];
+      }
+    }
   };
 };
 

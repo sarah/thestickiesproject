@@ -214,6 +214,22 @@ Screw.Unit(function(){
 
         });
 
+        describe("dealing with passed arguments", function() {
+          it("allows you to access by index", function() {
+            obj.foo("argument1", "argument2");
+
+            expect(spies.passedArguments(1)).to(equal, "argument1");
+            expect(spies.passedArguments(2)).to(equal, "argument2");
+          });
+
+          it("allows you to access all of them", function() {
+            obj.foo("argument1", "argument2");
+            
+            expect(spies.passedArguments()[0]).to(equal, "argument1");
+            expect(spies.passedArguments()[1]).to(equal, "argument2");
+            expect(spies.passedArguments().length).to(equal, 2);
+          });
+        });
       });
     });
     
