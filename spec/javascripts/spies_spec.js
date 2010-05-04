@@ -214,6 +214,21 @@ Screw.Unit(function(){
 
         });
 
+        it("can stopSpying to restore function", function() {
+            var originalCalled;
+            originalCalled = false;
+
+            obj.foo = function() { originalCalled = true; };
+
+            spies = Spies.v2.spyOn(obj, "foo");
+
+            spies.stopSpying();
+
+            obj.foo();
+
+            expect(originalCalled).to(be_true);
+        });
+
         describe("dealing with passed arguments", function() {
           it("allows you to access by index", function() {
             obj.foo("argument1", "argument2");
@@ -230,6 +245,7 @@ Screw.Unit(function(){
             expect(spies.passedArguments().length).to(equal, 2);
           });
         });
+        
       });
     });
     

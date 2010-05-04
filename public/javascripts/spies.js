@@ -28,7 +28,9 @@ Spies.stub = (function() {
 }());
 
 Spies.v2.spyOn = function(obj, functionName, returnValue) {
-  var wasCalled, capturedArgs;
+  var wasCalled, capturedArgs, originalFunction;
+
+  originalFunction = obj[functionName];
   obj[functionName] = function() { 
     capturedArgs = arguments;
     wasCalled = true;
@@ -43,7 +45,8 @@ Spies.v2.spyOn = function(obj, functionName, returnValue) {
       } else {
         return capturedArgs[index - 1];
       }
-    }
+    },
+    stopSpying: function() { obj[functionName] = originalFunction; }
   };
 };
 
