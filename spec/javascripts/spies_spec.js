@@ -3,6 +3,33 @@ require("spec_helper.js");
 Screw.Unit(function(){
 
   describe("#stub", function(){
+    describe("v2", function(){
+      describe("single method", function() {
+        var obj;
+        before(function() {
+          obj = { wasCalled:false, foo: function(){ this.wasCalled = true; } };
+        });
+        it("prevents the original function from being called", function() {
+          var spy;
+          spy = Spies.v2.stub(obj, "foo");
+
+          obj.foo();
+
+          expect(obj.wasCalled).to(be_false);
+        });
+
+        it("can be told to return a certain value", function() {
+          var spy, returnValue;
+
+          spy = Spies.v2.stub(obj, "foo", "return value");
+
+          returnValue = obj.foo();
+
+          expect(returnValue).to(equal, "return value");
+        });
+      });
+    });
+
     describe("multiple objects", function() {
       var objFoo, fooReturn, objBar, barReturn;
       before(function() {
@@ -188,12 +215,31 @@ Screw.Unit(function(){
     });
 
     describe("v2", function() {
-      describe("single object", function() {
+      describe("spying on multiple objects", function() {
+        var obj1, obj2, obj1Spy, obj2Spy;
+        before(function() {
+          obj1 = {foo: function() {}};
+          obj2 = {foo: function() {}};
+          obj1Spy = Spies.v2.spyOn(obj1, "foo");
+          obj2Spy = Spies.v2.spyOn(obj2, "foo");
+        });
+
+        it("keeps track of which object had method called on it", function() {
+
+          obj1.foo();
+
+          expect(obj1Spy.wasCalled("foo")).to(be_true);
+          expect(obj2Spy.wasCalled("foo")).to(be_false);
+        });
+
+      });
+      describe("spying on a single object", function() {
         var obj, spies;
         before(function() {
           obj = {foo: function() {}, bar: function() {}};
           spies = Spies.v2.spyOn(obj, "foo");
         });
+
         it("tells if method was not called", function() {
           expect(spies.wasCalled()).to(be_false);
         });
@@ -246,7 +292,8 @@ Screw.Unit(function(){
               expect(spies.passedArguments().length).to(equal, 0);
           });
         });
-        describe("dealing with passed arguments", function() {
+
+        describe("accessing passedArguments", function() {
           it("allows you to access by index", function() {
             obj.foo("argument1", "argument2");
 
@@ -254,7 +301,7 @@ Screw.Unit(function(){
             expect(spies.passedArguments(2)).to(equal, "argument2");
           });
 
-          it("allows you to access all of them", function() {
+          it("passing no index returns all arguments", function() {
             obj.foo("argument1", "argument2");
             
             expect(spies.passedArguments()[0]).to(equal, "argument1");
