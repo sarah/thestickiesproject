@@ -340,6 +340,16 @@ Screw.Unit(function(){
           expect(spy.object.id).to(equal, "me");
         });
 
+        it("holds a reference to the function being spied upon", function() {
+          var spy, spiedUponFunction;
+
+          spy = Spies.v2.spyOn({}, "foo", "i am spied upon");
+
+          spiedUponFunction = spy.spyFunction;
+
+          expect(spiedUponFunction()).to(equal, "i am spied upon");
+        });
+
         it("can stopSpying to restore function", function() {
             var originalCalled;
             originalCalled = false;
