@@ -331,6 +331,15 @@ Screw.Unit(function(){
 
         });
 
+        it("holds a reference to the object spied upon", function() {
+          var obj, spy;
+          obj = { id: "me" };
+
+          spy = Spies.v2.spyOn(obj, "foo");
+
+          expect(spy.object.id).to(equal, "me");
+        });
+
         it("can stopSpying to restore function", function() {
             var originalCalled;
             originalCalled = false;

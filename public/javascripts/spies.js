@@ -70,7 +70,8 @@ Spies.v2.spyOn = function(obj, functionName, returnValue) {
       }
     },
     stopSpying: resetOriginalFunction,
-    resetSpy: initialize
+    resetSpy: initialize,
+    object: obj
   };
 };
 
