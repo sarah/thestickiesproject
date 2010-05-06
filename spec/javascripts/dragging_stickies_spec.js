@@ -74,12 +74,11 @@ Screw.Unit(function(){
     });
     describe("MovingVisitor", function() {
       describe("#moveMyNeighbors", function() {
-        function expectDragged(neighbor, dx, dy, visitor) {
-          var spy = neighbor.spyFramework.spies;
-          expect(spy.wasCalled("youAreBeingDragged")).to(equal, true);
-          expect(spy.passedArguments(1)).to(equal, dx);
-          expect(spy.passedArguments(2)).to(equal, dy);
-          expect(spy.passedArguments(3)).to(equal, visitor);
+        function expectDragged(neighborSpy, dx, dy, visitor) {
+          expect(neighborSpy.wasCalled()).to(equal, true);
+          expect(neighborSpy.passedArguments(1)).to(equal, dx);
+          expect(neighborSpy.passedArguments(2)).to(equal, dy);
+          expect(neighborSpy.passedArguments(3)).to(equal, visitor);
         }
         function returnThese() {
           var outerArguments;
@@ -87,44 +86,45 @@ Screw.Unit(function(){
           return function(){ return outerArguments; };
         };
         it("does not tell a sticky that was already visited to drag", function(){
-          var movingVisitor = createMovingVisitor();
+          var stickyNeighborToBothSpy, stickyNeighborToFirstSpy, stickyNeighborToSecondSpy, movingVisitor;
+          movingVisitor = createMovingVisitor();
 
-          var stickyNeighborToBoth, stickyNeighborToFirst,
-              stickyNeighborToSecond;
-          stickyNeighborToBoth = Spies.spyOn({id: 3}, "youAreBeingDragged");
+          stickyNeighborToBothSpy = Spies.v2.spyOn({id: 3}, "youAreBeingDragged");
           
-          stickyNeighborToFirst = Spies.spyOn({id: 1}, "youAreBeingDragged");
-          stickyNeighborToSecond = Spies.spyOn({id: 2}, "youAreBeingDragged");
+          stickyNeighborToFirstSpy = Spies.v2.spyOn({id: 1}, "youAreBeingDragged");
+          stickyNeighborToSecondSpy = Spies.v2.spyOn({id: 2}, "youAreBeingDragged");
 
           var firstSticky = {};
-          firstSticky.getNeighbors = returnThese(stickyNeighborToFirst, stickyNeighborToBoth);
+          firstSticky.getNeighbors = returnThese(stickyNeighborToFirstSpy.object, stickyNeighborToBothSpy.object);
 
           var secondSticky = {};
-          secondSticky.getNeighbors = returnThese(stickyNeighborToSecond, stickyNeighborToBoth);
+          secondSticky.getNeighbors = returnThese(stickyNeighborToSecondSpy.object, stickyNeighborToBothSpy.object);
 
 
           movingVisitor.moveMyNeighbors(10,100, firstSticky);
-          stickyNeighborToBoth.spyFramework.spies.resetSpy();
+          stickyNeighborToBothSpy.resetSpy();
           movingVisitor.moveMyNeighbors(10,100, secondSticky);
 
-          expectDragged(stickyNeighborToFirst, 10, 100, movingVisitor);
-          expectDragged(stickyNeighborToSecond, 10, 100, movingVisitor);
-          expect(stickyNeighborToBoth.spyFramework.spies.wasCalled("youAreBeingDragged")).to(equal, false);
+          expectDragged(stickyNeighborToFirstSpy, 10, 100, movingVisitor);
+          expectDragged(stickyNeighborToSecondSpy, 10, 100, movingVisitor);
+
+          expect(stickyNeighborToBothSpy.wasCalled()).to(equal, false);
         });
         it("tells the sticky's neighbor to drag", function(){
-          var movingVisitor = createMovingVisitor();
+          var neighbor1Spy, neighbor2Spy, movingVisitor, sticky;
 
-          var sticky = {};
+          movingVisitor = createMovingVisitor();
+          sticky = {};
 
-          var neighborOne = Spies.spyOn({id: 1}, "youAreBeingDragged");
-          var neighborTwo = Spies.spyOn({id: 2}, "youAreBeingDragged");
+          neighbor1Spy = Spies.v2.spyOn({id: 1}, "youAreBeingDragged");
+          neighbor2Spy = Spies.v2.spyOn({id: 2}, "youAreBeingDragged");
 
-          sticky.getNeighbors = returnThese(neighborOne, neighborTwo);
+          sticky.getNeighbors = returnThese(neighbor1Spy.object, neighbor2Spy.object);
 
           movingVisitor.moveMyNeighbors(10,100, sticky);
 
-          expectDragged(neighborOne, 10, 100, movingVisitor);
-          expectDragged(neighborTwo, 10, 100, movingVisitor);
+          expectDragged(neighbor1Spy, 10, 100, movingVisitor);
+          expectDragged(neighbor2Spy, 10, 100, movingVisitor);
         });
       });
     });
