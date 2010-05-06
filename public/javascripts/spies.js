@@ -14,8 +14,19 @@ Spies.v2.stub = function(obj, functionName, returnValue){
   return spy;
 };
 
-Spies.v2.spyOn = function(obj, functionName, returnValue) {
-  var wasCalled, capturedArgs, originalFunction, spy;
+Spies.v2.spyOn = function() {
+  var obj, functionName, returnValue, wasCalled, capturedArgs, originalFunction, spy;
+
+  if(typeof arguments[0] === 'string') {
+    obj = {};
+    functionName = arguments[0];
+    returnValue = arguments[1];
+  }else{
+    obj = arguments[0];
+    functionName = arguments[1];
+    returnValue = arguments[2];
+  }
+
   function initialize() {
     wasCalled = false;
     capturedArgs = [];

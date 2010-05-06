@@ -20,6 +20,70 @@ Screw.Unit(function(){
         });
 
       });
+
+
+      describe("not passing an object", function() {
+        var spy;
+        before(function() {
+          spy = Spies.v2.spyOn("foo");
+        });
+
+        it("tells if method was not called", function() {
+          expect(spy.wasCalled()).to(be_false);
+        });
+
+        it("tells if method was called", function() {
+          spy.spyFunction();
+          expect(spy.wasCalled()).to(be_true);
+        });
+
+        it("returns the desired value", function() {
+          var returnValue;
+
+          spy = Spies.v2.spyOn("bar", "returnValue");
+
+          returnValue = spy.spyFunction();
+
+          expect(returnValue).to(equal, "returnValue");
+
+        });
+
+        describe("can resetSpy to forget previous interactions", function() {
+          it("resets to not having been called", function() {
+              spy.spyFunction();
+
+              spy.resetSpy();
+
+              expect(spy.wasCalled()).to(be_false);
+          });
+
+          it("resets the passedArguments to empty", function() {
+              spy.spyFunction("1", "2", "3");
+
+              spy.resetSpy();
+
+              expect(spy.passedArguments().length).to(equal, 0);
+          });
+        });
+
+        describe("accessing passedArguments", function() {
+          it("allows you to access by index", function() {
+            spy.spyFunction("argument1", "argument2");
+
+            expect(spy.passedArguments(1)).to(equal, "argument1");
+            expect(spy.passedArguments(2)).to(equal, "argument2");
+          });
+
+          it("passing no index returns all arguments", function() {
+            spy.spyFunction("argument1", "argument2");
+            
+            expect(spy.passedArguments()[0]).to(equal, "argument1");
+            expect(spy.passedArguments()[1]).to(equal, "argument2");
+            expect(spy.passedArguments().length).to(equal, 2);
+          });
+        });
+        
+      });
       describe("spying on a single object", function() {
         var obj, spies;
         before(function() {
