@@ -27,6 +27,18 @@ Screw.Unit(function(){
 
           expect(returnValue).to(equal, "return value");
         });
+      
+        it("can be removed to allow the original function to be called again", function() {
+          var spy;
+
+          spy = Spies.v2.stub(obj, "foo");
+
+          spy.removeStub();
+        
+          obj.foo();
+
+          expect(obj.wasCalled).to(be_true);
+        });
       });
     });
 
