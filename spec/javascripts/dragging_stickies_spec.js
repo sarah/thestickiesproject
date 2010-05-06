@@ -62,7 +62,7 @@ Screw.Unit(function(){
         it("returns the neighbors from the 'neighbor lookup' function", function() {
           var neighbors, spy, sticky, resulting_neighbors;
           neighbors = {foo: 1};
-          spy = Spies.v2.spyOn({}, "getMyNeighbors", neighbors);
+          spy = Spies.v2.spyOn("getMyNeighbors", neighbors);
 
           sticky = createSticky($.noop, spy.spyFunction);
           resulting_neighbors = sticky.getNeighbors();
