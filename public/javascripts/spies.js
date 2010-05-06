@@ -6,15 +6,10 @@ Spies = {};
 Spies.v2 = {};
 
 Spies.v2.stub = function(obj, functionName, returnValue){
-  var spy, originalFunction;
-  originalFunction = obj[functionName];
+  var spy;
 
-  obj[functionName] = function(){ return returnValue; };
-
-  spy = {};
-  spy.removeStub = function(){
-    obj[functionName] = originalFunction;
-  };
+  spy = Spies.v2.spyOn(obj, functionName, returnValue);
+  spy.removeStub = spy.stopSpying;
 
   return spy;
 };
@@ -33,12 +28,12 @@ Spies.v2.spyOn = function(obj, functionName, returnValue) {
   }
 
   originalFunction = obj[functionName];
-  obj[functionName] = spyFunction;
 
   function resetOriginalFunction() {
     obj[functionName] = originalFunction; 
   }
 
+  obj[functionName] = spyFunction;
   spy = {
     wasCalled: function() {return wasCalled;},
     passedArguments: function(index) {
