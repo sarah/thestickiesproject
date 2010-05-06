@@ -13,11 +13,11 @@ AUTH_TOKEN = "dummy_token";
 
 function verify_argument_to_jquery_post_when_calling(binding_object, method_to_call, arg_to_method_under_test, block){
   var jquerySpy;
-  jquerySpy = Spies.spyOn($, "post");
+  jquerySpy = Spies.v2.spyOn($, "post");
   try {
     binding_object[method_to_call](arg_to_method_under_test);
   } finally {
-    jquerySpy.spyFramework.spies.stopSpying();
+    jquerySpy.stopSpying();
   }
   block(jquerySpy);
 };

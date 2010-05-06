@@ -12,27 +12,20 @@ Screw.Unit(function(){
     tsp  = TSP.get();
   });
 
-  var mock_sticky = function(tsp){
-    var sticky = mock();
-    Spies.stub(tsp.lookups, 'actions_on', sticky);
-    Spies.stub(sticky, 'update_content');
-    return sticky;
-  };
-
   describe("tsp.event_handlers", function(){
     describe("stickies", function(){
       describe("#destroy", function(){
 
         it("calls destroy on sticky", function(){
             var delete_div, lookups, action_spy;
-            action_spy = Spies.spyOn({}, "destroy");
+            action_spy = Spies.v2.spyOn({}, "destroy");
 
-            lookups = Spies.spyOn(tsp.lookups, "actions_on", action_spy);
+            lookups = Spies.v2.spyOn(tsp.lookups, "actions_on", action_spy.object);
 
             tsp.event_handlers.stickies.destroy.apply(delete_div, []);
-            lookups.spyFramework.spies.stopSpying();
+            lookups.stopSpying();
 
-            expect(action_spy.spyFramework.spies.wasCalled("destroy")).to(equal, true);
+            expect(action_spy.wasCalled("destroy")).to(equal, true);
         });
       });
 
@@ -44,25 +37,33 @@ Screw.Unit(function(){
                         helper : get_sticky_div()};
           var event_obj = 'unused';
 
-          mock_sticky(tsp).should_receive('update_position').exactly(1).with_arguments({left : 15, top : 100});
+          stickySpy = Spies.v2.spyOn({}, "update_position");
+          Spies.v2.stub(tsp.lookups, 'actions_on', stickySpy.object);
+
           tsp.event_handlers.stickies.update_position(event_obj, ui_obj);
+
+          expect(stickySpy.wasCalled).to(be_true);
+          expect(stickySpy.passedArguments(1).left).to(equal, 15);
+          expect(stickySpy.passedArguments(1).top).to(equal, 100);
         });
       });
 
       describe("#update_text", function(){
-        var sticky;
+        var stickySpy;
         before(function(){
-          sticky = mock_sticky(tsp);
-          });
+          stickySpy = Spies.v2.spyOn({}, "update_content");
+          Spies.v2.stub(tsp.lookups, 'actions_on', stickySpy.object);
+        });
         it("returns the value passed in", function(){
           var value = tsp.event_handlers.stickies.update_text.apply(get_editable_div(), ['new text', null]);
           expect(value).to(equal, "new text");
         });
 
         it("updates the sticky value with the passed value", function(){
-          sticky.should_receive('update_content').with_arguments('new content').exactly(1);
-
           tsp.event_handlers.stickies.update_text.apply(get_editable_div(), ['new content', null]);
+
+          expect(stickySpy.wasCalled).to(be_true);
+          expect(stickySpy.passedArguments(1)).to(equal, 'new content');
         });
       });
     });
