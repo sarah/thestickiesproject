@@ -1,6 +1,10 @@
 require("spec_helper.js");
 
-Screw.Unit(function(){
+var TestFramework;
+TestFramework = {};
+TestFramework.tests = Screw.Unit;
+
+TestFramework.tests(function(){
   describe("v2", function(){
     describe("#spyOn", function() {
       describe("spying on multiple objects", function() {

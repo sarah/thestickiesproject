@@ -87,7 +87,6 @@ Screw.Unit(function(){
         };
         it("does not tell a sticky that was already visited to drag", function(){
           var stickyNeighborToBothSpy, stickyNeighborToFirstSpy, stickyNeighborToSecondSpy, movingVisitor;
-          movingVisitor = createMovingVisitor();
 
           stickyNeighborToBothSpy = Spies.v2.spyOn({id: 3}, "youAreBeingDragged");
           
@@ -100,6 +99,7 @@ Screw.Unit(function(){
           var secondSticky = {};
           secondSticky.getNeighbors = returnThese(stickyNeighborToSecondSpy.object, stickyNeighborToBothSpy.object);
 
+          movingVisitor = createMovingVisitor();
 
           movingVisitor.moveMyNeighbors(10,100, firstSticky);
           stickyNeighborToBothSpy.resetSpy();
