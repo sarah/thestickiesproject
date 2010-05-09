@@ -7,7 +7,11 @@ TSP.builders = (function() {
                                   event : "dblclick", tooltip : "Double-click to edit",
                                   indicator : 'Saving...', placeholder : "Double-click to edit"};
 
-    sticky_element.draggable({stop: handlers.update_position, containment: "#stickies" });
+    sticky_element.draggable({
+      start: handlers.dragging.start,
+      drag: handlers.dragging.drag,
+      stop: handlers.dragging.stop, 
+      containment: "#stickies" });
 
     sticky_element.find('.editable').editable(handlers.update_text, EDITABLE_STICKY_PROPS);
 

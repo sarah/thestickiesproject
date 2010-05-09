@@ -18,8 +18,26 @@ TSP.event_handlers = (function() {
                       var position = { left : left, top : top };
                       var actions = tsp.lookups.actions_on(ui.helper);
                       actions.update_position(position);
-                   }
+                    },
   };
+  var dragging_actions = {
+    start: function() {
+      console.log('started ' ); 
+      console.log( arguments); 
+    },
+    stop: function(){
+      console.log('stopped ' ); 
+      console.log( arguments); 
+    },
+    drag: function(){
+      console.log('dragging! ' ); 
+      console.log( arguments); 
+    }
+  };
+
+  sticky_actions.dragging = dragging_actions;
+
+
   var surface_actions = {
     create_sticky: function() {
                      tsp.builders.create_sticky();

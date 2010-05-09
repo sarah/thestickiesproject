@@ -8,10 +8,16 @@ require("spec_helper.js", {onload: function() {
 
 Screw.Unit(function(){
   describe("DraggingFeature", function(){
-    var surface, tsp_builders;
+    var surface, tsp_builders, sticky, stickyElement;
     before(function() {
       tsp_builders = TSP.get().builders;
       surface = $('#surface_template');
+      sticky = create_sticky(5,20,30);
+      stickyElement = $(surface.find("#sticky_5")); 
+    });
+
+    after(function() {
+      surface.find(".sticky").remove();
     });
 
     function create_sticky(id,left,top){
@@ -22,13 +28,6 @@ Screw.Unit(function(){
     }
     
     describe("Moving a group together", function() {
-      var sticky, stickyElement;
-      before(function(){
-        sticky = create_sticky(5,20,30);
-
-        stickyElement = $(surface.find("#sticky_5")); 
-      });
-
       describe("one neighbor", function() {
         var neighborSticky, neighborStickyElement;
         before(function() {
@@ -53,17 +52,6 @@ Screw.Unit(function(){
     });
 
     describe("How to use the system", function() {
-      var sticky, stickyElement;
-      before(function(){
-        sticky = create_sticky(5,20,30);
-
-        stickyElement = $(surface.find("#sticky_5")); 
-      });
-
-      after(function() {
-        stickyElement.remove();
-      });
-
       it("Placing a new sticky on the surface", function(){
         expect(sticky.id).to(equal, 5);
 

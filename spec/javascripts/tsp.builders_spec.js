@@ -11,6 +11,14 @@ Screw.Unit(function(){
   });
 
   describe("tsp.builders", function(){
+
+    describe("#create_sticky_dom_element", function() {
+    });
+
+
+
+
+
     describe("#create_sticky", function(){
       it("posts to the create-sticky-url", function(){
         var url = get_stickies_div().attr('data-create-sticky-url');
