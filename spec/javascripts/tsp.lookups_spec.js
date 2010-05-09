@@ -57,8 +57,8 @@ Screw.Unit(function(){
 
             it("removes the sticky element", function(){
               var postSpy, extendSpy;
-              postSpy = Spies.v2.stub($, 'post');
-              extendSpy = Spies.v2.stub($, 'extend');
+              postSpy = Spies.stub($, 'post');
+              extendSpy = Spies.stub($, 'extend');
 
               try {
                 sticky.destroy();

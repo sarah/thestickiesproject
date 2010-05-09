@@ -25,9 +25,8 @@ TSP.event_handlers = (function() {
       console.log('started ' ); 
       console.log( arguments); 
     },
-    stop: function(){
-      console.log('stopped ' ); 
-      console.log( arguments); 
+    stop: function(event,ui){
+      sticky_actions.update_position(event,ui);
     },
     drag: function(){
       console.log('dragging! ' ); 

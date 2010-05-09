@@ -14,6 +14,28 @@ Screw.Unit(function(){
 
   describe("tsp.event_handlers", function(){
     describe("stickies", function(){
+
+      describe("dragging_actions", function() {
+        describe("#stop", function() {
+          it("calls update_position on sticky_actions", function() {
+            var event_obj, ui_obj, update_position_spy;
+            event_obj = {id:5};
+            ui_obj = {id:4};
+
+            update_position_spy = Spies.spyOn(tsp.event_handlers.stickies, "update_position");
+
+            tsp.event_handlers.stickies.dragging.stop(event_obj, ui_obj);
+
+            update_position_spy.stopSpying();
+
+            expect(update_position_spy.wasCalled()).to(be_true);
+            expect(update_position_spy.passedArguments(1)).to(equal,event_obj);
+            expect(update_position_spy.passedArguments(2)).to(equal,ui_obj);
+          });
+        });
+      });
+
+
       describe("#destroy", function(){
 
         it("calls destroy on sticky", function(){

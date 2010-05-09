@@ -2,7 +2,6 @@ require("spec_helper.js", {onload: function() {
   rails_require("tsp");
   rails_require("tsp.builders");
   rails_require("tsp.event_handlers");
-  require('vendor/spies.js');
   require('vendor/jquery.simulate.js');
 }});
 
