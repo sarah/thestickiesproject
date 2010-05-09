@@ -7,7 +7,7 @@ Screw.Matchers['expect_true'] = function(value){
 
 rails_require("vendor/jquery.jeditable.mini");
 rails_require("vendor/jquery-ui-1.7.2.custom.min");
-rails_require("spies");
+require("vendor/spies.js");
 
 AUTH_TOKEN = "dummy_token";
 
