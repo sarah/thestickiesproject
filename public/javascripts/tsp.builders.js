@@ -17,7 +17,8 @@ TSP.builders = (function() {
   }
 
   function create_sticky_dom_element(options){
-    var sticky_el = $("<div class='sticky' data-delete-url='"+
+    var sticky_el = $("<div class='sticky' id='sticky_"+
+                      options.id +"' data-delete-url='"+
                       options.delete_url+"' data-update-url='"+
                       options.update_url+"'><div class='header'>"+
                       options.id+"<a class='delete_link'>x</a></div><div class='body'>"+
