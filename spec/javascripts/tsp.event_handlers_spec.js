@@ -33,13 +33,32 @@ Screw.Unit(function(){
             expect(update_position_spy.passedArguments(2)).to(equal,ui_obj);
           });
         });
+
+        describe("#drag", function(){
+          it("calls dragging on sticky_actions", function() {
+            var event_obj, ui_obj, draggingSpy, draggingBehaviorsStub;
+            var ui_obj = { offset : {
+                          left : 15, top: 100 },
+                          helper : {}};
+
+            draggingSpy = Spies.spyOn("youAreBeingDragged");
+
+            tsp.event_handlers.stickies.dragging.dragging_sticky = draggingSpy.object;
+
+            tsp.event_handlers.stickies.dragging.drag(event_obj, ui_obj);
+
+            expect(draggingSpy.wasCalled()).to(be_true);
+            expect(draggingSpy.passedArguments(1).left).to(equal, 15);
+            expect(draggingSpy.passedArguments(1).top).to(equal, 100);
+          });  
+        });
       });
 
 
       describe("#destroy", function(){
 
         it("calls destroy on sticky", function(){
-            var delete_div, lookups, action_spy;
+            var delete_div, lookups, action_spy, lookups;
             action_spy = Spies.spyOn({}, "destroy");
 
             lookups = Spies.spyOn(tsp.lookups, "actions_on", action_spy.object);
